@@ -1,4 +1,6 @@
-# Local deployment of airflow on minikube K8s cluster
+# Local deployment of Jenkins and ArgoCD on minikube K8s cluster
+
+This is a demonstration of a GitOps CI/CD pipeline using Jenkins and ArgoCD deployed in a Kubernetes cluster
 ```
 minikube
 ```
