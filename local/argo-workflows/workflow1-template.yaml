@@ -1,0 +1,15 @@
+apiVersion: argoproj.io/v1alpha1
+kind: WorkflowTemplate
+metadata:
+  name: hello-world-template-local-arg
+spec:
+  templates:
+    - name: hello-world
+      inputs:
+        parameters:
+          - name: msg
+            value: "hello world"
+      container:
+        image: docker/whalesay
+        command: [cowsay]
+        args: ["{{inputs.parameters.msg}}"]
