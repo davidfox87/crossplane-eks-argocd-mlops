@@ -21,6 +21,12 @@ add the Jenkins repo to Helm :
 helm repo add jenkinsci https://charts.jenkins.io
 helm repo update
 helm search repo jenkinsci
+helm list
+```
+
+if you want to later remove 
+```
+helm delete chart-name
 ```
 
 ## Create a volume called jenkins-pv
@@ -131,7 +137,6 @@ kubectl patch deployment \
 ]}]'
 
 kubectl patch svc argo-server -n argo -p '{"spec": {"type": "NodePort"}}'
-kubectl port-forward svc/argo-server 2747:2747 -n argo
 
 Set up the port forward to the service
 ```kubectl -n argo port-forward deployment/argo-server 2746:2746```
@@ -161,6 +166,11 @@ http://localhost:9001 in the terminal!!!!
 ACCESS_KEY=$(kubectl get secret argo-artifacts -o jsonpath="{.data.accesskey}" | base64 --decode)
 SECRET_KEY=$(kubectl get secret argo-artifacts -o jsonpath="{.data.secretkey}" | base64 --decode)
 
+Log in to minio and create the "my-bucket" bucket
+
+modify the configmap in the argo namespace, which will reference the artifact repository in the default namespace
+
+
 ### Configure the Default Artifact Repository¶
 
 In order for Argo to use your artifact repository, you can configure it as the default repository. Edit the workflow-controller config map with the correct endpoint and access/secret keys for your repository. 
@@ -184,3 +194,22 @@ artifacts:
         name: gitlab
         key: id_rsa
       insecureIgnoreHostKey: true
+
+
+
+
+kubectl edit configmap workflow-controller-configmap -n argo  
+data:
+  artifactRepository: |
+    s3:
+      bucket: my-bucket
+      keyFormat: prefix/in/bucket     #optional
+      endpoint: argo-artifacts.default:9000        #AWS => s3.amazonaws.com; GCS => storage.googleapis.com
+      insecure: true                  #omit for S3/GCS. Needed when minio runs without TLS
+      accessKeySecret:                #omit if accessing via AWS IAM
+        name: my-minio-cred
+        key: o8HXEn7KIAFV9qmzRqwk
+      secretKeySecret:                #omit if accessing via AWS IAM
+        name: my-minio-cred
+        key: SL70gUV5YY0kF8pBdc39szhrsZAS9826JGa2PjeQ
+      useSDKCreds: true               #tells argo to use AWS SDK's default provider chain, enable for things like IRSA support

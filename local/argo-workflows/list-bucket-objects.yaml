@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Workflow
+metadata:
+  generateName: list-files-
+spec:
+  entrypoint: list-file
+  templates:
+  - name: list-file
+    steps:
+    - - name: list-files
+        templateRef:
+          name: file-input
+          template: listfiles
+        arguments:
+          artifacts:
+          - name: input-bucket
+            s3:
+              endpoint: argo-artifacts.default:9000
+              bucket: my-bucket 
+              key: "/tmp"

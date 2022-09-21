@@ -1,0 +1,16 @@
+apiVersion: argoproj.io/v1alpha1
+kind: WorkflowTemplate
+metadata:
+  name: file-input
+spec:
+  entrypoint: listfiles
+  templates:
+    - name: listfiles
+      container:
+        image: alpine:latest
+        command: ["/bin/sh", "-c"]
+        args: ["ls -lR /input"]
+      inputs:
+        artifacts:
+        - name: input-bucket
+          path: /input/
