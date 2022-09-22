@@ -1,35 +1,27 @@
-apiVersion: argoproj.io/v1alpha1
+apiVersion: argoproj.io/valpha1
 kind: Workflow
-metadata:
-  generateName: artifact-passing-
-  
+metadata: 
+  generateName: output-artifact-s3-
 spec:
-  entrypoint: artifact-example
+  entrypoint: whalesay
   templates:
-  - name: artifact-example
-    steps:
-    - - name: generate-artifact
-        template: whalesay
-
-  - name: whalesay
-    container:
-      image: docker/whalesay:latest
-      command: [sh, -c]
-      args: ["cowsay hello world | tee /tmp/hello_world.txt"]
-    outputs:
-      artifacts:
-      # generate hello-art artifact from /tmp/hello_world.txt
-      # artifacts can be directories as well as files
-      - name: hello-art
-        path: /tmp/hello_world.txt
-        s3:
-          endpoint: argo-artifacts.default:9000
-          bucket: my-bucket
-          key: "/tmp"
-          insecure: true 
-          accessKeySecret:
-            name: argo-artifacts
-            key: accessKey
-          secretKeySecret:
-            name: argo-artifacts
-            key: secretKey
+    - name: whalesay
+      container:
+        image: docker/whalesay:latest
+        command: [sh, -c]
+        args: ["cowsay hello world | tee /tmp/hello_world2.txt"]
+      outputs:
+        artifacts:
+          - name: message
+            path: /tmp/hello_world2.txt
+            s3:
+              bucket: my-bucket
+              endpoint: argo-artifacts.default:9000
+              insecure: true
+              key: output/hello_world2.txt
+              accessKeySecret:
+                name: argo-artifacts
+                key: accesskey
+              secretKeySecret:
+                name: argo-artifacts
+                key: secretkey
