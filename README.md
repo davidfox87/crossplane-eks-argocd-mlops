@@ -1,6 +1,7 @@
 # Local deployment of ArgoCD and Argo workflows on a local minikube K8s cluster
 
-This is a demonstration of a GitOps CI/CD pipeline using Jenkins and ArgoCD deployed in a Kubernetes cluster
+This is a demonstration of a GitOps CI/CD pipeline using Argo workflows (clone, build and push docker image, and update helm chart repo)
+and ArgoCD to update cluster configuration from the helm chart repository. Both Argo workflows and ArgoCD are deployed in the same Kubernetes cluster.
 
 
 # installing argocd 
