@@ -17,6 +17,3 @@ data:
           key: secretkey
 
 
-
-
-helm upgrade argo-artifacts minio/minio --set service.type=NodePort --set fullnameOverride=argo-artifacts

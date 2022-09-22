@@ -170,6 +170,31 @@ Log in to minio and create the "my-bucket" bucket
 
 modify the configmap in the argo namespace, which will reference the artifact repository in the default namespace
 
+```
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: workflow-controller-configmap
+data:
+    artifactRepository: |    # However, all nested maps must be strings
+      archiveLogs: true
+      s3:
+        endpoint: argo-artifacts.default:9000
+        bucket: my-bucket
+        insecure: false
+        accessKeySecret:
+          name: argo-artfacts
+          key: accesskey
+        secretKeySecret:
+          name: argo-artfacts
+          key: secretkey
+
+```
+
+## submit argo artifact-passing workflow to argo namespace
+Go over to http://localhost:9001 and check the bucket for the new file
+``` argo submit -n argo local/argo-workflows/artifact-passing.yaml --watch```
+
 
 ### Configure the Default Artifact Repository¶
 
