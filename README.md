@@ -118,7 +118,7 @@ kubectl apply -f local/argo-workflows/default-artifact-repository.yaml -n argo
 
 ## how to do git clone of a repo within workflow
 in the inputs section do...
-
+```
 artifacts:
   - name: git-clone
     path: "/workspace/project"
@@ -130,22 +130,4 @@ artifacts:
         name: gitlab
         key: id_rsa
       insecureIgnoreHostKey: true
-
-
-
-
-kubectl edit configmap workflow-controller-configmap -n argo  
-data:
-  artifactRepository: |
-    s3:
-      bucket: my-bucket
-      keyFormat: prefix/in/bucket     #optional
-      endpoint: argo-artifacts.default:9000        #AWS => s3.amazonaws.com; GCS => storage.googleapis.com
-      insecure: true                  #omit for S3/GCS. Needed when minio runs without TLS
-      accessKeySecret:                #omit if accessing via AWS IAM
-        name: my-minio-cred
-        key: o8HXEn7KIAFV9qmzRqwk
-      secretKeySecret:                #omit if accessing via AWS IAM
-        name: my-minio-cred
-        key: SL70gUV5YY0kF8pBdc39szhrsZAS9826JGa2PjeQ
-      useSDKCreds: true               #tells argo to use AWS SDK's default provider chain, enable for things like IRSA support
+```
