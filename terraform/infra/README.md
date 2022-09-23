@@ -112,8 +112,12 @@ Confirm the deployment is using the service-account
 kubectl describe deployment my-app | grep "Service Account"
 ```
 
-# Install Airflow chart using Helm
-First test using minikube local k8s cluster
+## provide external access to multiple Kubernetes services in my Amazon EKS cluster
+https://aws.amazon.com/premiumsupport/knowledge-center/eks-access-kubernetes-services/
+
+Use the NGINX ingress controller or AWS Load Balancer Controller for Kubernetes to provide external access to multiple Kubernetes services in your Amazon EKS cluster. 
+
+Prerequisite: Install the AWS Load Balancer Controller. It's a best practice to use the AWS Load Balancer Controller to create and manage a Network Load Balancer for the LoadBalancer type service objects in Amazon EKS.
 
 
 # Clean up your workspace

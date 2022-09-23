@@ -61,3 +61,8 @@ resource "aws_iam_role" "workernodes" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
   role    = aws_iam_role.workernodes.name
  }
+
+ resource "aws_iam_role_policy_attachment" "WorkerNodeALBIngress" {
+  policy_arn = var.workers_iam_policy_arn
+  role    = aws_iam_role.workernodes.name
+ }

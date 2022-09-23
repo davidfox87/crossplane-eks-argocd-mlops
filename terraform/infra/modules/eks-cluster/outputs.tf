@@ -48,3 +48,7 @@ output "cluster_security_group_id" {
 output "cluster_oidc_issuer_url" {
   value = aws_eks_cluster.demo.identity[0].oidc[0].issuer
 }
+
+output "kubeconfig-certificate-authority-data" {
+  value = aws_eks_cluster.demo.certificate_authority[0].data
+}

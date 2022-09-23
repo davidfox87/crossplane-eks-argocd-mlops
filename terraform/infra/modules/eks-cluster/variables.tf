@@ -12,3 +12,8 @@ variable "vpc_id" {
   type  = string
   description = "vpc id"
 }
+
+variable "workers_iam_policy_arn" {
+  type = string
+  description = "worker node IAM policy" 
+}
