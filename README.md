@@ -132,3 +132,22 @@ artifacts:
         key: id_rsa
       insecureIgnoreHostKey: true
 ```
+
+
+## create a secret for docker hub credentials
+https://kubernetes.io/docs/concepts/configuration/secret/#creating-a-secret
+
+To configure that, you:
+
+1. Create a secret or use an existing one. Multiple Pods can reference the same secret.
+2. Modify your Pod definition to add a volume under .spec.volumes[]. Name the volume anything, and have a .spec.volumes[].secret.secretName field equal to the name of the Secret object.
+3. Add a .spec.containers[].volumeMounts[] to each container that needs the secret. Specify .spec.containers[].volumeMounts[].readOnly = true and .spec.containers[].volumeMounts[].mountPath to an unused directory name where you would like the secrets to appear.
+4. Modify your image or command line so that the program looks for files in that directory. Each key in the secret data map becomes the filename under mountPath.
+
+```
+kubectl create secret docker-registry dockercred \
+    --docker-server=https://index.docker.io/v1/ \
+    --docker-username=foxy7887 \
+    --docker-password=xxxxx \
+    --docker-email=davidmfox87@gmail.com
+```
