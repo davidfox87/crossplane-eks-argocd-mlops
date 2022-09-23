@@ -16,18 +16,25 @@ module "my-eks" {
 }
 
 
-data "aws_eks_cluster_auth" "cluster" {
-  name = module.my-eks.cluster_id
+# get info about the EKS cluster to pass to helm
+data "aws_eks_cluster" "cluster" {
+  name = module.eks.cluster_id
 }
+
+data "aws_eks_cluster_auth" "cluster" {
+  name = module.eks.cluster_id
+}
+
 provider "helm" {
   version = "1.3.1"
   kubernetes {
-    host                   = module.my-eks.cluster_endpoint
-    cluster_ca_certificate = module.my-eks.kubeconfig-certificate-authority-data
+    host                   = data.aws_eks_cluster.cluster.endpoint
+    cluster_ca_certificate = base64decode(data.aws_eks_cluster.cluster.certificate_authority.0.data)
     token                  = data.aws_eks_cluster_auth.cluster.token
     load_config_file       = false
   }
 }
+
 
 resource "helm_release" "ingress" {
   name       = "ingress"
