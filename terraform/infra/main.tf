@@ -12,7 +12,7 @@ module "my-eks" {
     cluster-name = var.cluster-name
     vpc_id = module.network.vpc_id
     subnets = concat(module.network.vpc_public_subnets,  module.network.vpc_private_subnets)
-    workers_iam_policy = aws_iam_policy.worker_policy.arn
+
 }
 
 
@@ -35,23 +35,36 @@ provider "helm" {
   }
 }
 
-
+#install the AWS Load Balancer Controller
 resource "helm_release" "ingress" {
   name       = "ingress"
-  chart      = "aws-alb-ingress-controller"
-  repository = "http://storage.googleapis.com/kubernetes-charts-incubator"
+  chart      = "aws-load-balancer-controller"
+  repository = "https://aws.github.io/eks-charts"
   version    = "1.0.2"
-
+  namespace = "kube-system"
   set {
-    name  = "autoDiscoverAwsRegion"
-    value = "true"
+    name  = "region"
+    value = "us-west-1"
   }
   set {
-    name  = "autoDiscoverAwsVpcID"
-    value = "true"
+    name  = "vpcId"
+    value =  "${module.network.vpc_id}"
+  }
+  set {
+    name  = "image.repository"
+    value =  "602401143452.dkr.ecr.region-code.amazonaws.com/amazon/aws-load-balancer-controller"
   }
   set {
     name  = "clusterName"
-    value = var.cluster-name
+    value =  "${module.my-eks.cluster_name}"
+  }
+  set {
+    name  = "serviceAccount.create"
+    value =  "false"
+  }
+
+  set {
+    name  = "serviceAccount.name"
+    value =  "aws-load-balancer-controller "
   }
 }

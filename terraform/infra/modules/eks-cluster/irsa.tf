@@ -28,31 +28,21 @@ resource "aws_iam_role" "eks-service-account-role" {
       },
     ]
   })
-
-  inline_policy {
-    name = "eks_service_account_policy"
-
-    policy = jsonencode({
-      Version = "2012-10-17"
-      Statement = [
-        {
-            "Sid": "ListObjectsInBucket",
-            "Effect": "Allow",
-            "Action": "s3:ListBucket",
-            "Resource": ["arn:aws:s3:::my-test-k8s-bucket"]
-        },
-        {
-            "Sid": "AllObjectActions",
-            "Effect": "Allow",
-            "Action": "s3:*Object",
-            "Resource": ["arn:aws:s3:::my-test-k8s-bucket/*"]
-        }
-      ]
-    })
-  }
 }
 
 resource aws_iam_role_policy_attachment s3_full_access {
   role = aws_iam_role.eks-service-account-role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"
 }
+
+ resource "aws_iam_policy" "AWSLoadBalancerControllerIAMPolicy" {
+  name        = "AWSLoadBalancerControllerIAMPolicy"
+  description = "Worker policy for the ALB Ingress"
+
+  policy = file("iam-policy.json")
+}
+
+ resource "aws_iam_role_policy_attachment" "WorkerNodeALBIngress" {
+  policy_arn = aws_iam_policy.AWSLoadBalancerControllerIAMPolicy.arn
+  role    = aws_iam_role.eks-service-account-role.name
+ }

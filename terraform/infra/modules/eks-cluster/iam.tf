@@ -62,7 +62,3 @@ resource "aws_iam_role" "workernodes" {
   role    = aws_iam_role.workernodes.name
  }
 
- resource "aws_iam_role_policy_attachment" "WorkerNodeALBIngress" {
-  policy_arn = var.workers_iam_policy_arn
-  role    = aws_iam_role.workernodes.name
- }
