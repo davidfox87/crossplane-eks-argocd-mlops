@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    app: eks-demo
+  name: eks-demo 
+  namespace: default # specified in irsa.tf
+spec:
+  serviceAccountName: demo-user # specified in irsa.tf
+  containers:
+  - image: eks-demo:v1 # image from ECR
+    imagePullPolicy: Always
+    name: eks-demo
+    # The command and arguments that you define in the configuration file override the default command and 
+    # arguments provided by the container image. If you define args, but do not define a command, 
+    # the default command is used with your new arguments.
+    command: ['python3 app.py'] # https://kubernetes.io/docs/tasks/inject-data-application/define-command-argument-container/
+    args: 
+    - --bucket
+    - my-test-k8s-bucket

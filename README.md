@@ -151,3 +151,31 @@ kubectl create secret docker-registry dockercred \
     --docker-password=xxxxx \
     --docker-email=davidmfox87@gmail.com
 ```
+
+## argo-events
+now have github to send a webhook to our k8s cluster
+tell processes in the cluster to trigger some pipelines (argo workflows)
+
+
+install argo events
+https://argoproj.github.io/argo-events/installation/
+
+
+K8s ingress
+https://kubernetes.io/docs/concepts/services-networking/ingress/
+An API object that manages external access to the services in a cluster, typically HTTP.
+
+In order for the Ingress resource to work, the cluster must have an ingress controller running.
+https://docs.nginx.com/nginx-ingress-controller/installation/installation-with-helm/
+
+
+```
+helm repo add nginx-stable https://helm.nginx.com/stable
+helm repo update
+helm install my-release nginx-stable/nginx-ingress
+```
+or add ingress add-on to minikube
+minikube addons enable ingress
+
+
+kubectl apply -f local/argo-events/event-sources.yaml 
