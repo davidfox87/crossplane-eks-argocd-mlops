@@ -50,10 +50,6 @@ resource "aws_iam_policy" "s3_access" {
 
 
 
-
-
-
-
 module "iam_assumable_role_lb" {
   source  = "terraform-aws-modules/iam/aws//modules/iam-assumable-role-with-oidc"
   version = "~> 4.0"
