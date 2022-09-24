@@ -26,7 +26,7 @@ module "iam_assumable_role_s3_access" {
   role_name                     = "s3-access"
   provider_url                  = replace(aws_iam_openid_connect_provider.eks-cluster.url, "https://", "")
   role_policy_arns              = [aws_iam_policy.s3_access.arn]
-  oidc_fully_qualified_subjects = ["system:serviceaccount:${local.k8s_service_account_namespace}:${local.k8s_service_account_name}"]
+  oidc_fully_qualified_subjects = ["${local.k8s_service_account_namespace}:${local.k8s_service_account_name}"]
 }
 data "aws_iam_policy_document" "s3-access" {
   version = "2012-10-17"
@@ -50,26 +50,41 @@ resource "aws_iam_policy" "s3_access" {
 
 
 
-module "iam_assumable_role_lb" {
-  source  = "terraform-aws-modules/iam/aws//modules/iam-assumable-role-with-oidc"
-  version = "~> 4.0"
+# module "iam_assumable_role_lb" {
+#   source  = "terraform-aws-modules/iam/aws//modules/iam-assumable-role-with-oidc"
+#   version = "~> 4.0"
+#   create_role                   = true
+#   role_name                     = "aws-load-balancer-controller"
+#   provider_url                  = replace(aws_iam_openid_connect_provider.eks-cluster.url, "https://", "")
+#   role_policy_arns              = [aws_iam_policy.AWSLoadBalancerControllerIAMPolicy.arn]
+#   oidc_fully_qualified_subjects = ["${local.k8s_service_account_namespace2}:${local.k8s_service_account_name2}"]
+# }
 
-  create_role                   = true
-  role_name                     = "aws-load-balancer-controller"
-  provider_url                  = replace(aws_iam_openid_connect_provider.eks-cluster.url, "https://", "")
-  role_policy_arns              = [aws_iam_policy.AWSLoadBalancerControllerIAMPolicy.arn]
-  oidc_fully_qualified_subjects = ["system:serviceaccount:${local.k8s_service_account_namespace2}:${local.k8s_service_account_name2}"]
+
+#  resource "aws_iam_policy" "AWSLoadBalancerControllerIAMPolicy" {
+#   name        = "AWSLoadBalancerControllerIAMPolicy"
+#   description = "Worker policy for the ALB Ingress"
+
+#   policy = file("${path.module}/iam_policy.json")
+# }
+
+
+
+module "load_balancer_controller_irsa_role" {
+  source = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
+
+  role_name                              = "load-balancer-controller"
+  attach_load_balancer_controller_policy = true
+
+  oidc_providers = {
+    ex = {
+      provider_arn               = aws_iam_openid_connect_provider.eks-cluster.arn 
+      namespace_service_accounts = ["kube-system:aws-load-balancer-controller"]
+    }
+  }
+
+  tags = {"name" : "aws-load-balancer-controller"}
 }
-
-
- resource "aws_iam_policy" "AWSLoadBalancerControllerIAMPolicy" {
-  name        = "AWSLoadBalancerControllerIAMPolicy"
-  description = "Worker policy for the ALB Ingress"
-
-  policy = file("${path.module}/iam_policy.json")
-}
-
-
 
 
 

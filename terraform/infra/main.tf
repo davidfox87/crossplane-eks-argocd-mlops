@@ -33,7 +33,7 @@ provider "helm" {
   }
 }
 
-#install the AWS Load Balancer Controller
+# Installs helm chart for the aws-load-balancer-controller.
 resource "helm_release" "ingress" {
   name       = "ingress"
   chart      = "aws-load-balancer-controller"
