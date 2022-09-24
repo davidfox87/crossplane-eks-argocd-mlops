@@ -13,7 +13,13 @@ variable "vpc_id" {
   description = "vpc id"
 }
 
-variable "workers_iam_policy_arn" {
-  type = string
-  description = "worker node IAM policy" 
+variable "kubernetes_version" {
+  type    = string
+  default = "1.21"
+}
+
+variable "role_policy_arns" {
+  description = "ARNs of any policies to attach to the IAM role"
+  type        = map(string)
+  default     = {}
 }

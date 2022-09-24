@@ -59,9 +59,6 @@ resource "aws_route_table" "my_table" {
 
 }
 resource "aws_route_table_association" "rta_subnet_public" {
-  # for_each      = aws_subnet.public
-
-  # subnet_id      = each.value.id
   count = 2
   subnet_id      = "${aws_subnet.public.*.id[count.index]}"
 
@@ -91,7 +88,6 @@ resource "aws_nat_gateway" "natgw" {
 
 resource "aws_route_table" "my_nat_table" {
   vpc_id = aws_vpc.vpc.id
-
   route {
     cidr_block = "0.0.0.0/0"
     gateway_id = aws_nat_gateway.natgw.id
@@ -99,9 +95,6 @@ resource "aws_route_table" "my_nat_table" {
 
 }
 resource "aws_route_table_association" "rta_subnet_private" {
-  # for_each      = aws_subnet.private
-  # subnet_id      = each.value.id
-
   count = 2
   subnet_id      = "${aws_subnet.private.*.id[count.index]}"
   route_table_id = aws_route_table.my_nat_table.id
