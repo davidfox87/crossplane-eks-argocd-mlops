@@ -35,9 +35,10 @@ data "aws_iam_policy_document" "s3-access" {
     effect = "Allow"
     actions = [ "s3:GetObject",
                 "s3:PutObject",
-                "s3:ListBucket"
+                "s3:ListBucket",
+                "s3:GetBucketLocation"
     ]
-    resources = [ "arn:aws:s3:::my-bucket/*" ]
+    resources = [ "arn:aws:s3::::*" ]
   }
 }
 
