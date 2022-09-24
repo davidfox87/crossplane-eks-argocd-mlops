@@ -29,17 +29,13 @@ module "iam_assumable_role_s3_access" {
   oidc_fully_qualified_subjects = ["system:serviceaccount:${local.k8s_service_account_namespace}:${local.k8s_service_account_name}"]
 }
 data "aws_iam_policy_document" "s3-access" {
-  statement {
-    sid = "List"
-    effect = "Allow"
-    actions = [ "s3:ListBucket" ]
-    resources = [ "arn:aws:s3:::my-bucket" ]
-  }
+  version = "2012-10-17"
   statement {
     sid = "Fetch"
     effect = "Allow"
     actions = [ "s3:GetObject",
-                "s3:GetObjectVersion"
+                "s3:PutObject",
+                "s3:ListBucket"
     ]
     resources = [ "arn:aws:s3:::my-bucket/*" ]
   }
