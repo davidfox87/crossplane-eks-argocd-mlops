@@ -3,7 +3,10 @@ resource "kubernetes_service_account" "eks-service-account" {
     name = "aws-load-balancer-controller" # This is used as the serviceAccountName in the spec section of the k8 pod manifest
                                           # it means that the pod can assume the IAM role with the S3 policy attached
     namespace = "kube-system"
-    
+    labels = {
+      "app.kubernetes.io/component": "controller"
+      "app.kubernetes.io/name": "aws-load-balancer-controller"
+    }
     annotations = {
       "eks.amazonaws.com/role-arn" = aws_iam_role.eks-service-account-role.arn
     }
