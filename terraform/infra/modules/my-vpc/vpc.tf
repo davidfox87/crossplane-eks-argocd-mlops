@@ -1,3 +1,5 @@
+# to understand the special tags in subnets and vpc see
+# https://docs.aws.amazon.com/eks/latest/userguide/alb-ingress.html
 resource "aws_vpc" "vpc" {
   cidr_block       = "10.0.0.0/16"
   enable_dns_hostnames = true
@@ -25,6 +27,7 @@ resource "aws_subnet" "public" {
     tomap({
      "Name"= "terraform-eks-demo-node",
      "kubernetes.io/cluster/${var.cluster-name}"= "shared",
+     "kubernetes.io/role/elb" = "1" # This is so that Kubernetes knows to use only the subnets that were specified for external load balancers.
     })
   }"
 }

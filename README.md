@@ -220,6 +220,11 @@ Now verify that all three worker nodes are part of the cluster.
 kubectl get nodes
 ```
 
+Verify the aws-load-balancer-controller is installed
+```
+kubectl get deployment -n kube-system aws-load-balancer-controller
+```
+
 # IAM role for service account with OIDC
 IAM roles for service accounts provide the ability to manage credentials for your applications, similar to the way that Amazon EC2 instance profiles provide credentials to Amazon EC2 instances. Instead of creating and distributing your AWS credentials to the containers or using the Amazon EC2 instance’s role, you associate an IAM role with a Kubernetes service account and configure your pods to use the service account.
 

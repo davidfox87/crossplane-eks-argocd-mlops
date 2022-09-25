@@ -25,26 +25,33 @@ data "aws_eks_cluster_auth" "cluster" {
   name = module.my-eks.cluster_id
 }
 
+# https://learn.hashicorp.com/tutorials/terraform/helm-provider?in=terraform/kubernetes
 provider "helm" {
   kubernetes {
     host                   = data.aws_eks_cluster.cluster.endpoint
     cluster_ca_certificate = base64decode(data.aws_eks_cluster.cluster.certificate_authority.0.data)
-    token                  = data.aws_eks_cluster_auth.cluster.token
-
     exec {
-      api_version = "client.authentication.k8s.io/v1alpha1"
+      api_version = "client.authentication.k8s.io/v1beta1"
       args        = ["eks", "get-token", "--cluster-name", data.aws_eks_cluster.cluster.name]
       command     = "aws"
     }
   }
 }
 
+
+# The Terraform Helm provider contains the helm_release resource that deploys 
+# a Helm chart to a Kubernetes cluster. The helm_release resource specifies the
+# chart name and the configuration variables for your deployment.
+
 # Installs helm chart for the aws-load-balancer-controller.
 resource "helm_release" "ingress" {
+  depends_on = [
+    module.my-eks
+  ]
   name       = "aws-load-balancer-controller"
   repository = "https://aws.github.io/eks-charts"
   chart      = "aws-load-balancer-controller"
-  
+
   namespace = "kube-system"
   set {
     name  = "region"
