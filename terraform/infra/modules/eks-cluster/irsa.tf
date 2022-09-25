@@ -18,35 +18,35 @@ resource "aws_iam_openid_connect_provider" "eks-cluster" {
 }
 
 
-module "iam_assumable_role_s3_access" {
-  source  = "terraform-aws-modules/iam/aws//modules/iam-assumable-role-with-oidc"
-  version = "~> 4.0"
+# module "iam_assumable_role_s3_access" {
+#   source  = "terraform-aws-modules/iam/aws//modules/iam-assumable-role-with-oidc"
+#   version = "~> 4.0"
 
-  create_role                   = true
-  role_name                     = "s3-access"
-  provider_url                  = replace(aws_iam_openid_connect_provider.eks-cluster.url, "https://", "")
-  role_policy_arns              = [aws_iam_policy.s3_access.arn]
-  oidc_fully_qualified_subjects = ["${local.k8s_service_account_namespace}:${local.k8s_service_account_name}"]
-}
-data "aws_iam_policy_document" "s3-access" {
-  version = "2012-10-17"
-  statement {
-    sid = "Fetch"
-    effect = "Allow"
-    actions = [ "s3:GetObject",
-                "s3:PutObject",
-                "s3:ListBucket",
-                "s3:GetBucketLocation"
-    ]
-    resources = [ "arn:aws:s3::::*" ]
-  }
-}
+#   create_role                   = true
+#   role_name                     = "s3-access"
+#   provider_url                  = replace(aws_iam_openid_connect_provider.eks-cluster.url, "https://", "")
+#   role_policy_arns              = [aws_iam_policy.s3_access.arn]
+#   oidc_fully_qualified_subjects = ["${local.k8s_service_account_namespace}:${local.k8s_service_account_name}"]
+# }
+# data "aws_iam_policy_document" "s3-access" {
+#   version = "2012-10-17"
+#   statement {
+#     sid = "Fetch"
+#     effect = "Allow"
+#     actions = [ "s3:GetObject",
+#                 "s3:PutObject",
+#                 "s3:ListBucket",
+#                 "s3:GetBucketLocation"
+#     ]
+#     resources = [ "arn:aws:s3::::*" ]
+#   }
+# }
 
-resource "aws_iam_policy" "s3_access" {
-  name_prefix = "s3_access"
-  description = "s3 access for pods run by argo workflows in ${var.cluster-name}"
-  policy      = data.aws_iam_policy_document.s3-access.json
-}
+# resource "aws_iam_policy" "s3_access" {
+#   name_prefix = "s3_access"
+#   description = "s3 access for pods run by argo workflows in ${var.cluster-name}"
+#   policy      = data.aws_iam_policy_document.s3-access.json
+# }
 
 
 
@@ -61,37 +61,32 @@ resource "aws_iam_policy" "s3_access" {
 # }
 
 
-#  resource "aws_iam_policy" "AWSLoadBalancerControllerIAMPolicy" {
-#   name        = "AWSLoadBalancerControllerIAMPolicy"
-#   description = "Worker policy for the ALB Ingress"
 
-#   policy = file("${path.module}/iam_policy.json")
+
+
+
+# module "load_balancer_controller_irsa_role" {
+#   source = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
+
+#   role_name                              = "load-balancer-controller"
+#   attach_load_balancer_controller_policy = true
+
+#   oidc_providers = {
+#     ex = {
+#       provider_arn               = aws_iam_openid_connect_provider.eks-cluster.arn 
+#       namespace_service_accounts = ["kube-system:aws-load-balancer-controller"]
+#     }
+#   }
+
+#   tags = {"name" : "aws-load-balancer-controller"}
 # }
 
 
 
-module "load_balancer_controller_irsa_role" {
-  source = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
-
-  role_name                              = "load-balancer-controller"
-  attach_load_balancer_controller_policy = true
-
-  oidc_providers = {
-    ex = {
-      provider_arn               = aws_iam_openid_connect_provider.eks-cluster.arn 
-      namespace_service_accounts = ["kube-system:aws-load-balancer-controller"]
-    }
-  }
-
-  tags = {"name" : "aws-load-balancer-controller"}
-}
 
 
 
-
-
-
-
+# unfortunately, it seems this has to be done manually by submitting the service accoutn manifest using kubectl
 # resource "kubernetes_service_account" "eks-service-account" {
 #   metadata {
 #     name = "aws-load-balancer-controller" # This is used as the serviceAccountName in the spec section of the k8 pod manifest
@@ -108,24 +103,33 @@ module "load_balancer_controller_irsa_role" {
 #   automount_service_account_token = true
 # }
 
+resource "aws_iam_policy" "AWSLoadBalancerControllerIAMPolicy" {
+  name        = "AWSLoadBalancerControllerIAMPolicy"
+  description = "Worker policy for the ALB Ingress"
 
-# resource "aws_iam_role" "eks-service-account-role" {
-#   name = "iam-test"
+  policy = file("${path.module}/iam_policy.json")
+}
+resource "aws_iam_role" "eks-service-account-role" {
+  name = "iam-test"
   
-#   assume_role_policy = jsonencode({
-#     Version = "2012-10-17"
-#     Statement = [
-#       {
-#         Action = ["sts:AssumeRoleWithWebIdentity"]
-#         Effect = "Allow"
-#         Sid    = ""
-#         Principal = {
-#           Federated = aws_iam_openid_connect_provider.eks-cluster.arn
-#         }
-#       },
-#     ]
-#   })
-# }
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = ["sts:AssumeRoleWithWebIdentity"]
+        Effect = "Allow"
+        
+        Sid    = ""
+        Principal = {
+          Federated = aws_iam_openid_connect_provider.eks-cluster.arn
+        }
+      },
+    ]
+  })
+}
 
-
+resource "aws_iam_role_policy_attachment" "AWSLoadBalancerControllerIAMPolicy" {
+ policy_arn = aws_iam_policy.AWSLoadBalancerControllerIAMPolicy.arn
+ role    = aws_iam_role.eks-service-account-role.name
+}
 

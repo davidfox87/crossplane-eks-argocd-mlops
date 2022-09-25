@@ -34,10 +34,10 @@ metadata:
   name: service-task-tracker-app
 spec:
   ports:
-    - port: 8080
+    - port: 80
       targetPort: 80
       protocol: TCP
-  type: NodePort
+  type: LoadBalancer
   selector:
     app.kubernetes.io/name: myapp
 ---

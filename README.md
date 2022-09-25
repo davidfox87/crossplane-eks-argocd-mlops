@@ -301,6 +301,46 @@ kubectl describe deployment my-app | grep "Service Account"
 ```
 
 
+## try installing aws-load-balancer-controller manually
+
+kubectl apply -f modules/eks-cluster/load-balancer-controller-service-account.yaml 
+kubectl get serviceaccounts -n kube-system
+
+helm install aws-load-balancer-controller eks/aws-load-balancer-controller \
+  -n kube-system \
+  --set clusterName=my-cluster \
+  --set serviceAccount.create=false \
+  --set serviceAccount.name=load-balancer-controller \
+  --set vpcId=vpc-02692294b4491d4f8 \
+  --set region=us-west-1 \
+  --set image.repository=602401143452.dkr.ecr.us-west-1.amazonaws.com/amazon/aws-load-balancer-controller
+
+
+kubectl get deployment -n kube-system aws-load-balancer-controller
+```
+NAME                           READY   UP-TO-DATE   AVAILABLE   AGE
+aws-load-balancer-controller   2/2     2            2           81s
+```
+
+## Exposing the service
+```
+kubectl -n task-tracker-app patch svc service-task-tracker-app -p '{"spec": {"type": "LoadBalancer"}}'
+
+export loadbalancer=$(kubectl -n task-tracker-app get svc service-task-tracker-app -o jsonpath='{.status.loadBalancer.ingress[*].hostname}')
+
+kubectl -n task-tracker-app describe service service-task-tracker-app | grep Ingress
+```
+
+Hypothetically, we should be able to type that address in the browser to view our app
+
+http://a2a82cd1cb3b941d8b0b8aa2210cd4ef-39901005.us-west-1.elb.amazonaws.com/
+
+Please read up on ingress and load-balancer-controller
+```https://www.eksworkshop.com/beginner/130_exposing-service/exposing/```
+```https://www.eksworkshop.com/beginner/130_exposing-service/ingress/```
+
+
+
 ## installing argocd, argo workflow, argo events
 
 ## create service accounts and assocate them with load-balancer-controller and argo worfklows (for s3 access)

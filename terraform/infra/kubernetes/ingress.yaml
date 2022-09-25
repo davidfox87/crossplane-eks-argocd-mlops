@@ -1,5 +1,5 @@
 # Ingress exposes HTTP and HTTPS routes from outside the cluster to services within the cluster. Traffic routing is controlled by rules defined on the Ingress resource.
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   namespace: task-tracker-app
@@ -12,10 +12,14 @@ spec:
   rules:
     - http:
         paths:
-          - path: /
-            backend:
-            serviceName: service-task-tracker-app
-            servicePort: 80
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: service-task-tracker-app
+              port:
+                number: 80
+
 
             
 
