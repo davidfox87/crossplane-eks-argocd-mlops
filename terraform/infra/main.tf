@@ -30,15 +30,21 @@ provider "helm" {
     host                   = data.aws_eks_cluster.cluster.endpoint
     cluster_ca_certificate = base64decode(data.aws_eks_cluster.cluster.certificate_authority.0.data)
     token                  = data.aws_eks_cluster_auth.cluster.token
+
+    exec {
+      api_version = "client.authentication.k8s.io/v1alpha1"
+      args        = ["eks", "get-token", "--cluster-name", data.aws_eks_cluster.cluster.name]
+      command     = "aws"
+    }
   }
 }
 
 # Installs helm chart for the aws-load-balancer-controller.
 resource "helm_release" "ingress" {
-  name       = "ingress"
-  chart      = "aws-load-balancer-controller"
+  name       = "aws-load-balancer-controller"
   repository = "https://aws.github.io/eks-charts"
-
+  chart      = "aws-load-balancer-controller"
+  
   namespace = "kube-system"
   set {
     name  = "region"
@@ -50,11 +56,11 @@ resource "helm_release" "ingress" {
   }
   set {
     name  = "image.repository"
-    value =  "602401143452.dkr.ecr.region-code.amazonaws.com/amazon/aws-load-balancer-controller"
+    value =  "602401143452.dkr.ecr.us-west-1.amazonaws.com/amazon/aws-load-balancer-controller"
   }
   set {
     name  = "clusterName"
-    value =  var.cluster-name
+    value =  "${var.cluster-name}"
   }
   set {
     name  = "serviceAccount.create"
@@ -63,7 +69,7 @@ resource "helm_release" "ingress" {
 
   set {
     name  = "serviceAccount.name"
-    value =  "aws-load-balancer-controller "
+    value =  "aws-load-balancer-controller"
   }
 }
 
