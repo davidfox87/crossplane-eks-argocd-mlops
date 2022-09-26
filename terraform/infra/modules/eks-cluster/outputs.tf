@@ -37,6 +37,10 @@ output "cluster_id" {
   value = aws_eks_cluster.demo.id
 }
 
+output "cluster_name" {
+  value = aws_eks_cluster.demo.name
+}
+
 output "cluster_endpoint" {
     value = aws_eks_cluster.demo.endpoint
 }
@@ -45,7 +49,7 @@ output "cluster_security_group_id" {
     value = aws_security_group.cluster_security_group_id.id
 }
 
-output "cluster_oidc_issuer_url" {
+output "cluster_oidc_issuer" {
   value = aws_eks_cluster.demo.identity[0].oidc[0].issuer
 }
 

@@ -1,10 +1,12 @@
-locals {
-  k8s_service_account_namespace       = "argo"
-  k8s_service_account_name            = "s3-access"
-  k8s_service_account_namespace2       = "kube-system"
-  k8s_service_account_name2            = "aws-load-balancer-controller"
-}
 
+
+data "aws_eks_cluster" "example" {
+  name = aws_eks_cluster.demo.id
+}
+data "aws_eks_cluster_auth" "example" {
+  name = aws_eks_cluster.demo.id
+}
+# Get information about the TLS certificates securing a host.
 
 # Get information about the TLS certificates securing a host.
 data "tls_certificate" "demo" {
@@ -16,6 +18,66 @@ resource "aws_iam_openid_connect_provider" "eks-cluster" {
   thumbprint_list = [data.tls_certificate.demo.certificates[0].sha1_fingerprint]
   url             = aws_eks_cluster.demo.identity[0].oidc[0].issuer
 }
+
+
+provider "kubernetes" {
+  host                   = data.aws_eks_cluster.example.endpoint
+  cluster_ca_certificate = base64decode(data.aws_eks_cluster.example.certificate_authority[0].data)
+  exec {
+    api_version = "client.authentication.k8s.io/v1beta1"
+    args        = ["eks", "get-token", "--cluster-name", var.cluster-name]
+    command     = "aws"
+  }
+}
+resource "kubernetes_service_account" "eks-service-account" {
+  metadata {
+    name = local.k8s_service_account_name # This is used as the serviceAccountName in the spec section of the k8 pod manifest
+                                          # it means that the pod can assume the IAM role with the S3 policy attached
+    namespace = local.k8s_service_account_namespace
+    labels = {
+      "app.kubernetes.io/component": "controller"
+      "app.kubernetes.io/name": "${local.k8s_service_account_name}"
+    }
+    annotations = {
+      "eks.amazonaws.com/role-arn" = aws_iam_role.eks-service-account-role.arn
+    }
+  }
+}
+
+resource "aws_iam_policy" "AWSLoadBalancerControllerIAMPolicy" {
+  name        = "AWSLoadBalancerControllerIAMPolicy"
+  description = "Worker policy for the ALB Ingress"
+
+  policy = file("${path.module}/iam_policy.json")
+}
+resource "aws_iam_role" "eks-service-account-role" {
+  name = "iam-test"
+  
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = ["sts:AssumeRoleWithWebIdentity"]
+        Effect = "Allow"
+        
+        Sid    = ""
+        Principal = {
+          Federated = aws_iam_openid_connect_provider.eks-cluster.arn
+        }
+      },
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "AWSLoadBalancerControllerIAMPolicy" {
+ policy_arn = aws_iam_policy.AWSLoadBalancerControllerIAMPolicy.arn
+ role    = aws_iam_role.eks-service-account-role.name
+}
+
+
+
+
+
 
 
 # module "iam_assumable_role_s3_access" {
@@ -82,54 +144,4 @@ resource "aws_iam_openid_connect_provider" "eks-cluster" {
 # }
 
 
-
-
-
-
-# unfortunately, it seems this has to be done manually by submitting the service accoutn manifest using kubectl
-# resource "kubernetes_service_account" "eks-service-account" {
-#   metadata {
-#     name = "aws-load-balancer-controller" # This is used as the serviceAccountName in the spec section of the k8 pod manifest
-#                                           # it means that the pod can assume the IAM role with the S3 policy attached
-#     namespace = "kube-system"
-#     labels = {
-#       "app.kubernetes.io/component": "controller"
-#       "app.kubernetes.io/name": "aws-load-balancer-controller"
-#     }
-#     annotations = {
-#       "eks.amazonaws.com/role-arn" = aws_iam_role.eks-service-account-role.arn
-#     }
-#   }
-#   automount_service_account_token = true
-# }
-
-resource "aws_iam_policy" "AWSLoadBalancerControllerIAMPolicy" {
-  name        = "AWSLoadBalancerControllerIAMPolicy"
-  description = "Worker policy for the ALB Ingress"
-
-  policy = file("${path.module}/iam_policy.json")
-}
-resource "aws_iam_role" "eks-service-account-role" {
-  name = "iam-test"
-  
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Action = ["sts:AssumeRoleWithWebIdentity"]
-        Effect = "Allow"
-        
-        Sid    = ""
-        Principal = {
-          Federated = aws_iam_openid_connect_provider.eks-cluster.arn
-        }
-      },
-    ]
-  })
-}
-
-resource "aws_iam_role_policy_attachment" "AWSLoadBalancerControllerIAMPolicy" {
- policy_arn = aws_iam_policy.AWSLoadBalancerControllerIAMPolicy.arn
- role    = aws_iam_role.eks-service-account-role.name
-}
 
