@@ -16,7 +16,7 @@ module "my-eks" {
 }
 
 
-# # get info about the EKS cluster to pass to helm
+# get info about the EKS cluster to pass to helm
 data "aws_eks_cluster" "cluster" {
   name = module.my-eks.cluster_name
 }

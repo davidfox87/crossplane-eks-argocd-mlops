@@ -72,7 +72,6 @@ resource "aws_route_table_association" "rta_subnet_public" {
 # Elastic-IP (eip) for NAT
 resource "aws_eip" "nat_eip" {
   vpc        = true
-  depends_on = [aws_internet_gateway.mygateway]
 }
 
 # NAT gateway sits in first public subnet
