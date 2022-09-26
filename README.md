@@ -35,6 +35,7 @@ Set up the port forward to the service
 
 # Installing Argo workflows
 As of today, v3.4.9 is the latest release tag in github
+```
 kubectl create namespace argo
 kubectl apply -n argo -f https://github.com/argoproj/argo-workflows/releases/download/v3.4.0/install.yaml
 
@@ -49,19 +50,22 @@ kubectl patch deployment \
 ]}]'
 
 kubectl patch svc argo-server -n argo -p '{"spec": {"type": "NodePort"}}'
+```
+
 
 Set up the port forward to the service
-```kubectl -n argo port-forward deployment/argo-server 2746:2746```
+```
+kubectl -n argo port-forward deployment/argo-server 2746:2746
 https://localhost:2746
-
+```
 ## create a workflow template 
-argo template create -n argo local/argo-workflows/workflow1-template.yaml 
+```argo template create -n argo local/argo-workflows/workflow1-template.yaml ```
 
 ## trigger a workflow using that template
-argo submit -n argo local/argo-workflows/workflow1.yaml 
+```argo submit -n argo local/argo-workflows/workflow1.yaml ```
 
 ## multistep workflow that passes outputs into inputs
-To run Argo workflows that use artifacts, you must configure and use an artifact repository. Argo supports any S3 compatible artifact repository such as AWS, GCS and MinIO. 
+To run Argo workflows that use artifacts, you must configure and use an artifact repository. Argo supports any S3 compatible artifact repository such as  MinIO. 
 ```
 helm repo add minio https://helm.min.io/ # official minio Helm charts
 helm repo update
@@ -73,11 +77,13 @@ To access Minio from localhost, run the below commands:
   1. ```export POD_NAME=$(kubectl get pods --namespace default -l "release=argo-artifacts" -o jsonpath="{.items[0].metadata.name}")```
   2. ```kubectl port-forward svc/argo-artifacts 9001:9000``` or ```kubectl port-forward po/$POD_NAME 9001:9000```
 
-http://localhost:9001 in the terminal!!!!
+```http://localhost:9001``` in the terminal!!!!
 
+## Get the decoded username and password for minio
+```
 ACCESS_KEY=$(kubectl get secret argo-artifacts -o jsonpath="{.data.accesskey}" | base64 --decode)
 SECRET_KEY=$(kubectl get secret argo-artifacts -o jsonpath="{.data.secretkey}" | base64 --decode)
-
+```
 Log in to minio and create the "my-bucket" bucket
 
 modify the configmap in the argo namespace, which will reference the artifact repository in the default namespace
@@ -115,7 +121,7 @@ In order for Argo to use your artifact repository, you can configure it as the d
 get a shell to running container
 ```kubectl exec --stdin --tty argo-artifacts-7785b88865-llzh7 -- /bin/bash```
 
-kubectl apply -f local/argo-workflows/default-artifact-repository.yaml -n argo
+```kubectl apply -f local/argo-workflows/default-artifact-repository.yaml -n argo```
 
 ## how to do git clone of a repo within workflow
 in the inputs section do...
@@ -165,32 +171,17 @@ K8s ingress
 https://kubernetes.io/docs/concepts/services-networking/ingress/
 An API object that manages external access to the services in a cluster, typically HTTP.
 
-In order for the Ingress resource to work, the cluster must have an ingress controller running.
+In order for the Ingress resource to work, the cluster must have an ingress controller running and the outside world must be able to access the ingress
 https://docs.nginx.com/nginx-ingress-controller/installation/installation-with-helm/
 
 
-```
-helm repo add nginx-stable https://helm.nginx.com/stable
-helm repo update
-helm install my-release nginx-stable/nginx-ingress
-```
-or add ingress add-on to minikube
-minikube addons enable ingress
 
 
-kubectl apply -f local/argo-events/event-sources.yaml 
-
-
-
-
-
-
-
-# Installing an AWS EKS cluster and an autoscaling Node group
+# Deploy to the AWS EKS using Terraform! 
 
 
 - EKS Cluster: AWS managed Kubernetes cluster of master servers
-- EKS Node Group and optionally update an Auto Scaling Group of Kubernetes worker nodes compatible with EKS.
+- EKS Node Group
 - Associated VPC, Internet Gateway, Security Groups, and Subnets: Operator managed networking resources for the EKS Cluster and worker node instances
 - Associated IAM Roles and Policies: Operator managed access resources for EKS and worker node instances
 
@@ -225,87 +216,15 @@ Verify the aws-load-balancer-controller is installed
 kubectl get deployment -n kube-system aws-load-balancer-controller
 ```
 
-# IAM role for service account with OIDC
-IAM roles for service accounts provide the ability to manage credentials for your applications, similar to the way that Amazon EC2 instance profiles provide credentials to Amazon EC2 instances. Instead of creating and distributing your AWS credentials to the containers or using the Amazon EC2 instance’s role, you associate an IAM role with a Kubernetes service account and configure your pods to use the service account.
-
-With IAM roles for service accounts on Amazon EKS clusters, you can associate an IAM role with a Kubernetes service account. This module creates a single IAM role which can be assumed by trusted resources using OpenID Connect federated users. 
-
-Ensure the iam-test is created and eks-iam-test pod is running:
-```
-kubectl apply -f service-account.yaml
-```
-
-Successfully created service account, you can deploy test application. This will run a pod to try to describe s3 buckets on your AWS account using aws-cli.
-
-```
-kubectl apply -f list-s3.yaml
-```
-
-Looking at the logs for the pod:
-```
-kubectl logs aws-cli-mp5kx
-2022-08-28 00:16:21 churn-dataset
-2022-08-24 16:11:05 elasticbeanstalk-eu-west-2-880572800141
-2022-08-24 16:12:15 elasticbeanstalk-us-east-2-880572800141
-2022-08-26 01:01:03 mlflow-artifacts-30cccc8
-2022-09-17 22:46:49 my-test-k8s-bucket
-```
-
-Success! 
-
-View the ARN of the IAM role that the pod is using
-```
-kubectl describe pod aws-cli-mp5kx | grep AWS_ROLE_ARN:
-```
-# Associating the service-account with the depolyment
-```
-cat >my-deployment.yaml <<EOF
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: my-app
-spec:
-  selector:
-    matchLabels:
-      app: my-app
-  template:
-    metadata:
-      labels:
-        app: my-app
-    spec:
-      serviceAccountName: my-service-account
-      containers:
-      - name: my-app
-        image: public.ecr.aws/nginx/nginx:1.21
-EOF
-```
-
-Deploy the manifest to the cluster
-```
-kubectl apply -f my-deployment.yaml
-```
-
-Check the pods were deployed 
-```
-kubectl get pods | grep my-app
-```
-
-View the ARN of the IAM role that the pod is using
-```
-kubectl describe pod my-app-6f4dfff6cb-76cv9 | grep AWS_ROLE_ARN:
-```
-
-Confirm the deployment is using the service-account
-```
-kubectl describe deployment my-app | grep "Service Account"
-```
-
-
 ## try installing aws-load-balancer-controller manually
 
+create service accounts and assocate them with load-balancer-controller and argo worfklows (for s3 access)
+```
 kubectl apply -f modules/eks-cluster/load-balancer-controller-service-account.yaml 
 kubectl get serviceaccounts -n kube-system
+```
 
+```
 helm install aws-load-balancer-controller eks/aws-load-balancer-controller \
   -n kube-system \
   --set clusterName=my-cluster \
@@ -317,13 +236,16 @@ helm install aws-load-balancer-controller eks/aws-load-balancer-controller \
 
 
 kubectl get deployment -n kube-system aws-load-balancer-controller
-```
+
 NAME                           READY   UP-TO-DATE   AVAILABLE   AGE
 aws-load-balancer-controller   2/2     2            2           81s
 ```
 
-## Exposing the service
+## deploy and expose the service
 ```
+kubectl apply -f terraform/infra/kubernetes/ingress.yaml
+kubectl apply -f terraform/infra/kubernetes/test-deployment.yaml
+
 kubectl -n task-tracker-app patch svc service-task-tracker-app -p '{"spec": {"type": "LoadBalancer"}}'
 
 export loadbalancer=$(kubectl -n task-tracker-app get svc service-task-tracker-app -o jsonpath='{.status.loadBalancer.ingress[*].hostname}')
@@ -343,7 +265,6 @@ Please read up on ingress and load-balancer-controller
 
 ## installing argocd, argo workflow, argo events
 
-## create service accounts and assocate them with load-balancer-controller and argo worfklows (for s3 access)
 
 
 
