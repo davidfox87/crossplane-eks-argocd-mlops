@@ -83,10 +83,7 @@ resource "aws_nat_gateway" "natgw" {
     Name        = "nat gw"
     Environment = "${var.environment}"
   }
-
-  depends_on = [aws_internet_gateway.mygateway]
 }
-
 
 resource "aws_route_table" "my_nat_table" {
   vpc_id = aws_vpc.vpc.id

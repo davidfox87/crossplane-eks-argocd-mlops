@@ -88,102 +88,43 @@ resource "aws_eks_addon" "addons" {
 
 
 
+# The Terraform Helm provider contains the helm_release resource that deploys 
+# a Helm chart to a Kubernetes cluster. The helm_release resource specifies the
+# chart name and the configuration variables for your deployment.
 
+# Installs helm chart for the aws-load-balancer-controller.
+resource "helm_release" "ingress" {
 
+  name       = "aws-load-balancer-controller"
+  repository = "https://aws.github.io/eks-charts"
+  chart      = "aws-load-balancer-controller"
 
-# module "eks" {
-#   source  = "terraform-aws-modules/eks/aws"
-#   version = "18.29.0"
+  namespace = "kube-system"
+  set {
+    name  = "region"
+    value = "us-west-1"
+  }
+  set {
+    name  = "vpcId"
+    value =  "${var.vpc_id}"
+  }
+  set {
+    name  = "image.repository"
+    value =  "602401143452.dkr.ecr.us-west-1.amazonaws.com/amazon/aws-load-balancer-controller"
+  }
+  set {
+    name  = "clusterName"
+    value =  "${var.cluster-name}"
+  }
+  set {
+    name  = "serviceAccount.create"
+    value =  "false"
+  }
 
-
-#   cluster_name                    = local.name
-#   cluster_endpoint_private_access = true
-#   cluster_endpoint_public_access  = true
-
-#   cluster_addons = {
-#     coredns = {
-#       resolve_conflicts = "OVERWRITE"
-#     }
-#     kube-proxy = {}
-#     vpc-cni = {
-#       resolve_conflicts = "OVERWRITE"
-#     }
-#   }
-
-#   # Encryption key
-#   create_kms_key = true
-#   cluster_encryption_config = [{
-#     resources = ["secrets"]
-#   }]
-#   kms_key_deletion_window_in_days = 7
-#   enable_kms_key_rotation         = true
-
-#   vpc_id                   = module.vpc.vpc_id
-#   subnet_ids               = module.vpc.private_subnets
-#   control_plane_subnet_ids = module.vpc.intra_subnets
-
-#   # Extend cluster security group rules
-#   cluster_security_group_additional_rules = {
-#     egress_nodes_ephemeral_ports_tcp = {
-#       description                = "To node 1025-65535"
-#       protocol                   = "tcp"
-#       from_port                  = 1025
-#       to_port                    = 65535
-#       type                       = "egress"
-#       source_node_security_group = true
-#     }
-#   }
-
-#   # Extend node-to-node security group rules
-#   node_security_group_ntp_ipv4_cidr_block = ["169.254.169.123/32"]
-#   node_security_group_additional_rules = {
-#     ingress_self_all = {
-#       description = "Node to node all ports/protocols"
-#       protocol    = "-1"
-#       from_port   = 0
-#       to_port     = 0
-#       type        = "ingress"
-#       self        = true
-#     }
-#     egress_all = {
-#       description      = "Node all egress"
-#       protocol         = "-1"
-#       from_port        = 0
-#       to_port          = 0
-#       type             = "egress"
-#       cidr_blocks      = ["0.0.0.0/0"]
-#       ipv6_cidr_blocks = ["::/0"]
-#     }
-#   }
-
-#   # Self Managed Node Group(s)
-#   self_managed_node_group_defaults = {
-#     vpc_security_group_ids       = [aws_security_group.additional.id]
-#     iam_role_additional_policies = ["arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"]
-#   }
-
-#   self_managed_node_groups = {
-#     spot = {
-#       instance_type = "m5.large"
-#       instance_market_options = {
-#         market_type = "spot"
-#       }
-
-#       pre_bootstrap_user_data = <<-EOT
-#       echo "foo"
-#       export FOO=bar
-#       EOT
-
-#       bootstrap_extra_args = "--kubelet-extra-args '--node-labels=node.kubernetes.io/lifecycle=spot'"
-
-#       post_bootstrap_user_data = <<-EOT
-#       cd /tmp
-#       sudo yum install -y https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/linux_amd64/amazon-ssm-agent.rpm
-#       sudo systemctl enable amazon-ssm-agent
-#       sudo systemctl start amazon-ssm-agent
-#       EOT
-#     }
-#   }
-
+  set {
+    name  = "serviceAccount.name"
+    value =  "aws-load-balancer-controller"
+  }
+}
 
 
