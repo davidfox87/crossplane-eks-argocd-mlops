@@ -2,21 +2,21 @@ apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
   name: task-tracker-app
-  labels:
-    app: task-tracker-app
+  namespace: istio-system
 spec:
-  gateways:
-  - istio-system/default-gateway
   hosts:
-  - task-tracker-app.local
+  - servicemesh.demo
+  gateways:
+  - default-gateway
   http:
-  - name: primary
+  - match:
+    - uri:
+        exact: /task-tracker-app-ui
     route:
     - destination:
-        host: task-tracker-app # target kubernetes service
+        host: task-tracker-app-ui
         port:
           number: 80
-      weight: 100
 
 ---
 
@@ -34,4 +34,5 @@ spec:
       name: http
       protocol: HTTP
     hosts:
-     - "*" 
+     - "*"
+
