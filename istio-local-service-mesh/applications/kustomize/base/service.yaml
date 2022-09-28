@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: task-tracker-app-ui
+  labels:
+    app: task-tracker-app-ui
+spec:
+  type: ClusterIP
+  selector:
+    app: task-tracker-app-ui
+  ports:
+    - port: 80
+      targetPort: 80
+      protocol: TCP
+      name: http

@@ -220,19 +220,8 @@ kubectl get deployment -n kube-system aws-load-balancer-controller
 
 create service accounts and assocate them with load-balancer-controller and argo worfklows (for s3 access)
 ```
-kubectl apply -f modules/eks-cluster/load-balancer-controller-service-account.yaml 
 kubectl get serviceaccounts -n kube-system
 ```
-
-```
-helm install aws-load-balancer-controller eks/aws-load-balancer-controller \
-  -n kube-system \
-  --set clusterName=my-cluster \
-  --set serviceAccount.create=false \
-  --set serviceAccount.name=load-balancer-controller \
-  --set vpcId=vpc-02692294b4491d4f8 \
-  --set region=us-west-1 \
-  --set image.repository=602401143452.dkr.ecr.us-west-1.amazonaws.com/amazon/aws-load-balancer-controller
 
 
 kubectl get deployment -n kube-system aws-load-balancer-controller
@@ -262,10 +251,20 @@ Please read up on ingress and load-balancer-controller
 ```https://www.eksworkshop.com/beginner/130_exposing-service/ingress/```
 
 
+## remember to delete the aws-load-balancer-controller
+kubectl delete deployment -n kube-system aws-load-balancer-controller
+
 
 ## installing argocd, argo workflow, argo events
 
+kubectl create namespace argocd
+kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
 
+
+kubectl patch svc argocd-server -n argocd -p '{"spec": {"type": "LoadBalancer"}}'
+
+
+kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d; echo
 
 
 

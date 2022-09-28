@@ -62,3 +62,17 @@ resource "aws_iam_role" "workernodes" {
   role    = aws_iam_role.workernodes.name
  }
 
+
+
+resource "aws_iam_policy" "s3-access" {
+  name        = "S3AccessWorkerNode"
+  description = "Worker policy for the ALB Ingress"
+
+  policy = file("${path.module}/iam_policy.json")
+}
+
+ resource "aws_iam_role_policy_attachment" "AmazonS3AccessWorkerNode" {
+  policy_arn = aws_iam_policy.s3-access.arn
+  role    = aws_iam_role.workernodes.name
+ }
+

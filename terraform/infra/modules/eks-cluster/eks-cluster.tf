@@ -18,7 +18,7 @@ resource "aws_eks_node_group" "example" {
   node_group_name = "example-nodes"
   node_role_arn   = aws_iam_role.workernodes.arn
   subnet_ids      = [var.subnets[2], var.subnets[3]] # private subnets
-
+  
   instance_types = ["t3.small"]#["m5.xlarge"]
   scaling_config {
     desired_size = 2#5
@@ -86,7 +86,17 @@ resource "aws_eks_addon" "addons" {
 
 
 
-
+provider "helm" {
+    kubernetes {
+    host                   = data.aws_eks_cluster.example.endpoint
+    cluster_ca_certificate = base64decode(data.aws_eks_cluster.example.certificate_authority[0].data)
+    exec {
+      api_version = "client.authentication.k8s.io/v1beta1"
+      args        = ["eks", "get-token", "--cluster-name", var.cluster-name]
+      command     = "aws"
+    }
+  }
+}
 
 # The Terraform Helm provider contains the helm_release resource that deploys 
 # a Helm chart to a Kubernetes cluster. The helm_release resource specifies the
@@ -127,4 +137,7 @@ resource "helm_release" "ingress" {
   }
 }
 
-
+locals {
+  namespaces = ["istio-ingress"]
+}
+# argocd will deploy into this namespace

@@ -14,3 +14,5 @@ module "my-eks" {
     subnets = concat(module.network.vpc_public_subnets,  module.network.vpc_private_subnets)
 
 }
+
+
