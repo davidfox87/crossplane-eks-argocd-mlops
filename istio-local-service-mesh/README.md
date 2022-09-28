@@ -61,3 +61,7 @@ kubectl label namespace/default istio-injection=enabled
 kubectl delete pods --all
 
 kubectl -n ingress-nginx get deploy nginx-ingress-controller  -o yaml | istioctl kube-inject -f - | kubectl apply -f -
+
+
+# delete cluster
+```kind delete cluster --name istio```
