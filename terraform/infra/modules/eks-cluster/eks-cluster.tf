@@ -19,11 +19,17 @@ resource "aws_eks_node_group" "example" {
   node_role_arn   = aws_iam_role.workernodes.arn
   subnet_ids      = [var.subnets[2], var.subnets[3]] # private subnets
   
-  instance_types = ["t3.small"]#["m5.xlarge"]
+  # Maximum number of pods – Since each pod is assigned its own IP address, 
+  # the number of IP addresses supported by an instance type is a factor in 
+  # determining the number of pods that can run on the instance. To manually
+  # determine how many pods an instance type supports, see Amazon EKS 
+  # recommended maximum pods for each Amazon EC2 instance type.
+
+  instance_types = ["m5.large"]
   scaling_config {
-    desired_size = 2#5
-    max_size     = 5#10
-    min_size     = 2# 5
+    desired_size = 5
+    max_size     = 10
+    min_size     = 5
   }
 
   # launch_template {
@@ -136,8 +142,3 @@ resource "helm_release" "ingress" {
     value =  "aws-load-balancer-controller"
   }
 }
-
-locals {
-  namespaces = ["istio-ingress"]
-}
-# argocd will deploy into this namespace

@@ -12,7 +12,7 @@ kubectl create namespace argocd
 kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
 
 
-kubectl patch svc argocd-server -n argocd -p '{"spec": {"type": "NodePort"}}'
+kubectl patch svc argo-server -n argo -p '{"spec": {"type": "NodePort"}}'
 kubectl port-forward svc/argocd-server -n argocd 31719:443
 
 The API server can then be accessed using https://localhost:31719
@@ -111,7 +111,7 @@ data:
 
 ## submit argo artifact-passing workflow to argo namespace
 Go over to http://localhost:9001 and check the bucket for the new file
-``` argo submit -n argo local/argo-workflows/artifact-passing.yaml --watch```
+``` argo submit -n argo argo-workflows/artifact-passing.yaml --watch```
 
 
 ### Configure the Default Artifact Repository¶
@@ -261,8 +261,8 @@ kubectl create namespace argocd
 kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
 
 
-kubectl patch svc argocd-server -n argocd -p '{"spec": {"type": "LoadBalancer"}}'
-
+kubectl get secret argocd-initial-admin-secret -n argocd
+echo aGdhbGU0ZGhQVVIzMjN1WQ== | base64 --decode
 
 kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d; echo
 

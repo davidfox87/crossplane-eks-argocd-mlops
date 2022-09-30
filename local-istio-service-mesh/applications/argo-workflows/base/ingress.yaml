@@ -1,0 +1,20 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: argo-server
+spec:
+  tls:
+    - secretName: 172-17-0-2-nip-io-tls
+      hosts:
+        - '*.172.17.0.2.nip.io'
+  rules:
+    - host: minikube.172.17.0.2.nip.io
+      http:
+        paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: argo-server
+              port:
+                number: 2746
