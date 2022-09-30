@@ -96,30 +96,5 @@ Checkout the awesome Grafana and Kiali dashboards! Try running the [google micro
 kubectl patch svc argo-server -n argo -p '{"spec": {"type": "NodePort"}}'
 
 
-cat <<EOF | kubectl apply -f -
-apiVersion: v1
-data:
-  accesskey: V2hxWmhrZGpvVElnR2JEd2NWc2Y=
-  secretkey: MHJtdVpIMDJVdTRTUjkyRW1Nc0NJdElkNG5aaGRMOGFDNWtGRGNHaA==
-kind: Secret
-metadata:
-  namespace: argo
-  annotations:
-    meta.helm.sh/release-name: argo-artifacts
-    meta.helm.sh/release-namespace: default
-  creationTimestamp: "2022-09-30T04:01:11Z"
-  labels:
-    app: minio
-    app.kubernetes.io/managed-by: Helm
-    chart: minio-8.0.10
-    heritage: Helm
-    release: argo-artifacts
-  name: argo-artifacts
-  namespace: default
-  resourceVersion: "5553"
-  uid: eea35f0b-bd69-4610-8ee8-06845700952b
-type: Opaque
-EOF
 
-kubectl get secret argo-artifacts --namespace=default -o yaml | kubectl apply --namespace=argo -f -
 kubectl get secret argo-artifacts --namespace=default -o yaml | grep -v '^\s*namespace:\s' | kubectl apply --namespace=argo -f -

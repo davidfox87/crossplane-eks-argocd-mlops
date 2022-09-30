@@ -4,6 +4,7 @@ metadata:
   generateName: output-artifact-s3-
 spec:
   entrypoint: whalesay
+  #serviceAccountName: workflow
   templates:
     - name: whalesay
       container:
