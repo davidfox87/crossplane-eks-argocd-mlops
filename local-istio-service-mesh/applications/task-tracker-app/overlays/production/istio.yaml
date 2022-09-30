@@ -5,7 +5,7 @@ metadata:
   namespace: istio-system
 spec:
   hosts:
-  - servicemesh.demo
+  - minikube.172.17.0.2.nip.io
   gateways:
   - default-gateway
   http:

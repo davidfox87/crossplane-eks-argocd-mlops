@@ -3,4 +3,10 @@ kind: Kustomization
 resources:
 - ../../base
 - istio.yaml
-namespace: task-tracker-app
+
+namespace: production
+
+images:
+- name: foxy7887/task-tracker-app
+  newName: foxy7887/task-tracker-app
+  newTag: v2
