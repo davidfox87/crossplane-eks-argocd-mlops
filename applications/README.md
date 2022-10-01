@@ -76,6 +76,7 @@ see pod nginx.conf for nginx ingress controller (this will allow us to debug)
 Do ```minikube service list``` to get the address of the istio-ingressgateway url:port
 
 you will see the following
+
 |---------------|------------------------------------|-------------------|-------------------------|
 |   NAMESPACE   |                NAME                |    TARGET PORT    |           URL           |
 |---------------|------------------------------------|-------------------|-------------------------|
