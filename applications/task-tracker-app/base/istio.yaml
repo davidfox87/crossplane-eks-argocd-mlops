@@ -1,3 +1,21 @@
+
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: default-gateway
+spec:
+  selector:
+    istio: ingressgateway # This is the selector for the istio ingress gateway
+  servers:
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+    - "*"
+
+---
+
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
@@ -16,20 +34,3 @@ spec:
         host: task-tracker-app-ui.default.svc.cluster.local # virtual service must be in the same namespace as service or explicitly specify namespace
         port:
           number: 9080
-
----
-
-apiVersion: networking.istio.io/v1alpha3
-kind: Gateway
-metadata:
-  name: default-gateway
-spec:
-  selector:
-    istio: ingressgateway # use Istio default gateway implementation
-  servers:
-  - port:
-      number: 80
-      name: http
-      protocol: HTTP
-    hosts:
-    - "*"

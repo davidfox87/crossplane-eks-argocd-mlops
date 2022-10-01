@@ -8,5 +8,10 @@
                 "alb.ingress.kubernetes.io/healthcheck-path": "/healthz/ready",
                 "alb.ingress.kubernetes.io/healthcheck-port": "traffic-port"
       }
+    },
+    {
+      "op": "replace",
+      "path": "/spec/rules/0/host",
+      "value": "prod.my-app.com"
     }
   ]
