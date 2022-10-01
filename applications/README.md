@@ -77,7 +77,7 @@ Do ```minikube service list``` to get the address of the istio-ingressgateway ur
 
 you will see the following
 
-|---------------|------------------------------------|-------------------|-------------------------|
+
 |   NAMESPACE   |                NAME                |    TARGET PORT    |           URL           |
 |---------------|------------------------------------|-------------------|-------------------------|
 | default       | kubernetes                         | No node port      |
