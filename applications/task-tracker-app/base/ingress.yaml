@@ -3,14 +3,21 @@ kind: Ingress
 metadata:
   name: task-tracker-app-ui
 spec:
+  ingressClassName: nginx
+  tls:
   rules:
-    - host: minikube.172.17.0.2.nip.io
-      http:
-        paths:
-        - path: /
-          pathType: Prefix
-          backend:
-            service:
-              name: task-tracker-app-ui
-              port:
-                number: 80
+  - host: demo.local.me
+    http:
+      paths:
+      - path: /
+        pathType: Exact
+        backend:
+          service:
+            name: task-tracker-app-ui
+            port:
+              number: 80
+        
+
+
+
+

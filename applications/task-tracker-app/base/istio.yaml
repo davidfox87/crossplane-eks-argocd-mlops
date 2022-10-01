@@ -1,22 +1,21 @@
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
-  name: task-tracker-app
-  namespace: istio-system
+  name: task-tracker-app-virtualservice
 spec:
   hosts:
-  - minikube.172.17.0.2.nip.io
+  - '*'
   gateways:
   - default-gateway
   http:
   - match:
     - uri:
-        exact: /task-tracker-app-ui
+        prefix: /task-tracker-app-ui
     route:
     - destination:
-        host: task-tracker-app-ui
+        host: task-tracker-app-ui.default.svc.cluster.local 
         port:
-          number: 80
+          number: 9080
 
 ---
 
@@ -24,15 +23,13 @@ apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
 metadata:
   name: default-gateway
-  namespace: istio-system
 spec:
   selector:
-    istio: ingressgateway
+    istio: ingressgateway # use Istio default gateway implementation
   servers:
   - port:
       number: 80
       name: http
       protocol: HTTP
     hosts:
-     - "*"
-
+    - "*"

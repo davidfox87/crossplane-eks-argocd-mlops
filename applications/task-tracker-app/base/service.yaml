@@ -4,12 +4,12 @@ metadata:
   name: task-tracker-app-ui
   labels:
     app: task-tracker-app-ui
+    service: task-tracker-app-ui
 spec:
-  type: ClusterIP
+  type: NodePort
+  ports:
+  - name: http
+    port: 9080
+    targetPort: 80
   selector:
     app: task-tracker-app-ui
-  ports:
-    - port: 80
-      targetPort: 80
-      protocol: TCP
-      name: http

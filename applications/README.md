@@ -11,7 +11,17 @@ minikube addons enable ingress
 
 # ingress controller
 ```
-kubectl apply -f ingress-nginx/
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.3.1/deploy/static/provider/cloud/deploy.yaml
+
+kubectl wait --namespace ingress-nginx \
+  --for=condition=ready pod \
+  --selector=app.kubernetes.io/component=controller \
+  --timeout=120s
+
+  kubectl get pods --namespace=ingress-nginx
+
+
+
 ```
 # applications
 ```
@@ -98,3 +108,8 @@ kubectl patch svc argo-server -n argo -p '{"spec": {"type": "NodePort"}}'
 
 
 kubectl get secret argo-artifacts --namespace=default -o yaml | grep -v '^\s*namespace:\s' | kubectl apply --namespace=argo -f -
+
+
+
+
+curl -v -H "host: task-tracker-app-ui.default.svc.cluster.local " 10.100.155.9/
