@@ -13,7 +13,7 @@ spec:
         prefix: /task-tracker-app-ui
     route:
     - destination:
-        host: task-tracker-app-ui.default.svc.cluster.local 
+        host: task-tracker-app-ui.default.svc.cluster.local # virtual service must be in the same namespace as service or explicitly specify namespace
         port:
           number: 9080
 

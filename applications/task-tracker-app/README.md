@@ -14,11 +14,7 @@ images:
 https://istio.io/latest/docs/tasks/traffic-management/ingress/ingress-control/#determining-the-ingress-ip-and-ports
 
 
-kubectl patch svc istio-ingressgateway -n istio-system --type='json' -p '[{"op":"replace","path":"/spec/type","value":"NodePort"}]'
-curl -s -I -HHost:demo.local.me "http://$INGRESS_HOST:$INGRESS_PORT/task-tracker-app-ui/"
 
-
-kubectl get pod -l app=task-tracker-app-ui -o jsonpath='{.items[0].metadata.name}')
 
 
 
@@ -26,4 +22,13 @@ kubectl get pod -l app=task-tracker-app-ui -o jsonpath='{.items[0].metadata.name
 istioctl install --set profile=demo -y
 kubectl label namespace prod istio-injection=enabled
 
+minikube tunnel
+export INGRESS_HOST=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+export INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.spec.ports[?(@.name=="http2")].port}')
+export SECURE_INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.spec.ports[?(@.name=="https")].port}')
+export GATEWAY_URL=$INGRESS_HOST:$INGRESS_PORT
+
+echo "http://$GATEWAY_URL/productpage"
+
+curl -s -I -HHost:task-tracker-app-ui.default.svc.cluster.local "http://$GATEWAY_URL"
 echo "http://$GATEWAY_URL/task-tracker-app"

@@ -103,13 +103,12 @@ Checkout the awesome Grafana and Kiali dashboards! Try running the [google micro
 
 
 
-kubectl patch svc argo-server -n argo -p '{"spec": {"type": "NodePort"}}'
-
-
 
 kubectl get secret argo-artifacts --namespace=default -o yaml | grep -v '^\s*namespace:\s' | kubectl apply --namespace=argo -f -
 
 
 
+kubectl patch svc istio-ingressgateway -n istio-system -p '{"spec": {"type": "NodePort"}}'
 
-curl -v -H "host: task-tracker-app-ui.default.svc.cluster.local " 10.100.155.9/
+
+curl -v -H "host: task-tracker-app-ui.default.svc.cluster.local " 10.98.95.225/
