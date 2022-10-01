@@ -9,8 +9,9 @@ metadata:
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
     ingress.kubernetes.io/rewrite-target: /
     nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/service-upstream: "true"
+    nginx.ingress.kubernetes.io/upstream-vhost: "istio-ingressgateway.istio-system.svc.cluster.local"
 spec:
-  ingressClassName: nginx
   tls:
   rules:
   - http:
@@ -22,7 +23,6 @@ spec:
             name: istio-ingressgateway
             port:
               number: 80
-        
 
 
 

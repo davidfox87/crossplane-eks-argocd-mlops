@@ -6,7 +6,8 @@
       "value": { "kubernetes.io/ingress.class": "alb",
                 "alb.ingress.kubernetes.io/scheme": "internet-facing",
                 "alb.ingress.kubernetes.io/healthcheck-path": "/healthz/ready",
-                "alb.ingress.kubernetes.io/healthcheck-port": "traffic-port"
+                "alb.ingress.kubernetes.io/healthcheck-port": "traffic-port",
+                "alb.ingress.kubernetes.io/backend-protocol": "HTTP" 
       }
     },
     {

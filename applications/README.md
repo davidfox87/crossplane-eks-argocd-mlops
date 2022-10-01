@@ -8,6 +8,7 @@ docker network create --subnet 192.168.57.0/16 --driver bridge minikube
 minikube start
 minikube addons enable ingress
 ```
+or
 
 # ingress controller
 ```
@@ -20,50 +21,70 @@ kubectl wait --namespace ingress-nginx \
 
   kubectl get pods --namespace=ingress-nginx
 
-
-
-```
-# applications
-```
-cd applications
-kustomize build argo-workflows/base | kubectl apply -f -
-
-```
-cd applications/kustomize/overlays/production
-kustomize build .
 ```
 
-Confirm application and nginx-ingress controller are running
-```
-kubectl get pods -n task-tracker-app
-kubectl get pods -n ingress-nginx
-```
-
-
-create a fake DNS name servicemesh.demo by adding an entry in our /etc/hosts file
-
-```
-127.0.0.1       servicemesh.demo
-```
-
-
+# follow this 
+https://aws.amazon.com/blogs/containers/secure-end-to-end-traffic-on-amazon-eks-using-tls-certificate-in-acm-alb-and-istio/
 
 ## install Istio
+Note that argocd will take care of installing istio-related helm charts in production cluster
 ```
 curl -L https://istio.io/downloadIstio | sh -
 cd istio-1.15.1
 export PATH=$PWD/bin:$PATH
-istioctl install --set profile=default -y```
+istioctl install \
+--set profile=demo \
+--set values.gateways.istio-ingressgateway.type=NodePort
 kubectl label namespace default istio-injection=enabled
 ```
 
+Verify Istio installation is properly enabled by using ```kubectl get po -n istio-system```
 
-To inject the istio sidecar proxy into all pods running in a given namespace
-add the label to the namespace
+# applications
+Install our application into the default namespace - which has been labeled with istio-injection=enabled - using kustomize
 ```
-labels: 
-    istio-injection: enabled
+cd applications
+kustomize build task-tracker-app/base | kubectl apply -f -
 ```
+
+Confirm application and nginx-ingress controller are running and there are 2 containers running in each pod (because we have the istio proxy sidecar)
+```
+kubectl get pods -o wide
+kubectl get pods -n ingress-nginx
+
+kubectl get svc -n ingress-nginx
+```
+Once Ingress is installed, it will provision AWS Application Load Balancer, bind it with the ACM certificate for HTTPS traffic and forward traffic to Istio resources inside the EKS cluster. You can get a generated manifest of Ingress resource using
+```
+kubectl get ingress istio-ingressgateway-alb  -o yaml
+```
+Note the values corresponding to ```alb.ingress.kubernetes.io/backend-protocol``` and ```host``` fields
+Get ALB load balancer DNS and make a note of it.
+```
+echo $(kubectl get ingress istio-ingressgateway-alb  \
+-o jsonpath="{.status.loadBalancer.ingress[*].hostname}")
+```
+
+We should get an output that looks like this:
+```k8s-istiosys-xxxxxxxxxxxxxxxxxxx.us-east-1.elb.amazonaws.com```
+
+
+## in local mode
+see pod nginx.conf for nginx ingress controller
+```kubectl exec -it -n ingress-nginx ingress-nginx-controller-7989d7f7f4-mjnch -- cat /etc/nginx/nginx.conf```
+
+create a fake DNS name servicemesh.demo by adding an entry in our /etc/hosts file
+Use the IP address of our ingress
+```
+172.17.0.2       task-tracker-app-ui.default.svc.cluster.local
+```
+
+# generate self-signed TLS certificates 
+Generate self-signed certificates. We will use a key/pair to encrypt traffic from ALB to Istio Gateway.
+
+
+
+
 
 Kill all pods that have not been given this istio injection label so K8s will restart with the sidecar
 ```kubectl delete --all pods -n task-tracker-app```
@@ -89,7 +110,7 @@ kubectl label namespace/default istio-injection=enabled
 # restart all pods to get sidecar injected
 kubectl delete pods --all
 
-kubectl -n ingress-nginx get deploy nginx-ingress-controller  -o yaml | istioctl kube-inject -f - | kubectl apply -f -
+kubectl -n ingress-nginx get deploy ingress-nginx-controller  -o yaml | istioctl kube-inject -f - | kubectl apply -f -
 
 
 # delete cluster

@@ -3,6 +3,7 @@ apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
 metadata:
   name: default-gateway
+  namespace: istio-system
 spec:
   selector:
     istio: ingressgateway # This is the selector for the istio ingress gateway
