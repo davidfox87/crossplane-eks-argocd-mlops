@@ -70,14 +70,34 @@ We should get an output that looks like this:
 
 
 ## in local mode
-see pod nginx.conf for nginx ingress controller
+see pod nginx.conf for nginx ingress controller (this will allow us to debug)
 ```kubectl exec -it -n ingress-nginx ingress-nginx-controller-7989d7f7f4-mjnch -- cat /etc/nginx/nginx.conf```
+
+Do ```minikube service list``` to get the address of the istio-ingressgateway url:port
+
+you will see the following
+|---------------|------------------------------------|-------------------|-------------------------|
+|   NAMESPACE   |                NAME                |    TARGET PORT    |           URL           |
+|---------------|------------------------------------|-------------------|-------------------------|
+| default       | kubernetes                         | No node port      |
+| default       | task-tracker-app-ui                | http/9080         | http://172.17.0.2:30929 |
+| ingress-nginx | ingress-nginx-controller           | http/80           | http://172.17.0.2:30025 |
+|               |                                    | https/443         | http://172.17.0.2:30281 |
+| ingress-nginx | ingress-nginx-controller-admission | No node port      |
+| istio-system  | istio-egressgateway                | No node port      |
+| istio-system  | istio-ingressgateway               | status-port/15021 | http://172.17.0.2:32326 |
+|               |                                    | http2/80          | http://172.17.0.2:31147 |
+
+Now we can hit our virtualservice and ultimately the service through the istio-gateway
+```curl -k http://172.17.0.2:31147/task-tracker-app-ui```
 
 create a fake DNS name servicemesh.demo by adding an entry in our /etc/hosts file
 Use the IP address of our ingress
 ```
-172.17.0.2       task-tracker-app-ui.default.svc.cluster.local
+172.17.0.2:31147       test.com
 ```
+
+Now we can do ```curl -k http://test.com/task-tracker-app-ui```
 
 # generate self-signed TLS certificates 
 Generate self-signed certificates. We will use a key/pair to encrypt traffic from ALB to Istio Gateway.
