@@ -2,9 +2,17 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
 - ../../base
-- istio.yaml
 
 namespace: production
+
+patches:
+- path: ingress_patch.json
+  target:
+    group: networking.k8s.io
+    version: v1
+    kind: Ingress
+    name: istio-ingressgateway-alb  
+
 
 images:
 - name: foxy7887/task-tracker-app

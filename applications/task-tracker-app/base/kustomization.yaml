@@ -5,6 +5,7 @@ resources:
 - deployment.yaml
 - service.yaml
 - istio.yaml
+- ingress.yaml
 
 namespace: default
 
