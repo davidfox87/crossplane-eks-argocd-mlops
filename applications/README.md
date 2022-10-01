@@ -120,6 +120,9 @@ kubectl -n istio-system get pods
 kubectl apply -f istio-1.15.1/samples/addons/kiali.yaml
 kubectl get po -n istio-system
 kubectl -n istio-system port-forward svc/kiali 20001
+
+
+kubectl -n istio-system port-forward svc/grafana 3000
 ```
 
 
