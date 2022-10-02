@@ -1,3 +1,7 @@
+provider "aws" {
+  region = var.region
+}
+
 resource "aws_eks_cluster" "demo" {
   name            = "${var.cluster-name}"
   version         = var.kubernetes_version
@@ -25,16 +29,12 @@ resource "aws_eks_node_group" "example" {
   # determine how many pods an instance type supports, see Amazon EKS 
   # recommended maximum pods for each Amazon EC2 instance type.
 
-  instance_types = ["m5.large"]
+  instance_types = [var.machine_type]
   scaling_config {
-    desired_size = 5
-    max_size     = 10
-    min_size     = 5
+    desired_size = var.min_node_count
+    max_size     = var.max_node_count
+    min_size     = var.min_node_count
   }
-
-  # launch_template {
-  #   # custom spec for worker nodes goes here  
-  # }
 
   tags = {
     "alpha.eksctl.io/cluster-name" = "${var.cluster-name}"
@@ -48,6 +48,10 @@ resource "aws_eks_node_group" "example" {
     aws_iam_role_policy_attachment.AmazonEKS_CNI_Policy,
     aws_iam_role_policy_attachment.AmazonEC2ContainerRegistryReadOnly,
   ]
+  timeouts {
+    create = "15m"
+    update = "1h"
+  }
 }
 
 variable "addons" {
@@ -141,4 +145,17 @@ resource "helm_release" "ingress" {
     name  = "serviceAccount.name"
     value =  "aws-load-balancer-controller"
   }
+}
+
+
+
+
+# automatically retrieve the access credentials for your cluster and configure kubectl
+resource "null_resource" "kubeconfig" {
+  provisioner "local-exec" {
+    command = "aws eks  --region ${var.region} update-kubeconfig --name ${var.cluster-name}"
+  }
+  depends_on = [
+    aws_eks_cluster.demo,
+  ]
 }

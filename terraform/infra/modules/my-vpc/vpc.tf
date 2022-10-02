@@ -4,12 +4,11 @@ resource "aws_vpc" "vpc" {
   cidr_block       = "10.0.0.0/16"
   enable_dns_hostnames = true
   enable_dns_support   = true
-  tags = "${
-    tomap({
-     "Name"= "terraform-eks-demo-node",
-     "kubernetes.io/cluster/${var.cluster-name}"= "shared",
-    })
-  }"
+  tags = {
+     "Name"                                       = "devops-test",
+     "kubernetes.io/cluster/${var.cluster-name}"  = "shared",
+    }
+
 }
 
 data "aws_availability_zones" "available" {
@@ -23,13 +22,11 @@ resource "aws_subnet" "public" {
   cidr_block        = "10.0.${count.index}.0/24"
   vpc_id            = "${aws_vpc.vpc.id}"
 
-  tags = "${
-    tomap({
-     "Name"= "terraform-eks-demo-node",
+  tags = {
+     "Name"= "devops-test",
      "kubernetes.io/cluster/${var.cluster-name}"= "shared",
      "kubernetes.io/role/elb" = "1" # This is so that Kubernetes knows to use only the subnets that were specified for external load balancers.
-    })
-  }"
+  }
 }
 
 resource "aws_subnet" "private" {
@@ -39,17 +36,19 @@ resource "aws_subnet" "private" {
   cidr_block        = "10.0.${count.index+2}.0/24" # start the private subnet addresses right after the public ones
   vpc_id            = "${aws_vpc.vpc.id}"
 
-  tags = "${
-    tomap({
-     "Name"= "terraform-eks-demo-node",
-     "kubernetes.io/cluster/${var.cluster-name}"= "shared",
-    })
-  }"
+  tags = {
+     "Name"                                      = "devops-test",
+     "kubernetes.io/cluster/${var.cluster-name}"  = "shared",
+    }
+
 }
 
 
 resource "aws_internet_gateway" "mygateway" {
   vpc_id = aws_vpc.vpc.id
+  tags = {
+    Name = "devops-test"
+  }
 }
 
 resource "aws_route_table" "my_table" {
@@ -63,7 +62,7 @@ resource "aws_route_table" "my_table" {
 }
 resource "aws_route_table_association" "rta_subnet_public" {
   count = 2
-  subnet_id      = "${aws_subnet.public.*.id[count.index]}"
+  subnet_id      = aws_subnet.public.id[count.index].id
 
   route_table_id = aws_route_table.my_table.id
 }

@@ -75,40 +75,35 @@ resource "aws_iam_role_policy_attachment" "AWSLoadBalancerControllerIAMPolicy" {
 }
 
 
+module "iam_assumable_role_s3_access" {
+  source  = "terraform-aws-modules/iam/aws//modules/iam-assumable-role-with-oidc"
+  version = "~> 4.0"
 
+  create_role                   = true
+  role_name                     = "s3-access"
+  provider_url                  = replace(aws_iam_openid_connect_provider.eks-cluster.url, "https://", "")
+  role_policy_arns              = [aws_iam_policy.s3_access.arn]
+  oidc_fully_qualified_subjects = ["${local.k8s_service_account_namespace}:${local.k8s_service_account_name}"]
+}
+data "aws_iam_policy_document" "s3-access" {
+  version = "2012-10-17"
+  statement {
+    sid = "Fetch"
+    effect = "Allow"
+    actions = [ "s3:GetObject",
+                "s3:PutObject",
+                "s3:ListBucket",
+                "s3:GetBucketLocation"
+    ]
+    resources = [ "arn:aws:s3::::*" ]
+  }
+}
 
-
-
-
-# module "iam_assumable_role_s3_access" {
-#   source  = "terraform-aws-modules/iam/aws//modules/iam-assumable-role-with-oidc"
-#   version = "~> 4.0"
-
-#   create_role                   = true
-#   role_name                     = "s3-access"
-#   provider_url                  = replace(aws_iam_openid_connect_provider.eks-cluster.url, "https://", "")
-#   role_policy_arns              = [aws_iam_policy.s3_access.arn]
-#   oidc_fully_qualified_subjects = ["${local.k8s_service_account_namespace}:${local.k8s_service_account_name}"]
-# }
-# data "aws_iam_policy_document" "s3-access" {
-#   version = "2012-10-17"
-#   statement {
-#     sid = "Fetch"
-#     effect = "Allow"
-#     actions = [ "s3:GetObject",
-#                 "s3:PutObject",
-#                 "s3:ListBucket",
-#                 "s3:GetBucketLocation"
-#     ]
-#     resources = [ "arn:aws:s3::::*" ]
-#   }
-# }
-
-# resource "aws_iam_policy" "s3_access" {
-#   name_prefix = "s3_access"
-#   description = "s3 access for pods run by argo workflows in ${var.cluster-name}"
-#   policy      = data.aws_iam_policy_document.s3-access.json
-# }
+resource "aws_iam_policy" "s3_access" {
+  name_prefix = "s3_access"
+  description = "s3 access for pods run by argo workflows in ${var.cluster-name}"
+  policy      = data.aws_iam_policy_document.s3-access.json
+}
 
 
 

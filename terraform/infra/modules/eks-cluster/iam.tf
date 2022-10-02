@@ -66,9 +66,9 @@ resource "aws_iam_role" "workernodes" {
 
 resource "aws_iam_policy" "s3-access" {
   name        = "S3AccessWorkerNode"
-  description = "Worker policy for the ALB Ingress"
+  description = "s3 access for workers"
 
-  policy = file("${path.module}/iam_policy.json")
+  policy = file("${path.module}/s3-access-worker.json.json")
 }
 
  resource "aws_iam_role_policy_attachment" "AmazonS3AccessWorkerNode" {

@@ -7,6 +7,7 @@ or minikube
 docker network create --subnet 192.168.57.0/16 --driver bridge minikube
 minikube start
 minikube addons enable ingress
+minikube tunnel
 ```
 or
 
