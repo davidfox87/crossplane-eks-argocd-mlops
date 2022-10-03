@@ -23,10 +23,6 @@ metadata:
                                         }
     alb.ingress.kubernetes.io/certificate-arn: "arn:aws:acm:us-west-1:880572800141:certificate/8d87927b-16e5-4952-b191-064cc118305a" 
 spec:
-  tls:
-    - hosts:
-      - staging.mlops-playground.com
-      secretName: tls-secret
   rules:
   - host: staging.mlops-playground.com
     http:
