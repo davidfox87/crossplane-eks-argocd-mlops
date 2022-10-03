@@ -113,6 +113,7 @@ kubectl create -n istio-system secret generic tls-secret \
 --from-file=key=certs/key.pem \
 --from-file=cert=certs/cert.pem
 
+kubectl get secret tls-secret -o yaml | kubeseal --controller-namespace kube-system --controller-name sealed-secrets --format yaml tls-secret.yaml
 
 ```
 Add to the ingresss the following:
@@ -178,3 +179,17 @@ domain name is www.mlops-playground.com (bought from domains.google.com)
 # for info on AWS load balancer controller
 Insanely useful
 https://blog.sivamuthukumar.com/aws-load-balancer-controller-on-eks-cluster
+
+
+
+
+
+# Testing
+
+ - Installing AWS Ingress controller
+ - Setting Domain and TLS certificate
+ - Configuring the external DNS
+ - Testing DNS creation on Route53
+ - Debugging External DNS and Route53
+ - Testing Ingress resource and External DNS
+ - propagating self-signed tls to istio service mesh services

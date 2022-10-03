@@ -11,7 +11,7 @@ metadata:
     alb.ingress.kubernetes.io/group.name: "alb-demo-group"
     alb.ingress.kubernetes.io/healthcheck-protocol: "HTTP"
     alb.ingress.kubernetes.io/backend-protocol: "HTTPS"
-    alb.ingress.kubernetes.io/listen-ports: [{"HTTP": 80}, {"HTTPS":443}]
+    alb.ingress.kubernetes.io/listen-ports: [{"HTTP": 80}, {"HTTPS": 443}]
     alb.ingress.kubernetes.io/actions.ssl-redirect: |
                                         {
                                           "Type": "redirect", 
@@ -24,7 +24,7 @@ metadata:
     alb.ingress.kubernetes.io/certificate-arn: "arn:aws:acm:us-west-1:880572800141:certificate/8d87927b-16e5-4952-b191-064cc118305a" 
 spec:
   rules:
-  - host: app.mlops-playground.com
+  - host: mlops-playground.com
     http:
       paths:
       - backend: 
@@ -34,6 +34,13 @@ spec:
               name: use-annotation
         path: /    
         pathType: Prefix 
+      - backend:
+          service:
+            name: istio-ingressgateway
+              port:            
+                number: 15021        
+          path: /healthz/ready        
+          pathType: Prefix
       - backend:
           service:
             name: istio-ingressgateway

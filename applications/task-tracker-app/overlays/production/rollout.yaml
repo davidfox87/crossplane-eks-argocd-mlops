@@ -65,3 +65,22 @@ spec:
         args:
         - name: service-name
           value: "task-tracker-app-ui.production.svc.cluster.local"
+
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: argo-combined-app-canary
+  labels:
+    app: argo-combined-app
+spec:
+  type: ClusterIP
+  ports:
+  - port: 443
+    targetPort: 443
+    protocol: TCP
+    name: https
+  selector:
+    app: argo-combined-app

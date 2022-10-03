@@ -279,11 +279,3 @@ You have now provisioned an EKS cluster, configured kubectl, and verified that y
 terraform destroy
 ```
 
-
-
-https://learn.hashicorp.com/tutorials/terraform/eks
-
-
-kubectl apply -f pods/commands.yaml
-kubectl get pods
-kubectl logs command-demo

@@ -25,10 +25,10 @@ metadata:
 spec:
   tls:
     - hosts:
-      - app.mlops-playground.com
+      - staging.mlops-playground.com
       secretName: tls-secret
   rules:
-  - host: app.mlops-playground.com
+  - host: staging.mlops-playground.com
     http:
       paths:
       - backend: 

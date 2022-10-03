@@ -8,7 +8,6 @@ spec:
   gateways:
   - default-gateway
   hosts:
-  - argo-combined-app.local
   - app.mlops-playground.com
   http:
   - name: primary
