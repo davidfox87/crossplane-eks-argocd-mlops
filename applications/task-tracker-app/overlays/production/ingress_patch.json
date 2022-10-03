@@ -13,6 +13,6 @@
     {
       "op": "replace",
       "path": "/spec/rules/0/host",
-      "value": "prod.my-app.com"
+      "value": "*.amazonaws.com"
     }
   ]

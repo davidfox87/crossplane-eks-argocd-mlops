@@ -16,4 +16,4 @@ patches:
 images:
 - name: foxy7887/task-tracker-app
   newName: foxy7887/task-tracker-app
-  newTag: v2
+  newTag: v1

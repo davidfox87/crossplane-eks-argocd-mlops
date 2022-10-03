@@ -1,7 +1,5 @@
 
 # create a local K8s cluster
-```kind create cluster --name istio --image kindest/node:v1.21.14```
-
 or minikube 
 ```
 docker network create --subnet 192.168.57.0/16 --driver bridge minikube
@@ -27,6 +25,8 @@ kubectl wait --namespace ingress-nginx \
 # follow this 
 https://aws.amazon.com/blogs/containers/secure-end-to-end-traffic-on-amazon-eks-using-tls-certificate-in-acm-alb-and-istio/
 
+and this for minikube
+https://istio.io/latest/docs/setup/platform-setup/minikube/
 ## install Istio
 Note that argocd will take care of installing istio-related helm charts in production cluster
 ```
@@ -155,7 +155,7 @@ kubectl label namespace/default istio-injection=enabled
 kubectl delete pods --all
 
 kubectl -n ingress-nginx get deploy ingress-nginx-controller  -o yaml | istioctl kube-inject -f - | kubectl apply -f -
-
+```
 
 # delete cluster
 ```kind delete cluster --name istio```
@@ -164,3 +164,13 @@ kubectl -n ingress-nginx get deploy ingress-nginx-controller  -o yaml | istioctl
 
 Checkout the awesome Grafana and Kiali dashboards! Try running the [google microservices demo](https://github.com/GoogleCloudPlatform/microservices-demo) and visualizing the graph in Kiali.
 
+# Create a DNS record in Amazon Route 53
+
+Create a record in Route53 to bind your domain with ALB. Make sure you are creating a DNS record in the corresponding hosting zone, matching the domain name. I have compiled a list of useful resources to learn more about DNS records and hosting zones in AWS.
+
+- [Registering domain names using Amazon Route 53](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/registrar.html)
+- [Working with public hosted zones](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/AboutHZWorkingWith.html)
+- [Working with records](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/rrsets-working-with.html)
+- [Routing traffic to an ELB load balancer](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/routing-to-elb-load-balancer.html)
+
+domain name is www.mlops-playground.com (bought from domains.google.com)
