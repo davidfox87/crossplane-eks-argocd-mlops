@@ -9,6 +9,13 @@ spec:
     istio: ingressgateway # This is the selector for the istio ingress gateway
   servers:
   - port:
+    number: 443
+    name: https-443
+    protocol: HTTPS
+  tls:
+    mode: SIMPLE
+    credentialName: "tls-secret"
+  - port:
       number: 80
       name: http
       protocol: HTTP
@@ -29,9 +36,15 @@ spec:
   http:
   - match:
     - uri:
-        prefix: /task-tracker-app-ui
+      prefix: /home                         # get to the ui
+    - uri:
+        prefix: /api/v1/tasks               # get to the nodejs backend api
+    - uri:
+        prefix: /api/v1/get-task-by-id       # get to the nodejs backend api
     route:
     - destination:
         host: task-tracker-app-ui.default.svc.cluster.local # virtual service must be in the same namespace as service or explicitly specify namespace
         port:
           number: 9080
+
+

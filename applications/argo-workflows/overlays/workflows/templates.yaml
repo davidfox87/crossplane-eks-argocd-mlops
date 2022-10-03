@@ -1,0 +1,66 @@
+---
+
+apiVersion: argoproj.io/v1alpha1
+kind: ClusterWorkflowTemplate
+metadata:
+  name: container-image
+spec:
+  templates:
+  - name: build-kaniko-git
+    inputs:
+      parameters:
+      - name: app_repo
+      - name: container_image
+      - name: container_tag
+    container:
+      image: gcr.io/kaniko-project/executor:debug
+      args:
+      - --context={{inputs.parameters.app_repo}}
+      - --destination={{inputs.parameters.container_image}}:{{inputs.parameters.container_tag}}
+      volumeMounts:
+        - name: kaniko-secret
+          mountPath: /kaniko/.docker/
+
+---
+
+apiVersion: argoproj.io/v1alpha1
+kind: ClusterWorkflowTemplate
+metadata:
+  name: deploy
+spec:
+  templates:
+  - name: kustomize
+    inputs:
+      parameters:
+      - name: container_image
+      - name: container_tag
+      - name: manifests_path
+      - name: app_repo
+    script:
+      image: nekottyo/kustomize-kubeval
+      command:
+      - sh
+      source: |
+        git clone {{inputs.parameters.app_repo}} src
+        cd src/{{inputs.parameters.manifests_path}}
+        kustomize edit set image {{inputs.parameters.container_image}}={{inputs.parameters.container_image}}:{{inputs.parameters.container_tag}}
+        kustomize build | kubectl apply --filename -
+
+---
+
+apiVersion: argoproj.io/v1alpha1
+kind: ClusterWorkflowTemplate
+metadata:
+  name: random
+spec:
+  templates:
+  - name: echo
+    inputs:
+      parameters:
+      - name: message
+    container:
+      image: alpine
+      command:
+      - echo
+      args:
+      - "{{inputs.parameters.message}}"

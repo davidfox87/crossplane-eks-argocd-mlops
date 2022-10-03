@@ -103,9 +103,28 @@ Now we can do ```curl -k http://test.com/task-tracker-app-ui```
 
 # generate self-signed TLS certificates 
 Generate self-signed certificates. We will use a key/pair to encrypt traffic from ALB to Istio Gateway.
+```
+openssl req -x509 -newkey rsa:4096 -sha256 -days 3650 -nodes \
+  -keyout certs/key.pem -out certs/cert.pem -subj "/CN=test.com" \
+  -addext "subjectAltName=DNS:test.com"
 
 
+kubectl create -n istio-system secret generic tls-secret \
+--from-file=key=certs/key.pem \
+--from-file=cert=certs/cert.pem
 
+
+```
+Add to the ingresss the following:
+```
+  tls:
+    - hosts:
+      - test.com
+      secretName: tls-secret
+```
+
+follow this resource:
+https://aws.amazon.com/blogs/containers/secure-end-to-end-traffic-on-amazon-eks-using-tls-certificate-in-acm-alb-and-istio/
 
 
 Kill all pods that have not been given this istio injection label so K8s will restart with the sidecar
@@ -145,16 +164,3 @@ kubectl -n ingress-nginx get deploy ingress-nginx-controller  -o yaml | istioctl
 
 Checkout the awesome Grafana and Kiali dashboards! Try running the [google microservices demo](https://github.com/GoogleCloudPlatform/microservices-demo) and visualizing the graph in Kiali.
 
-
-
-
-
-
-kubectl get secret argo-artifacts --namespace=default -o yaml | grep -v '^\s*namespace:\s' | kubectl apply --namespace=argo -f -
-
-
-
-kubectl patch svc istio-ingressgateway -n istio-system -p '{"spec": {"type": "NodePort"}}'
-
-
-curl -v -H "host: task-tracker-app-ui.default.svc.cluster.local " 10.98.95.225/
