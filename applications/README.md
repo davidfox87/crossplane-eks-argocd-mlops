@@ -113,7 +113,9 @@ kubectl create -n istio-system secret generic tls-secret \
 --from-file=key=certs/key.pem \
 --from-file=cert=certs/cert.pem
 
-kubectl get secret tls-secret -o yaml | kubeseal --controller-namespace kube-system --controller-name sealed-secrets --format yaml tls-secret.yaml
+kubectl get secret tls-secret -o yaml | kubeseal --controller-namespace kube-system \
+                                                 --controller-name sealed-secrets \
+                                                 --format yaml tls-secret.yaml
 
 ```
 Add to the ingresss the following:
