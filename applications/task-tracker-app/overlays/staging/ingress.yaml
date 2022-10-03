@@ -39,6 +39,13 @@ spec:
       - backend:
           service:
             name: istio-ingressgateway
+              port:            
+                number: 15021        
+          path: /healthz/ready        
+          pathType: Prefix
+      - backend:
+          service:
+            name: istio-ingressgateway
             port:
               number: 443
         path: /
