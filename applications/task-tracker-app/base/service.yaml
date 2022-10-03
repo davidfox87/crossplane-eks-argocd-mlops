@@ -10,7 +10,7 @@ spec:
   ports:
   - name: http
     port: 9080
-    targetPort: 80
+    targetPort: 9080
   selector:
     app: task-tracker-app-ui
 

@@ -4,6 +4,6 @@ resources:
 - service-account.yaml
 - deployment.yaml
 - service.yaml
-
+- tls-secret.yaml
 
 
