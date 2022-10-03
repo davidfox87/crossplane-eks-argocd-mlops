@@ -1,0 +1,52 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: default-gateway
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+    - port:
+        number: 443
+        name: https-443
+        protocol: HTTPS
+      tls:
+        mode: SIMPLE
+        credentialName: "tls-secret"
+      hosts:
+        - "*"
+
+# apiVersion: networking.istio.io/v1beta1
+# kind: VirtualService
+# metadata:
+#   name: task-tracker-db
+# spec:
+#   hosts:
+#     - task-tracker-db
+#   tcp:
+#     - route:
+#         - destination:
+#             host: task-tracker-db
+#             port:
+#               number: 5432
+#           weight: 100
+
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: task-tracker-app-ui # name of the k8s service
+spec:
+  hosts:
+  - "*"
+  gateways:
+  - default-gateway
+  http:
+    - route:
+        - destination:
+            host: task-tracker-app-ui
+            port:
+              number: 9080
+          weight: 100
+      match:
+        - uri:
+            prefix: /home # this could be the name of the page (in react app) or name of api endpoint
