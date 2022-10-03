@@ -1,0 +1,42 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: argo-combined-app
+  labels:
+    app: argo-combined-app
+spec:
+  gateways:
+  - default-gateway
+  hosts:
+  - argo-combined-app.local
+  - app.mlops-playground.com
+  http:
+  - name: primary
+    route:
+    - destination:
+        host: task-tracker-app-ui
+        port:
+          number: 80
+      weight: 100
+    - destination:
+        host: task-tracker-app-ui-canary
+        port:
+          number: 80
+      weight: 0
+
+---
+
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: default-gateway
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+     - "*"

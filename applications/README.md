@@ -174,3 +174,7 @@ Create a record in Route53 to bind your domain with ALB. Make sure you are creat
 - [Routing traffic to an ELB load balancer](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/routing-to-elb-load-balancer.html)
 
 domain name is www.mlops-playground.com (bought from domains.google.com)
+
+# for info on AWS load balancer controller
+Insanely useful
+https://blog.sivamuthukumar.com/aws-load-balancer-controller-on-eks-cluster
