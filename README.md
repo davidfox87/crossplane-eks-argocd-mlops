@@ -57,7 +57,7 @@ Try this markdown:
 ![GitOps ArgoCD](https://www.eksworkshop.com/images/argocd/argocd_architecture.png)
 
 ## installing argocd, argo workflow, argo events
-
+```
 kubectl create namespace argocd
 kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
 
@@ -66,7 +66,7 @@ kubectl get secret argocd-initial-admin-secret -n argocd
 echo anFJcTNnY3pmeVZPTWN5LQ== | base64 --decode
 
 kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d; echo
-
+```
 
 
 # Clean up your workspace
