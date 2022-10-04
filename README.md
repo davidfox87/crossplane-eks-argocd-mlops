@@ -1,8 +1,5 @@
 # Deployment of ArgoCD, Argo Events, and Argo workflows to AWS to implement GitOps CI/CD
 
-This is a demonstration of a GitOps CI/CD pipeline using Argo workflows (clone, build and push docker image, and update helm chart repo)
-and ArgoCD to update cluster configuration from the helm chart repository. Both Argo workflows and ArgoCD are deployed in the same Kubernetes cluster.
-
 
 # installing argocd 
 
