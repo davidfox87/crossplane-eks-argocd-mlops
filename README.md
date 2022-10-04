@@ -1,4 +1,4 @@
-# Local deployment of ArgoCD and Argo workflows on a local minikube K8s cluster
+# Deployment of ArgoCD, Argo Events, and Argo workflows to AWS to implement GitOps CI/CD
 
 # Deploy to the AWS EKS using Terraform! 
 
@@ -7,7 +7,6 @@
 - EKS Node Group
 - Associated VPC, Internet Gateway, Security Groups, and Subnets: Operator managed networking resources for the EKS Cluster and worker node instances
 - Associated IAM Roles and Policies: Operator managed access resources for EKS and worker node instances
-
 
 ```
 terraform init
