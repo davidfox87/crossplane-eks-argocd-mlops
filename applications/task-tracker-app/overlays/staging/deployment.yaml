@@ -15,6 +15,7 @@ spec:
     metadata:
       labels:
         app: task-tracker-app-ui
+        istio-injection: enabled
         version: v1
     spec:
       serviceAccountName: task-tracker

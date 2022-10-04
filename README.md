@@ -193,67 +193,10 @@ terraform apply
 ```
 
 
-Run the following command to retrieve the access credentials for your cluster and configure kubectl.
-
-``` 
-aws eks --region $(terraform output -raw region) update-kubeconfig \
-    --name $(terraform output -raw cluster_name)
-```
-
-
-First, get information about the cluster.
-```
-kubectl cluster-info
-```
-
-Now verify that all three worker nodes are part of the cluster.
-```
-kubectl get nodes
-```
-
 Verify the aws-load-balancer-controller is installed
 ```
 kubectl get deployment -n kube-system aws-load-balancer-controller
 ```
-
-## try installing aws-load-balancer-controller manually
-
-create service accounts and assocate them with load-balancer-controller and argo worfklows (for s3 access)
-```
-kubectl get serviceaccounts -n kube-system
-```
-
-
-kubectl get deployment -n kube-system aws-load-balancer-controller
-
-NAME                           READY   UP-TO-DATE   AVAILABLE   AGE
-aws-load-balancer-controller   2/2     2            2           81s
-```
-
-## deploy and expose the service
-```
-kubectl apply -f terraform/infra/kubernetes/ingress.yaml
-kubectl apply -f terraform/infra/kubernetes/test-deployment.yaml
-
-kubectl -n task-tracker-app patch svc service-task-tracker-app -p '{"spec": {"type": "LoadBalancer"}}'
-
-export loadbalancer=$(kubectl -n task-tracker-app get svc service-task-tracker-app -o jsonpath='{.status.loadBalancer.ingress[*].hostname}')
-
-kubectl -n task-tracker-app describe service service-task-tracker-app | grep Ingress
-```
-
-Hypothetically, we should be able to type that address in the browser to view our app
-
-http://a2a82cd1cb3b941d8b0b8aa2210cd4ef-39901005.us-west-1.elb.amazonaws.com/
-
-Please read up on ingress and load-balancer-controller
-```https://www.eksworkshop.com/beginner/130_exposing-service/exposing/```
-```https://www.eksworkshop.com/beginner/130_exposing-service/ingress/```
-
-
-## remember to delete the aws-load-balancer-controller
-kubectl delete deployment -n kube-system aws-load-balancer-controller
-
 
 ## installing argocd, argo workflow, argo events
 
@@ -262,7 +205,7 @@ kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/st
 
 
 kubectl get secret argocd-initial-admin-secret -n argocd
-echo aGdhbGU0ZGhQVVIzMjN1WQ== | base64 --decode
+echo anFJcTNnY3pmeVZPTWN5LQ== | base64 --decode
 
 kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d; echo
 
