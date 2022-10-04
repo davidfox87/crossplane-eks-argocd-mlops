@@ -45,15 +45,11 @@ echo UjlTQlRJbHZvbDFBdzRueg== | base64 --decode
 Take the decoded password and login to the ui
 
 # Install the Argo CD CLI
+```
 sudo curl --silent --location -o /usr/local/bin/argocd https://github.com/argoproj/argo-cd/releases/download/v2.4.7/argocd-linux-amd64
-
 sudo chmod +x /usr/local/bin/argocd
-
+```
 # Our true GitOps CI/CD platform
-
-
-Try this markdown:
-
 ![GitOps ArgoCD](https://www.eksworkshop.com/images/argocd/argocd_architecture.png)
 
 ## installing argocd, argo workflow, argo events
