@@ -29,27 +29,27 @@ spec:
   - host: staging.mlops-playground.com
     http:
       paths:
-      - backend: 
+      - path: /   
+        pathType: Prefix  
+        backend: 
           service:
             name: ssl-redirect
             port: 
-              name: use-annotation
-          path: /    
-          pathType: Prefix 
-      - backend:
+              name: use-annotation 
+      - path: /healthz/ready        
+        pathType: Prefix 
+        backend:
           service:
             name: istio-ingressgateway
             port:            
               number: 15021        
-          path: /healthz/ready        
-          pathType: Prefix
-      - backend:
+      - path: /
+        pathType: Prefix
+        backend:
           service:
             name: istio-ingressgateway
             port:
               number: 443
-        path: /
-        pathType: Prefix
 
 
 
