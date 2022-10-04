@@ -1,10 +1,31 @@
 # Local deployment of ArgoCD and Argo workflows on a local minikube K8s cluster
 
-This is a demonstration of a GitOps CI/CD pipeline using Argo workflows (clone, build and push docker image, and update helm chart repo)
-and ArgoCD to update cluster configuration from the helm chart repository. Both Argo workflows and ArgoCD are deployed in the same Kubernetes cluster.
+# Deploy to the AWS EKS using Terraform! 
 
 
-# installing argocd 
+- EKS Cluster: AWS managed Kubernetes cluster of master servers
+- EKS Node Group
+- Associated VPC, Internet Gateway, Security Groups, and Subnets: Operator managed networking resources for the EKS Cluster and worker node instances
+- Associated IAM Roles and Policies: Operator managed access resources for EKS and worker node instances
+
+
+```
+terraform init
+terraform get
+terraform apply
+```
+
+
+Verify the aws-load-balancer-controller is installed
+```
+kubectl get deployment -n kube-system aws-load-balancer-controller
+```
+Our infrastructure in aws will look like this:
+![AWS infra](https://docs.aws.amazon.com/prescriptive-guidance/latest/patterns/images/pattern-img/abf727c1-ff8b-43a7-923f-bce825d1b459/images/281936fa-bc43-4b4e-a343-ba1eab97df38.png)
+
+
+
+# Installing Argo-cd 
 
 [Getting started with ArgoCD](https://argo-cd.readthedocs.io/en/stable/getting_started/)
 
@@ -36,27 +57,6 @@ Try this markdown:
 
 ![GitOps ArgoCD](https://www.eksworkshop.com/images/argocd/argocd_architecture.png)
 
-# Deploy to the AWS EKS using Terraform! 
-
-
-- EKS Cluster: AWS managed Kubernetes cluster of master servers
-- EKS Node Group
-- Associated VPC, Internet Gateway, Security Groups, and Subnets: Operator managed networking resources for the EKS Cluster and worker node instances
-- Associated IAM Roles and Policies: Operator managed access resources for EKS and worker node instances
-
-
-```
-terraform init
-terraform get
-terraform apply
-```
-
-
-Verify the aws-load-balancer-controller is installed
-```
-kubectl get deployment -n kube-system aws-load-balancer-controller
-```
-
 ## installing argocd, argo workflow, argo events
 
 kubectl create namespace argocd
@@ -70,13 +70,11 @@ kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.pas
 
 
 
-
-
-
 # Clean up your workspace
 
-You have now provisioned an EKS cluster, configured kubectl, and verified that your cluster is ready to use.
+Delete the application in argo-cd
 
+Then destroy all infrastructure in AWS using
 ```
 terraform destroy
 ```
