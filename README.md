@@ -12,14 +12,14 @@ kubectl create namespace argocd
 kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
 
 
-kubectl patch svc argo-server -n argo -p '{"spec": {"type": "NodePort"}}'
+kubectl patch svc argo-server -n argocd -p '{"spec": {"type": "NodePort"}}'
 kubectl port-forward svc/argocd-server -n argocd 31719:443
 
 The API server can then be accessed using https://localhost:31719
 
 
 kubectl get secret argocd-initial-admin-secret -n argocd
-echo aGdhbGU0ZGhQVVIzMjN1WQ== | base64 --decode
+echo UjlTQlRJbHZvbDFBdzRueg== | base64 --decode
 
 To get the node port
 ```kubectl get svc -o wide -n myapp```

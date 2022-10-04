@@ -6,4 +6,3 @@ resources:
 - service.yaml
 - tls-secret.yaml
 
-

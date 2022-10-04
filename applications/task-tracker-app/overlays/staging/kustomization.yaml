@@ -6,3 +6,6 @@ resources:
 - istio.yaml
 
 namespace: staging
+
+commonLabels:
+  istio-injection: enabled
