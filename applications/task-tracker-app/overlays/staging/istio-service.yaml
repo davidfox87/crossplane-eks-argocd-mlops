@@ -16,5 +16,5 @@ spec:
           weight: 100
       match:
         - uri:
-            prefix: /home # this could be the name of the page (in react app) or name of api endpoint
+            prefix: / # this could be the name of the page (in react app) or name of api endpoint
 
