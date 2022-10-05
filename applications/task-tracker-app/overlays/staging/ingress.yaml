@@ -12,7 +12,6 @@ metadata:
     alb.ingress.kubernetes.io/target-type: instance
     alb.ingress.kubernetes.io/actions.ssl-redirect: '{"Type": "redirect", "RedirectConfig": { "Protocol": "HTTPS", "Port": "443", "StatusCode": "HTTP_301"}}'
     alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-west-1:880572800141:certificate/8d87927b-16e5-4952-b191-064cc118305a
-    external-dns.alpha.kubernetes.io/hostname: "staging.mlops-playground.com"
   labels:
     app: common-external-ingress
 spec:
