@@ -41,7 +41,7 @@ spec:
           service:
             name: istio-ingressgateway
             port:            
-              number: 15021        
+              number: 443        
       - path: /
         pathType: Prefix
         backend:
