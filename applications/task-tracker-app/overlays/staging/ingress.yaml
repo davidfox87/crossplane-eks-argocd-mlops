@@ -6,7 +6,7 @@ metadata:
     kubernetes.io/ingress.class: "alb"
     alb.ingress.kubernetes.io/scheme: "internet-facing"
     alb.ingress.kubernetes.io/healthcheck-path: "/healthz/ready"
-    alb.ingress.kubernetes.io/healthcheck-port: "traffic-port"
+    alb.ingress.kubernetes.io/healthcheck-port: "status-port"
     alb.ingress.kubernetes.io/group.name: "alb-demo-group"
     alb.ingress.kubernetes.io/healthcheck-protocol: "HTTP"
     alb.ingress.kubernetes.io/backend-protocol: "HTTPS"
