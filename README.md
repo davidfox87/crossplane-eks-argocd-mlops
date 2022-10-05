@@ -44,19 +44,15 @@ echo UjlTQlRJbHZvbDFBdzRueg== | base64 --decode
 Take the decoded password and login to the ui
 
 # Install the Argo CD CLI
+```
 sudo curl --silent --location -o /usr/local/bin/argocd https://github.com/argoproj/argo-cd/releases/download/v2.4.7/argocd-linux-amd64
-
 sudo chmod +x /usr/local/bin/argocd
-
+```
 # Our true GitOps CI/CD platform
-
-
-Try this markdown:
-
 ![GitOps ArgoCD](https://www.eksworkshop.com/images/argocd/argocd_architecture.png)
 
 ## installing argocd, argo workflow, argo events
-
+```
 kubectl create namespace argocd
 kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
 
@@ -65,7 +61,7 @@ kubectl get secret argocd-initial-admin-secret -n argocd
 echo anFJcTNnY3pmeVZPTWN5LQ== | base64 --decode
 
 kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d; echo
-
+```
 
 
 # Clean up your workspace
