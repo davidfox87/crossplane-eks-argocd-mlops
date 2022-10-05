@@ -25,7 +25,7 @@ metadata:
     app: common-external-ingress
 spec:
   rules:
-  - host: 'staging.mlops-playground.com'
+  - host: staging.mlops-playground.com
     http:
       paths:
       - path: /   
