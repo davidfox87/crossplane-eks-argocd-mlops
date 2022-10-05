@@ -5,7 +5,7 @@ resources:
 
 
 
-- ingress.yaml
-- istio.yaml
+# - ingress.yaml
+# - istio.yaml
 
 namespace: staging
