@@ -41,6 +41,25 @@ kubectl label namespace default istio-injection=enabled
 
 Verify Istio installation is properly enabled by using ```kubectl get po -n istio-system```
 
+However, we need to customize our installation of the standard Istio demo install manifest files. 
+
+## Patching the output manifests
+The IstioOperator CR, input to istioctl, is used to generate the output manifest containing the Kubernetes resources to be applied to the cluster. The output manifest can be further customized to add, modify or delete resources through the IstioOperator overlays API, after it is generated but before it is applied to the cluster. This is similar to using Kustomize to apply patchest to existing manifest files.
+ 
+In the ```applications/istio``` folder run:
+```
+ istioctl manifest generate -f patch.yaml > test-istio-ingressgateway-patch.yaml
+```
+
+Here we change the istio-ingressgateway service to type NodePort and add some annotations to the service, in particular, we add the following:
+```
+    alb.ingress.kubernetes.io/healthcheck-path: /healthz/ready
+    alb.ingress.kubernetes.io/healthcheck-port: "30218"
+```
+
+Now, the alb ingress object will get a readinessProbe from the deployment, whcih creates pods with the istio-ingress-gateway. When the Ingress is created, our ALB ingress controller will find the service specified in the backend.serviceName of the Ingress manifest, will read its annotations, and will apply the to a TargetGroup attached to the ALB.
+
+
 # applications
 Install our application into the default namespace - which has been labeled with istio-injection=enabled - using kustomize
 ```
@@ -195,3 +214,6 @@ https://blog.sivamuthukumar.com/aws-load-balancer-controller-on-eks-cluster
  - Debugging External DNS and Route53
  - Testing Ingress resource and External DNS
  - propagating self-signed tls to istio service mesh services
+
+
+
