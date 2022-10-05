@@ -39,7 +39,7 @@ spec:
         pathType: Prefix 
         backend:
           service:
-            name: istio-ingressgateway
+            name: istio-ingressgateway.istio-system.svc.cluster.local
             port:            
               number: 443        
       - path: /
