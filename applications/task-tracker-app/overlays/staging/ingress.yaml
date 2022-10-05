@@ -8,6 +8,7 @@ metadata:
     alb.ingress.kubernetes.io/healthcheck-path: "/healthz/ready"
     alb.ingress.kubernetes.io/healthcheck-port: "status-port"
     alb.ingress.kubernetes.io/group.name: "alb-demo-group"
+    alb.ingress.kubernetes.io/target-type: "instance-mode"
     alb.ingress.kubernetes.io/healthcheck-protocol: "HTTP"
     alb.ingress.kubernetes.io/backend-protocol: "HTTPS"
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS": 443}]'
@@ -24,8 +25,12 @@ metadata:
   labels:
     app: common-external-ingress
 spec:
+  tls:
+  - hosts:
+      - https://staging.mlops-playground.com
+    secretName: tls-secret
   rules:
-  - host: staging.mlops-playground.com
+  - host: https://staging.mlops-playground.com
     http:
       paths:
       - path: /   
