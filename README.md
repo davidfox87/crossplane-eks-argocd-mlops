@@ -73,3 +73,11 @@ Then destroy all infrastructure in AWS using
 terraform destroy
 ```
 
+
+
+
+
+    add an Ingress to create an ALB with the ALB Ingress controller
+    update a Service of the Istio Ingress Gateway, and instead of the LoadBalancer type will set the NodePort, so AWS ALB Ingress Controller can create a TargetGroup to be used with the ALB
+    deploy a test application with a common Kubernetes Service
+    for the testing application need to create a Gateway and VirtualService that will configure Envoy of the Istio Ingress Gateway to route traffic to the Service of the application
