@@ -17,22 +17,22 @@ metadata:
     app: common-external-ingress
 spec:
   rules:
-    - http:
-      paths:
-      - path: /   
-        pathType: Prefix  
-        backend: 
-          service:
-            name: ssl-redirect
-            port: 
-              name: use-annotation 
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: istio-ingressgateway
-            port:
-              number: 443
+  - http:
+    paths:
+    - path: /   
+      pathType: Prefix  
+      backend: 
+        service:
+          name: ssl-redirect
+          port: 
+            name: use-annotation 
+    - path: /
+      pathType: Prefix
+      backend:
+        service:
+          name: istio-ingressgateway
+          port:
+            number: 443
 
 
 
