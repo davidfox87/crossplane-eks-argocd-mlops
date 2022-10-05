@@ -25,7 +25,6 @@ Our infrastructure in aws will look like this:
 
 
 # Installing Argo-cd 
-
 [Getting started with ArgoCD](https://argo-cd.readthedocs.io/en/stable/getting_started/)
 
 ```
