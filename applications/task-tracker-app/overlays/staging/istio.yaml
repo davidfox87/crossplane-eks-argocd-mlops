@@ -31,7 +31,7 @@ spec:
 #               number: 5432
 #           weight: 100
 
-apiVersion: networking.istio.io/v1beta1
+apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
   name: task-tracker-app-ui # name of the k8s service
@@ -50,3 +50,11 @@ spec:
       match:
         - uri:
             prefix: /home # this could be the name of the page (in react app) or name of api endpoint
+
+
+
+
+
+
+
+
