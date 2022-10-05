@@ -109,11 +109,11 @@ openssl req -x509 -newkey rsa:4096 -sha256 -days 3650 -nodes \
   -addext "subjectAltName=DNS:test.com"
 
 
-kubectl create -n istio-system secret generic tls-secret \
+kubectl create secret generic tls-secret -n staging \
 --from-file=key=certs/key.pem \
 --from-file=cert=certs/cert.pem
 
-kubectl get secret tls-secret -o yaml | kubeseal --controller-namespace kube-system \
+kubectl get secret tls-secret -n staging -o yaml | kubeseal --controller-namespace kube-system \
                                                  --controller-name sealed-secrets \
                                                  --format yaml tls-secret.yaml
 
