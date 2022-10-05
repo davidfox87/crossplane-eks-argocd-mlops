@@ -10,7 +10,7 @@ metadata:
     alb.ingress.kubernetes.io/healthcheck-port: traffic-port
     alb.ingress.kubernetes.io/group.name: alb-demo-group
     alb.ingress.kubernetes.io/target-type: instance
-        alb.ingress.kubernetes.io/actions.ssl-redirect: |
+    alb.ingress.kubernetes.io/actions.ssl-redirect: |
         '{"Type": "redirect", 
         "RedirectConfig": { "Protocol": "HTTPS", 
                           "Port": "443", 
