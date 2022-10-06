@@ -31,23 +31,44 @@ Our infrastructure in aws will look like this:
 kubectl create namespace argocd
 kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/v2.4.12/manifests/install.yaml
 
-kubectl patch svc argo-server -n argocd -p '{"spec": {"type": "NodePort"}}'
 kubectl port-forward svc/argocd-server -n argocd 31719:443
+
+xdg-open https://localhost:8080
 ```
 
 The API server can then be accessed using https://localhost:31719
 
 ```
 kubectl get secret argocd-initial-admin-secret -n argocd -o yaml
-echo clFvY1pIN1dYUjJLRkx4eg== | base64 --decode
+echo TnltV3ptYVFydXlxMVh6Sg== | base64 --decode
 ```
 Take the decoded password and login to the ui
 
-# Install the Argo CD CLI
+# clone the repo which has our ArgoCD manifests for the project and app
 ```
-sudo curl --silent --location -o /usr/local/bin/argocd https://github.com/argoproj/argo-cd/releases/download/v2.4.7/argocd-linux-amd64
-sudo chmod +x /usr/local/bin/argocd
+git clone git@github.com:davidfox87/argocd-production.git
 ```
+Install projects and apps
+```
+kubectl apply -f projects.yaml
+kubectl apply -f apps.yaml
+
+```
+
+## generate tls-secret using sealed secrets
+```
+kubectl create secret generic tls-secret -n staging \
+--from-file=key=certs/key.pem \
+--from-file=cert=certs/cert.pem
+
+kubectl get secret tls-secret -n staging -o yaml | kubeseal --controller-namespace kube-system \
+                                                 --controller-name sealed-secrets \
+                                                 --format yaml tls-secret.yaml \ 
+                                                 | kubectl apply -f - -n staging
+```
+
+## wait for everything to sync and be healthy in the argo-cd UI
+
 # Our true GitOps CI/CD platform
 ![GitOps ArgoCD](https://www.eksworkshop.com/images/argocd/argocd_architecture.png)
 

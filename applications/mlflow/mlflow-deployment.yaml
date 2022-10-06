@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mlflow-tracking-server
+  labels:
+      app: mlflow-tracking-server
+spec:
+  # The replica count is kept to one for simplicity purposes.
+  # To create a highly available app, the replica count would
+  # be higher.
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mlflow-tracking-server-pods
+  template:
+    metadata:
+      labels:
+        app: mlflow-tracking-server-pods
+    spec:
+      containers:
+        - name: mlflow-tracking-server-pod
+          # The docker image is pulled from dockerhub.
+          image: aahansingh/applied-mlops:mlflow-tracking-server-gcloud
+          imagePullPolicy: Always
+          env: # we extract the values we set in the configmap and mount them as environmen variables in the pods.
+          - name: DB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: mlflow-tracking-server-database-postgresql
+                key: postgresql-password
+          - name: DB_USERNAME
+            valueFrom:
+              configMapKeyRef:
+                name: mlflow-configmap
+                key: DB_USERNAME
+          - name: DB_URL
+            valueFrom:
+              configMapKeyRef:
+                name: mlflow-configmap
+                key: DB_URL
+          - name: DB_NAME
+            valueFrom:
+              configMapKeyRef:
+                name: mlflow-configmap
+                key: DB_NAME
+          - name: ARTIFACT_STORE
+            valueFrom:
+              configMapKeyRef:
+                name: mlflow-configmap
+                key: ARTIFACT_STORE
+          # Remember the secret we created before? That will be mounted in the pod as a file.
+          volumeMounts:
+          - name: mlflow-gcloud-credentials
+            mountPath: "/workdir/gcloud-credentials/"
+            readOnly: true
+      volumes:
+      - name: mlflow-gcloud-credentials
+        secret:
+          secretName: mlflow-gcloud-credentials

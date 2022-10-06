@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mlflow-configmap
+data:
+  ARTIFACT_STORE: <URI OF THE GOOGLE CLOUD ARTIFACT STORE>
+  # The DB_NAME is the same as the postgresqlDatabase value 
+  # set in the helm chart while deploying PostgreSQL using Kubeapps.
+  DB_NAME: "mlflow-tracking-server-database"
+  # The DB_USERNAME is the same as the postgresqlUsername value 
+  # set in the helm chart while deploying PostgreSQL using Kubeapps.
+  DB_USERNAME: "admin"
+  # The DB_URL will be the same as the DNS displayed under "Installation Notes"
+  # section seen after deploying PostgreSQL using Kubeapps
+  DB_URL: "mlflow-tracking-server-database-postgresql.default.svc.cluster.local"
