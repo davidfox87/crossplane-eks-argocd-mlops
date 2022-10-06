@@ -38,8 +38,8 @@ kubectl port-forward svc/argocd-server -n argocd 31719:443
 The API server can then be accessed using https://localhost:31719
 
 ```
-kubectl get secret argocd-initial-admin-secret -n argocd
-echo UjlTQlRJbHZvbDFBdzRueg== | base64 --decode
+kubectl get secret argocd-initial-admin-secret -n argocd -o yaml
+echo clFvY1pIN1dYUjJLRkx4eg== | base64 --decode
 ```
 Take the decoded password and login to the ui
 

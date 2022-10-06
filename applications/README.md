@@ -48,7 +48,7 @@ The IstioOperator CR, input to istioctl, is used to generate the output manifest
  
 In the ```applications/istio``` folder run:
 ```
- istioctl manifest generate -f patch.yaml > test-istio-ingressgateway-patch.yaml
+ istioctl manifest generate -f patch.yaml -o aws-istio-profile
 ```
 
 Here we change the istio-ingressgateway service to type NodePort and add some annotations to the service, in particular, we add the following:
@@ -59,7 +59,9 @@ Here we change the istio-ingressgateway service to type NodePort and add some an
 
 Now, the alb ingress object will get a readinessProbe from the deployment, whcih creates pods with the istio-ingress-gateway. When the Ingress is created, our ALB ingress controller will find the service specified in the backend.serviceName of the Ingress manifest, will read its annotations, and will apply the to a TargetGroup attached to the ALB.
 
+Install with:
 
+```kustomize build aws-istio-profile/overlays/staging/ | istioctl manifest  apply -f - -y```
 # applications
 Install our application into the default namespace - which has been labeled with istio-injection=enabled - using kustomize
 ```
