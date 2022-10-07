@@ -64,11 +64,17 @@ kubectl create secret generic tls-secret -n staging \
 kubectl get secret tls-secret -n staging -o yaml | kubeseal --controller-namespace kube-system \
                                                  --controller-name sealed-secrets \
                                                  --format yaml tls-secret.yaml \ 
-                                                 | kubectl apply -f - -n staging
+                                                > base/tls-secret.yaml
+kubectl delete secret tls-secret -n staging
+
 ```
 
 ## wait for everything to sync and be healthy in the argo-cd UI
+woop
 
+## apply ingress object
+Ingress object will spawn aws-load-balancer-controler, which has a backend that points to istio-ingressgateway
+Important!!! The ingress object has to go into the istio-system namespace.
 # Our true GitOps CI/CD platform
 ![GitOps ArgoCD](https://www.eksworkshop.com/images/argocd/argocd_architecture.png)
 

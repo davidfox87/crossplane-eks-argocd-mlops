@@ -1,59 +1,45 @@
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: mlflow-tracking-server
-  labels:
-      app: mlflow-tracking-server
+  namespace: kubeflow
 spec:
-  # The replica count is kept to one for simplicity purposes.
-  # To create a highly available app, the replica count would
-  # be higher.
-  replicas: 1
   selector:
     matchLabels:
-      app: mlflow-tracking-server-pods
+      app: mlflow-tracking-server
+  replicas: 1
   template:
     metadata:
       labels:
-        app: mlflow-tracking-server-pods
+        app: mlflow-tracking-server
     spec:
       containers:
-        - name: mlflow-tracking-server-pod
-          # The docker image is pulled from dockerhub.
-          image: aahansingh/applied-mlops:mlflow-tracking-server-gcloud
-          imagePullPolicy: Always
-          env: # we extract the values we set in the configmap and mount them as environmen variables in the pods.
-          - name: DB_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: mlflow-tracking-server-database-postgresql
-                key: postgresql-password
-          - name: DB_USERNAME
-            valueFrom:
-              configMapKeyRef:
-                name: mlflow-configmap
-                key: DB_USERNAME
-          - name: DB_URL
-            valueFrom:
-              configMapKeyRef:
-                name: mlflow-configmap
-                key: DB_URL
-          - name: DB_NAME
-            valueFrom:
-              configMapKeyRef:
-                name: mlflow-configmap
-                key: DB_NAME
-          - name: ARTIFACT_STORE
-            valueFrom:
-              configMapKeyRef:
-                name: mlflow-configmap
-                key: ARTIFACT_STORE
-          # Remember the secret we created before? That will be mounted in the pod as a file.
-          volumeMounts:
-          - name: mlflow-gcloud-credentials
-            mountPath: "/workdir/gcloud-credentials/"
-            readOnly: true
+      - name: mlflow-tracking-server
+        image: seedjeffwan/mlflow-tracking-server:1.0.0
+        ports:
+        - containerPort: 5000
+        env:
+        # FILE_DIR can not be mount dir, MLFLOW need a empty dir but mount dir has lost+found
+        - name: FILE_DIR
+          value: /mnt/mlflow/manifest
+        - name: AWS_MLFLOW_BUCKET
+          value: mlflow-artifacts
+        - name: AWS_ACCESS_KEY_ID
+          valueFrom:
+            secretKeyRef:
+              name: aws-secret
+              key: AWS_ACCESS_KEY_ID
+        - name: AWS_SECRET_ACCESS_KEY
+          valueFrom:
+            secretKeyRef:
+              name: aws-secret
+              key: AWS_SECRET_ACCESS_KEY
+        volumeMounts:
+        - mountPath: /mnt/mlflow
+          name: mlflow-manifest-storage
       volumes:
-      - name: mlflow-gcloud-credentials
-        secret:
-          secretName: mlflow-gcloud-credentials
+        - name: mlflow-manifest-storage
+          persistentVolumeClaim:
+            claimName: mlflow-manifest-pvc
+
