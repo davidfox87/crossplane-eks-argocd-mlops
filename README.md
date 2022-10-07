@@ -40,7 +40,7 @@ The API server can then be accessed using https://localhost:31719
 
 ```
 kubectl get secret argocd-initial-admin-secret -n argocd -o yaml
-echo TnltV3ptYVFydXlxMVh6Sg== | base64 --decode
+echo U1lub2lpWk55U3NuYjI0aA== | base64 --decode
 ```
 Take the decoded password and login to the ui
 
