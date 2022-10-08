@@ -18,27 +18,26 @@ metadata:
     app: common-external-ingress
 spec:
   rules:
-  - host: 'staging.mlops-playground.com'
-    http:
-      paths:
-      - path: /   
-        pathType: Prefix  
-        backend: 
-          service:
-            name: ssl-redirect
-            port: 
-              name: use-annotation 
-      - path: /healthz/ready 
-        pathType: ImplementationSpecific
-        backend:        
-          service:          
-            name: istio-ingressgateway          
-            port:            
-              number: 15021        
-      - path: /
-        pathType: ImplementationSpecific
-        backend:
-          service:
-            name: istio-ingressgateway
-            port:
-              number: 443
+    - http:
+        paths:
+        - path: /
+          pathType: Prefix  
+          backend: 
+            service:
+              name: ssl-redirect
+              port: 
+                name: use-annotation 
+        - path: /healthz/ready 
+          pathType: Prefix
+          backend:        
+            service:          
+              name: istio-ingressgateway          
+              port:            
+                number: 15021        
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: istio-ingressgateway
+              port:
+                number: 443

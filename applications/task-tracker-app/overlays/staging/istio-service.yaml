@@ -4,17 +4,17 @@ metadata:
   name: task-tracker-app-ui # name of the k8s service
 spec:
   hosts:
-  - "*"
+  - "staging.mlops-playground.com"
   gateways:
   - default-gateway
   http:
-    - route:
-        - destination:
-            host: task-tracker-app-ui
-            port:
-              number: 8000
-          weight: 100
-      match:
-        - uri:
-            prefix: / # this could be the name of the page (in react app) or name of api endpoint
+  - match:
+    - uri:
+        exact: /task-tracker
+    route:
+    - destination:
+        host: task-tracker-app-ui
+        port:
+          number: 8000
 
+ 
