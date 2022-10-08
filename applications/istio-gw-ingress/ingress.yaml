@@ -4,24 +4,25 @@ metadata:
   name: gw-ingress
   namespace: istio-system
   annotations:
-    kubernetes.io/ingress.class: alb
-    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS": 443}]'
+    alb.ingress.kubernetes.io/actions.ssl-redirect: >-
+      {"Type": "redirect", "RedirectConfig": { "Protocol": "HTTPS", "Port":
+      "443", "StatusCode": "HTTP_301"}}
+    alb.ingress.kubernetes.io/backend-protocol: HTTP
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS":443}]'
     alb.ingress.kubernetes.io/scheme: internet-facing
-    alb.ingress.kubernetes.io/load-balancer-name: my-alb
-    alb.ingress.kubernetes.io/backend-protocol: HTTPS
-    alb.ingress.kubernetes.io/healthcheck-port: traffic-port
-    alb.ingress.kubernetes.io/group.name: alb-demo-group # group multiple ingress resources together
-    alb.ingress.kubernetes.io/target-type: instance # route traffic to ec2 instance within cluster on NodePort opened for your service
+    alb.ingress.kubernetes.io/ssl-redirect: '443'
+    alb.ingress.kubernetes.io/target-group-attributes: deregistration_delay.timeout_seconds=30
+    alb.ingress.kubernetes.io/ip-address-type: ipv4
     alb.ingress.kubernetes.io/healthcheck-path: /healthz/ready
-    alb.ingress.kubernetes.io/healthcheck-port: 15021
-    alb.ingress.kubernetes.io/success-codes: 200-399
-    alb.ingress.kubernetes.io/actions.ssl-redirect: '{"Type": "redirect", "RedirectConfig": { "Protocol": "HTTPS", "Port": "443", "StatusCode": "HTTP_301"}}'
+    alb.ingress.kubernetes.io/target-type: ip
+    kubernetes.io/ingress.class: alb
     alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-west-1:880572800141:certificate/8d87927b-16e5-4952-b191-064cc118305a
   labels:
     app: common-external-ingress
 spec:
   rules:
-  - http:
+  - host: 'staging.mlops-playground.com'
+    http:
       paths:
       - path: /   
         pathType: Prefix  
@@ -31,16 +32,16 @@ spec:
             port: 
               name: use-annotation 
       - path: /healthz/ready 
-        pathType: Prefix
+        pathType: ImplementationSpecific
         backend:        
           service:          
             name: istio-ingressgateway          
             port:            
               number: 15021        
       - path: /
-        pathType: Prefix
+        pathType: ImplementationSpecific
         backend:
           service:
             name: istio-ingressgateway
             port:
-              number: 443
+              number: 80
