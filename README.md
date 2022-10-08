@@ -40,7 +40,7 @@ The API server can then be accessed using https://localhost:31719
 
 ```
 kubectl get secret argocd-initial-admin-secret -n argocd -o yaml
-echo U1lub2lpWk55U3NuYjI0aA== | base64 --decode
+echo blRTaDZ3eTJKdmxrY3AzTw== | base64 --decode
 ```
 Take the decoded password and login to the ui
 
@@ -64,7 +64,7 @@ kubectl create secret generic tls-secret -n staging \
 kubectl get secret tls-secret -n staging -o yaml | kubeseal --controller-namespace kube-system \
                                                  --controller-name sealed-secrets \
                                                  --format yaml tls-secret.yaml \ 
-                                                > base/tls-secret.yaml
+                                                  > base/tls-secret.yaml
 kubectl delete secret tls-secret -n staging
 
 ```
