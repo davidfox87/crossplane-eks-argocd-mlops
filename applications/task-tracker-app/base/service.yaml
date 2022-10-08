@@ -10,7 +10,7 @@ spec:
     # Service object named "task-tracker-app-ui", which targets 
     # TCP port 9080 on any Pod with the app=task-tracker-app-ui label.
     - protocol: TCP
-      port: 443
+      port: 80
       targetPort: 9080
   selector:
     app: task-tracker-app-ui
