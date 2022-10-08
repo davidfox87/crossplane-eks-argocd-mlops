@@ -12,7 +12,7 @@ spec:
         - destination:
             host: task-tracker-app-ui
             port:
-              number: 9080
+              number: 8000
           weight: 100
       match:
         - uri:
