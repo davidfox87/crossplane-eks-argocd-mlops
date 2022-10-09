@@ -20,7 +20,7 @@ spec:
         mode: SIMPLE
         credentialName: tls-secret
       hosts:
-        - "staging.mlops-playground.com"
+        - "*"
 
 
 

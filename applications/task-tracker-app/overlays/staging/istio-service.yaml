@@ -11,7 +11,7 @@ spec:
   http:
   - match:
     - uri:
-        exact: /task-tracker
+        exact: /
       gateways:
       - default-gateway #restricts this rule to apply only to ingress gateway
     route:
