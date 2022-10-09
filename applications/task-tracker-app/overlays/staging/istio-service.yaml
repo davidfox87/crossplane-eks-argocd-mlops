@@ -13,7 +13,7 @@ spec:
         exact: /task-tracker
     route:
     - destination:
-        host: task-tracker-app-ui.staging.svc.cluster.local
+        host: task-tracker-app-ui
         port:
           number: 8000
 

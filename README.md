@@ -72,6 +72,30 @@ kubectl delete secret tls-secret -n staging
 ## wait for everything to sync and be healthy in the argo-cd UI
 woop
 
+## configure healthcheck path for alb
+To configure the alb.ingress.kubernetes.io/alb.ingress.kubernetes.io/healthcheck-path get a readinessProbe from the  Deployment, which creates pods with the istio-ingressgateway:
+```
+kubectl -n istio-system get deploy istio-ingressgateway -o yaml
+...
+readinessProbe:
+failureThreshold: 30
+httpGet:
+path: /healthz/ready
+...
+```
+
+Set annotations for the istio-ingressgateway Service: 
+- in the healthchek-port set the nodePort from the status-port 
+- in the healthcheck-path – a path from the readinessProbe:
+
+Note that the nodeport for the status-port will change so you will have to edit it after the service has come up
+
+It should look like this 
+```
+    alb.ingress.kubernetes.io/healthcheck-path: /healthz/ready
+    alb.ingress.kubernetes.io/healthcheck-port: "32454"
+```
+
 ## apply ingress object
 Ingress object will spawn aws-load-balancer-controler, which has a backend that points to istio-ingressgateway
 Important!!! The ingress object has to go into the istio-system namespace.
