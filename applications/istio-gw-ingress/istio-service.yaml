@@ -1,0 +1,21 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: task-tracker-app-ui # name of the k8s service
+  namespace: istio-system
+spec:
+  hosts:
+  - task-tracker-app-ui
+  gateways:
+  - default-gateway
+  http:
+  - match:
+    - uri:
+        exact: /task-tracker
+    route:
+    - destination:
+        host: task-tracker-app-ui
+        port:
+          number: 8000
+
+ 
