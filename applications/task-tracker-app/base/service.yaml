@@ -6,7 +6,7 @@ metadata:
     app: task-tracker-app-ui
     service: task-tracker-app-ui
 spec:
-  type: NodePort
+  type: ClusterIP
   ports:
     # Service object named "task-tracker-app-ui", which targets 
     # TCP port 80 on any Pod with the app=task-tracker-app-ui label.
