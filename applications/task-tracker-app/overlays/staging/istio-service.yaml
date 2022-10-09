@@ -16,7 +16,7 @@ spec:
       - default-gateway #restricts this rule to apply only to ingress gateway
     route:
     - destination:
-        host: task-tracker-app-ui.staging.svc.cluster.local
+        host: task-tracker-app-ui
         port:
           number: 8000
 
