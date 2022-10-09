@@ -3,6 +3,7 @@ kind: Kustomization
 resources:
 - istio-gateway.yaml
 - istio-service.yaml
+- namespace.yaml
 - ../../base
 
 namespace: staging
