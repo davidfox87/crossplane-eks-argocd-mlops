@@ -1,0 +1,20 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: task-tracker-app-ui # name of the k8s service
+spec:
+  hosts:
+  - task-tracker-app-ui.local
+  gateways:
+  - default-gateway
+  http:
+  - match:
+    - uri:
+        exact: /task-tracker
+    route:
+    - destination:
+        host: task-tracker-app-ui.staging.svc.cluster.local
+        port:
+          number: 8000
+
+ 
