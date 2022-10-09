@@ -5,7 +5,7 @@ metadata:
   namespace: istio-system
 spec:
   hosts:
-  - task-tracker-app-ui
+  - task-tracker-app-ui.staging.svc.cluster.local
   gateways:
   - default-gateway
   http:
@@ -14,7 +14,7 @@ spec:
         exact: /task-tracker
     route:
     - destination:
-        host: task-tracker-app-ui
+        host: task-tracker-app-ui.staging.svc.cluster.local
         port:
           number: 8000
 
