@@ -4,16 +4,19 @@ metadata:
   name: task-tracker-app-ui # name of the k8s service
 spec:
   hosts:
-  - "staging.mlops-playground.com"
+  - staging.mlops-playground.com
+  - task-tracker-app-ui.staging.svc.cluster.local
   gateways:
   - default-gateway
   http:
   - match:
     - uri:
         exact: /task-tracker
+      gateways:
+      - default-gateway #restricts this rule to apply only to ingress gateway
     route:
     - destination:
-        host: task-tracker-app-ui
+        host: task-tracker-app-ui.staging.svc.cluster.local
         port:
           number: 8000
 
