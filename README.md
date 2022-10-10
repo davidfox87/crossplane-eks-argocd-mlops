@@ -19,7 +19,7 @@ Verify the aws-load-balancer-controller is installed
 ```
 kubectl get deployment -n kube-system aws-load-balancer-controller
 ```
-Our infrastructure in aws will look like this:
+Our infrastructure in aws will look like this (substitute gRPC traffic with HTTPS traffic):
 ![AWS infra](https://docs.aws.amazon.com/prescriptive-guidance/latest/patterns/images/pattern-img/abf727c1-ff8b-43a7-923f-bce825d1b459/images/281936fa-bc43-4b4e-a343-ba1eab97df38.png)
 
 
@@ -99,20 +99,20 @@ It should look like this
 ## apply ingress object
 Ingress object will spawn aws-load-balancer-controler, which has a backend that points to istio-ingressgateway
 Important!!! The ingress object has to go into the istio-system namespace.
+
+```
+kubectl apply -f istio-gw-ingress/ingress.yaml -n istio-system
+```
+
+AWS ALB Ingress Controller will create a TargetGroup to be used with the ALB
+The Gateway and VirtualService that will configure Envoy of the Istio Ingress Gateway to route traffic to the Service of the application
+
+# map the domain name that is associated with ACM certificate to the ALB just spawned
+![route53](route53.png)
+
 # Our true GitOps CI/CD platform
 ![GitOps ArgoCD](https://www.eksworkshop.com/images/argocd/argocd_architecture.png)
 
-## installing argocd, argo workflow, argo events
-```
-kubectl create namespace argocd
-kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
-
-
-kubectl get secret argocd-initial-admin-secret -n argocd
-echo anFJcTNnY3pmeVZPTWN5LQ== | base64 --decode
-
-kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d; echo
-```
 
 
 # Clean up your workspace
@@ -128,7 +128,4 @@ terraform destroy
 
 
 
-    add an Ingress to create an ALB with the ALB Ingress controller
-    update a Service of the Istio Ingress Gateway, and instead of the LoadBalancer type will set the NodePort, so AWS ALB Ingress Controller can create a TargetGroup to be used with the ALB
-    deploy a test application with a common Kubernetes Service
-    for the testing application need to create a Gateway and VirtualService that will configure Envoy of the Istio Ingress Gateway to route traffic to the Service of the application
+
