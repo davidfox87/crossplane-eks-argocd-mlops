@@ -5,6 +5,5 @@ resources:
 - templates.yaml
 patchesStrategicMerge:
 - config.yaml
-- deployment_patch.yaml
 
 namespace: argo
