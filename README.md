@@ -33,14 +33,14 @@ kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/v2
 
 kubectl port-forward svc/argocd-server -n argocd 31719:443
 
-xdg-open https://localhost:8080
+xdg-open https://localhost:31719
 ```
 
 The API server can then be accessed using https://localhost:31719
 
 ```
 kubectl get secret argocd-initial-admin-secret -n argocd -o yaml
-echo blRTaDZ3eTJKdmxrY3AzTw== | base64 --decode
+echo akRjVGZmNjhxbTdJWHB3OA== | base64 --decode
 ```
 Take the decoded password and login to the ui
 
