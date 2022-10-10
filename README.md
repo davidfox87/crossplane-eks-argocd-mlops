@@ -56,6 +56,8 @@ kubectl apply -f apps.yaml
 ```
 
 ## generate tls-secret using sealed secrets
+NOTE TLS-SECRET NEEDS TO GO IN ISTIO-SYSTEM NAMESPACE
+JUST PUT THE GATEWAY, VIRTUAL-SERVICE AND TLS-SECRET ALL IN THE ISTIO-SYSTEM NAMESPACE AND THEN REFERENCE THE SERVICES USING task-tracker-app-ui.staging.svc.cluster.local
 ```
 kubectl create secret generic tls-secret -n staging \
 --from-file=key=certs/key.pem \
@@ -67,6 +69,10 @@ kubectl get secret tls-secret -n staging -o yaml | kubeseal --controller-namespa
                                                   > base/tls-secret.yaml
 kubectl delete secret tls-secret -n staging
 
+
+kubectl create secret generic tls-secret -n istio-system \
+--from-file=key=certs/key.pem \
+--from-file=cert=certs/cert.pem
 ```
 
 ## wait for everything to sync and be healthy in the argo-cd UI
