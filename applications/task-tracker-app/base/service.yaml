@@ -11,8 +11,8 @@ spec:
     # TCP port 80 on any Pod with the app=task-tracker-app-ui label.
     - protocol: TCP
       port: 8000
-      targetPort: 443
-      appProtocol: https
+      targetPort: 80
+      appProtocol: http
   selector:
     app: task-tracker-app-ui
 
