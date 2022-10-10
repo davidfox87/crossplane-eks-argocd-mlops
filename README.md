@@ -1,4 +1,4 @@
-# Deployment of ArgoCD, Argo Events, and Argo workflows to AWS to implement GitOps CI/CD
+# Using ArgoCD to deploy Secure end-to-end traffic on Amazon EKS using TLS certificate in ACM, ALB, and Istio gateway and service mesh.
 
 # Deploy to the AWS EKS using Terraform! 
 
