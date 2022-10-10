@@ -5,7 +5,7 @@ metadata:
   labels:
     app: task-tracker-app-ui
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: task-tracker-app-ui
@@ -18,7 +18,7 @@ spec:
       serviceAccountName: task-tracker
       containers:
       - name: task-tracker-app-ui
-        image: foxy7887/task-tracker-app:v3
+        image: foxy7887/task-tracker-app:v4
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 80
