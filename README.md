@@ -83,6 +83,7 @@ httpGet:
 path: /healthz/ready
 ...
 ```
+kubectl -n istio-system get svc istio-ingressgateway -o yaml
 
 Set annotations for the istio-ingressgateway Service: 
 - in the healthchek-port set the nodePort from the status-port 
@@ -93,7 +94,7 @@ Note that the nodeport for the status-port will change so you will have to edit 
 It should look like this 
 ```
     alb.ingress.kubernetes.io/healthcheck-path: /healthz/ready
-    alb.ingress.kubernetes.io/healthcheck-port: "32454"
+    alb.ingress.kubernetes.io/healthcheck-port: "30829"
 ```
 
 ## apply ingress object
