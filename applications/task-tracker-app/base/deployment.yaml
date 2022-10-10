@@ -21,4 +21,4 @@ spec:
         image: foxy7887/task-tracker-app:v3
         imagePullPolicy: IfNotPresent
         ports:
-        - containerPort: 80
+        - containerPort: 443
