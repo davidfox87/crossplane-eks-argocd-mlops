@@ -4,24 +4,24 @@ metadata:
   name: task-tracker-app-ui
   labels:
     app: task-tracker-app-ui
-    version: v1
+    version: v2
 spec:
   replicas: 3
   selector:
     matchLabels:
       app: task-tracker-app-ui
-      version: v1
+      version: v2
   template:
     metadata:
       labels:
         app: task-tracker-app-ui
         istio-injection: enabled
-        version: v1
+        version: v2
     spec:
       serviceAccountName: task-tracker
       containers:
       - name: task-tracker-app-ui
-        image: foxy7887/task-tracker-app:v1
+        image: foxy7887/task-tracker-app:v2
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 80
