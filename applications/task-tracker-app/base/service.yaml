@@ -12,7 +12,6 @@ spec:
     - protocol: TCP
       port: 8000
       targetPort: 80
-      appProtocol: http
   selector:
     app: task-tracker-app-ui
 
