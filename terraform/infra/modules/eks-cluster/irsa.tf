@@ -107,36 +107,18 @@ resource "aws_iam_policy" "s3_access" {
 
 
 
-# module "iam_assumable_role_lb" {
-#   source  = "terraform-aws-modules/iam/aws//modules/iam-assumable-role-with-oidc"
-#   version = "~> 4.0"
-#   create_role                   = true
-#   role_name                     = "aws-load-balancer-controller"
-#   provider_url                  = replace(aws_iam_openid_connect_provider.eks-cluster.url, "https://", "")
-#   role_policy_arns              = [aws_iam_policy.AWSLoadBalancerControllerIAMPolicy.arn]
-#   oidc_fully_qualified_subjects = ["${local.k8s_service_account_namespace2}:${local.k8s_service_account_name2}"]
-# }
 
 
 
 
+resource "kubernetes_service_account" "s3-access-service-account" {
+  metadata {
+    name = local.k8s_service_account_name_s3access # This is used as the serviceAccountName in the spec section of the k8 pod manifest
+                                          # it means that the pod can assume the IAM role with the S3 policy attached
+    namespace = local.k8s_service_account_namespace_mlflow
 
-
-# module "load_balancer_controller_irsa_role" {
-#   source = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
-
-#   role_name                              = "load-balancer-controller"
-#   attach_load_balancer_controller_policy = true
-
-#   oidc_providers = {
-#     ex = {
-#       provider_arn               = aws_iam_openid_connect_provider.eks-cluster.arn 
-#       namespace_service_accounts = ["kube-system:aws-load-balancer-controller"]
-#     }
-#   }
-
-#   tags = {"name" : "aws-load-balancer-controller"}
-# }
-
-
-
+    annotations = {
+      "eks.amazonaws.com/role-arn" = module.iam_assumable_role_s3_access.iam_role_arn
+    }
+  }
+}
