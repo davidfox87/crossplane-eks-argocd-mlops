@@ -24,11 +24,11 @@ kubectl get deployment -n kube-system aws-load-balancer-controller
 ![AWS infra](https://docs.aws.amazon.com/prescriptive-guidance/latest/patterns/images/pattern-img/abf727c1-ff8b-43a7-923f-bce825d1b459/images/281936fa-bc43-4b4e-a343-ba1eab97df38.png)
 
 ## End-to-end traffic encryption using a TLS certificate from ACM, ALB, and Istio in the Amazon EKS.
+In the following steps, I implement end-to-end encryption using a TLS certificate in AWS Certificate Manager (ACM), Application Load Balancer (ALB), and Istio gateway and service mesh in an AWS EKS environment. Istio generates detailed telemetry for all service communications within a service mesh. This telemetry provides full observability of traffic in and out of the mesh and between services inside the mesh. Istio integrates extremely well with Prometheus and Grafana, which we will also install using ArgoCD.
 ![tls](SecureEndtoEndTrafficOnEKS2.jpg)
 
 # Installing Argo-cd 
 [Getting started with ArgoCD](https://argo-cd.readthedocs.io/en/stable/getting_started/)
-
 ```
 kubectl create namespace argocd
 kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/v2.4.12/manifests/install.yaml
@@ -139,10 +139,13 @@ The Gateway and VirtualService that will configure Envoy of the Istio Ingress Ga
 ![GitOps ArgoCD](https://www.eksworkshop.com/images/argocd/argocd_architecture.png)
 
 
-
-
 # installing MLflow server with ingress and s3 artifact store
+[MLflow](https://mlflow.org/) is an open source platform to manage the ML lifecycle, including experimentation, reproducibility, deployment, and a central model registry. It offers the following features:
+- it allows you to store models artifacts in a central repository
+- record and query the results of machine learning modeling experiments: code, data, config, results
+- package DS code to reproduce any run on any platform
 
+In ```applications/mlflow```, we run the MLflow tracking server from a containerized service and deploy through a kubernetes deployment manifest. The DB metadata connection parameters and artifact store are mounted to the container as environment variables through secrets and configmaps.
 
 # Clean up your workspace
 
