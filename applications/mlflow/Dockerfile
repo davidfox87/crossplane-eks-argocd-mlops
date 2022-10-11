@@ -8,7 +8,7 @@ RUN pip install --no-cache-dir -r requirements.txt && \
 EXPOSE 5000
 
 ENV AWS_MLFLOW_BUCKET mlflow
-ENV BACKEND_URI postgresql://postgresdb/mlflow
+ENV BACKEND_URI postgresql://${PG_USER}:${PG_PASSWORD}@postgresdb:${PG_PORT}/${PG_DATABASE}
 
 CMD mlflow server \
     --backend-store-uri ${BACKEND_URI} \
