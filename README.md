@@ -94,7 +94,8 @@ kubectl create secret generic tls-secret -n istio-system \
 ```
 
 ## wait for everything to sync and be healthy in the argo-cd UI
-woop
+The following screenshot shows the applications that argocd has deployed into our EKS cluster either from our own kustomize application manifests or third-party helm charts.
+![route53](argocd.png)
 
 ## configure healthcheck path for alb
 To configure the alb.ingress.kubernetes.io/alb.ingress.kubernetes.io/healthcheck-path get a readinessProbe from the  Deployment, which creates pods with the istio-ingressgateway:
