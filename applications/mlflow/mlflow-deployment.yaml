@@ -22,6 +22,8 @@ spec:
         envFrom:
         - secretRef:
             name: db_creds
+        - configMapRef:
+            name: mlflow-configmap
         volumeMounts:
         - mountPath: /mnt/mlflow
           name: mlflow-manifest-storage
