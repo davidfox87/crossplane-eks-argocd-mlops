@@ -122,7 +122,9 @@ It should look like this
 ```
 
 Add these annotations to the existing istio-ingressgateway service manifest
-```kubectl -n istio-system edit svc istio-ingressgateway```
+```
+kubectl -n istio-system edit svc istio-ingressgateway
+```
 
 ## apply ingress object
 Ingress object will spawn aws-load-balancer-controler, which has a backend that points to istio-ingressgateway
