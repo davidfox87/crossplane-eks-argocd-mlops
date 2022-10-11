@@ -57,8 +57,9 @@ kubectl apply -f apps.yaml
 ```
 
 ## generate tls-secret using sealed secrets
-NOTE TLS-SECRET NEEDS TO GO IN ISTIO-SYSTEM NAMESPACE
-JUST PUT THE GATEWAY AND TLS-SECRET ALL IN THE ISTIO-SYSTEM NAMESPACE AND THEN REFERENCE THE  GATEWAY IN THE ISTIO-SYSTEM NAMESPACE FROM THE STAGING NAMESPACE USING THE FOLLOWING:
+Note the tls-secret needs to go in the istio-system namespace because the istio-ingressgateway needs to access it (didn't see that from the docs).
+I put the gateway and tls-secret in the istio-system namespace and the istio virtual services go in their own namespaces. The virtual services will reference the gateway using svc.namespace.svc.cluster.local naming convention to reference services in other namespaces. This is done in the following way:
+
 ```
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
