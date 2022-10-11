@@ -7,7 +7,7 @@ RUN pip install --no-cache-dir -r requirements.txt && \
 # Expose the port that the MLFlow tracking server runs on
 EXPOSE 5000
 
-ENV BACKEND_URI postgresql://${PG_USER}:${PG_PASSWORD}@${PG_HOST}b:${PG_PORT}/${PG_DATABASE}
+ENV BACKEND_URI postgresql://${PG_USER}:${PG_PASSWORD}@${PG_HOST}:${PG_PORT}/${PG_DATABASE}
 
 CMD mlflow server \
     --backend-store-uri ${BACKEND_URI} \
