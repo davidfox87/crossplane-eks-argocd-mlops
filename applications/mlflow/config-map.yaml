@@ -5,5 +5,5 @@ metadata:
 data:
   AWS_MLFLOW_BUCKET: mlflow
   PG_DATABASE: "mlflow"
-  PG_HOST: "postgresql.default.svc.cluster.local"
+  PG_HOST: "postgresql.mlflow.svc.cluster.local"
   PG_PORT: 5432
