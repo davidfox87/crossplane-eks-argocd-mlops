@@ -122,6 +122,10 @@ The Gateway and VirtualService that will configure Envoy of the Istio Ingress Ga
 
 
 
+
+# installing MLflow server with ingress and s3 artifact store
+
+
 # Clean up your workspace
 
 Delete the application in argo-cd
