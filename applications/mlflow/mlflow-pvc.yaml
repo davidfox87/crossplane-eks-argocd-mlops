@@ -2,7 +2,7 @@ kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
   name: mlflow-manifest-pvc
-  namespace: kubeflow
+  namespace: mlflow
 spec:
   storageClassName: gp2
   accessModes:
