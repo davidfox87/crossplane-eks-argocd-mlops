@@ -19,10 +19,10 @@ Verify the aws-load-balancer-controller is installed
 ```
 kubectl get deployment -n kube-system aws-load-balancer-controller
 ```
-Our infrastructure in aws will look like this (substitute gRPC traffic with HTTPS traffic):
+## Our infrastructure in aws will look like this (substitute gRPC traffic with HTTPS traffic):
 ![AWS infra](https://docs.aws.amazon.com/prescriptive-guidance/latest/patterns/images/pattern-img/abf727c1-ff8b-43a7-923f-bce825d1b459/images/281936fa-bc43-4b4e-a343-ba1eab97df38.png)
 
-End-to-end traffic encryption using a TLS certificate from ACM, ALB, and Istio in the Amazon EKS.
+## End-to-end traffic encryption using a TLS certificate from ACM, ALB, and Istio in the Amazon EKS.
 ![tls](SecureEndtoEndTrafficOnEKS2.jpg)
 
 # Installing Argo-cd 
@@ -57,8 +57,24 @@ kubectl apply -f apps.yaml
 ```
 
 ## generate tls-secret using sealed secrets
-NOTE TLS-SECRET NEEDS TO GO IN ISTIO-SYSTEM NAMESPACE
-JUST PUT THE GATEWAY, VIRTUAL-SERVICE AND TLS-SECRET ALL IN THE ISTIO-SYSTEM NAMESPACE AND THEN REFERENCE THE SERVICES USING task-tracker-app-ui.staging.svc.cluster.local
+Note the tls-secret needs to go in the istio-system namespace because the istio-ingressgateway needs to access it (didn't see that from the docs).
+I put the gateway and tls-secret in the istio-system namespace and the istio virtual services go in their own namespaces. The virtual services will reference the gateway using svc.namespace.svc.cluster.local naming convention to reference services in other namespaces. This is done in the following way:
+
+```
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: task-tracker-app-ui # name of the k8s service
+spec:
+  hosts:
+  - staging.mlops-playground.com
+  - task-tracker-app-ui
+  gateways:
+  - public-gateway.istio-system.svc.cluster.local
+```
+
+### Generate the tls-secret and then use sealed-secrets to encode it. 
+If we use sealed secrets, we can then store everything in github (without getting fired) and then argocd can manage the deployment using manifests stored in github (which is our source of truth)
 ```
 kubectl create secret generic tls-secret -n staging \
 --from-file=key=certs/key.pem \
