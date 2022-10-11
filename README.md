@@ -22,7 +22,8 @@ kubectl get deployment -n kube-system aws-load-balancer-controller
 Our infrastructure in aws will look like this (substitute gRPC traffic with HTTPS traffic):
 ![AWS infra](https://docs.aws.amazon.com/prescriptive-guidance/latest/patterns/images/pattern-img/abf727c1-ff8b-43a7-923f-bce825d1b459/images/281936fa-bc43-4b4e-a343-ba1eab97df38.png)
 
-
+End-to-end traffic encryption using a TLS certificate from ACM, ALB, and Istio in the Amazon EKS.
+![tls](SecureEndtoEndTrafficOnEKS2.jpg)
 
 # Installing Argo-cd 
 [Getting started with ArgoCD](https://argo-cd.readthedocs.io/en/stable/getting_started/)
