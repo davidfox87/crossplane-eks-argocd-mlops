@@ -3,7 +3,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: mlflow-tracking-server
-  namespace: kubeflow
+  namespace: mlflow
 spec:
   selector:
     matchLabels:
@@ -16,25 +16,12 @@ spec:
     spec:
       containers:
       - name: mlflow-tracking-server
-        image: seedjeffwan/mlflow-tracking-server:1.0.0
+        image: foxy7887/mlflow-tracking-server:1.0
         ports:
         - containerPort: 5000
-        env:
-        # FILE_DIR can not be mount dir, MLFLOW need a empty dir but mount dir has lost+found
-        - name: FILE_DIR
-          value: /mnt/mlflow/manifest
-        - name: AWS_MLFLOW_BUCKET
-          value: mlflow-artifacts
-        - name: AWS_ACCESS_KEY_ID
-          valueFrom:
-            secretKeyRef:
-              name: aws-secret
-              key: AWS_ACCESS_KEY_ID
-        - name: AWS_SECRET_ACCESS_KEY
-          valueFrom:
-            secretKeyRef:
-              name: aws-secret
-              key: AWS_SECRET_ACCESS_KEY
+        envFrom:
+        - secretRef:
+            name: db_creds
         volumeMounts:
         - mountPath: /mnt/mlflow
           name: mlflow-manifest-storage

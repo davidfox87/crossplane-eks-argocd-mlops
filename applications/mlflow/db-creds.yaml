@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: db-creds
+data:
+  PG_USER: mlflow
+  PG_PASSWORD: mlflow
+  PG_DATABASE: mlflow
+  PG_PORT: 5432
