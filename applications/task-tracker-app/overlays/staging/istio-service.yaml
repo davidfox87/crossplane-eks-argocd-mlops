@@ -5,15 +5,13 @@ metadata:
 spec:
   hosts:
   - staging.mlops-playground.com
-  - task-tracker-app-ui.staging.svc.cluster.local
+  - task-tracker-app-ui
   gateways:
-  - default-gateway
+  - public-gateway.istio-system.svc.cluster.local
   http:
   - match:
     - uri:
         exact: /
-      gateways:
-      - default-gateway #restricts this rule to apply only to ingress gateway
     route:
     - destination:
         host: task-tracker-app-ui
