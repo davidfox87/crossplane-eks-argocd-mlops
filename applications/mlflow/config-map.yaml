@@ -3,7 +3,7 @@ kind: ConfigMap
 metadata:
   name: mlflow-configmap
 data:
-  ARTIFACT_STORE: <URI OF THE GOOGLE CLOUD ARTIFACT STORE>
+  AWS_MLFLOW_BUCKET: mlflow
   PG_DATABASE: "mlflow"
   PG_HOST: "postgresql.default.svc.cluster.local"
   PG_PORT: 5432
