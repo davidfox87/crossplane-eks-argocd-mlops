@@ -1,13 +1,14 @@
 # Using ArgoCD to deploy Secure end-to-end traffic on Amazon EKS using TLS certificate in ACM, ALB, and Istio gateway and service mesh.
 
 # Deploy to the AWS EKS using Terraform! 
-
+Our AWS infrastructure will consist of the following:
 
 - EKS Cluster: AWS managed Kubernetes cluster of master servers
 - EKS Node Group
 - Associated VPC, Internet Gateway, Security Groups, and Subnets: Operator managed networking resources for the EKS Cluster and worker node instances
 - Associated IAM Roles and Policies: Operator managed access resources for EKS and worker node instances
 
+To spin up our infra, do the following:
 ```
 terraform init
 terraform get
