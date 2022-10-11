@@ -58,7 +58,22 @@ kubectl apply -f apps.yaml
 
 ## generate tls-secret using sealed secrets
 NOTE TLS-SECRET NEEDS TO GO IN ISTIO-SYSTEM NAMESPACE
-JUST PUT THE GATEWAY, VIRTUAL-SERVICE AND TLS-SECRET ALL IN THE ISTIO-SYSTEM NAMESPACE AND THEN REFERENCE THE SERVICES USING task-tracker-app-ui.staging.svc.cluster.local
+JUST PUT THE GATEWAY AND TLS-SECRET ALL IN THE ISTIO-SYSTEM NAMESPACE AND THEN REFERENCE THE  GATEWAY IN THE ISTIO-SYSTEM NAMESPACE FROM THE STAGING NAMESPACE USING THE FOLLOWING:
+```
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: task-tracker-app-ui # name of the k8s service
+spec:
+  hosts:
+  - staging.mlops-playground.com
+  - task-tracker-app-ui
+  gateways:
+  - public-gateway.istio-system.svc.cluster.local
+```
+
+### Generate the tls-secret and then use sealed-secrets to encode it. 
+If we use sealed secrets, we can then store everything in github (without getting fired) and then argocd can manage the deployment using manifests stored in github (which is our source of truth)
 ```
 kubectl create secret generic tls-secret -n staging \
 --from-file=key=certs/key.pem \
