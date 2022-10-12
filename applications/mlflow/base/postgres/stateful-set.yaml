@@ -7,20 +7,20 @@ metadata:
 spec:
   selector:
     matchLabels:
-      app: mlflow-postgres
+      app: postgres
   serviceName: "postgres"
   replicas: 1
   template:
     metadata:
       labels:
-        app: mlflow-postgres
+        app: postgres
     spec:
       containers:
-      - name: mlflow-postgres
+      - name: postgres
         image: postgres
         ports:
         - containerPort: 5432
-          protocol: TCP
+          name: mlflow-postgres
         envFrom: # contains PGDATA and POSTGRES_DB
         - configMapRef:
             name: mlflow-postgres-config
@@ -31,7 +31,7 @@ spec:
             valueFrom:
               secretKeyRef:
                 name: db-secret
-                key: postgresql-password
+                key: password
         resources:
           requests:
             memory: "1Gi"

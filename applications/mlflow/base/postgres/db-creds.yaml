@@ -1,6 +1,11 @@
 apiVersion: v1
+data:
+  password: bWxmbG93
 kind: Secret
 metadata:
+  creationTimestamp: "2022-10-12T16:45:02Z"
   name: db-secret
-data:
-  postgresql-password: mlflow
+  namespace: default
+  resourceVersion: "1117"
+  uid: 9e95d30a-38ea-477c-a717-7cb5f3ded22c
+type: Opaque
