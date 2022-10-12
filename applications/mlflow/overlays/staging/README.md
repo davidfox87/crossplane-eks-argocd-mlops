@@ -1,0 +1,1 @@
+change the provisioner in postgres StorageClass to EBS for production setup.

@@ -1,0 +1,262 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: local-mlflow
+---
+apiVersion: v1
+data:
+  AWS_ACCESS_KEY_ID: minio
+  AWS_SECRET_ACCESS_KEY: minio123
+  MLFLOW_S3_ENDPOINT_URL: http://10.111.110.13:9000/
+kind: ConfigMap
+metadata:
+  name: example-configmap-1-t4567kcf8f
+  namespace: local-mlflow
+---
+apiVersion: v1
+data:
+  AWS_MLFLOW_BUCKET: mlflow
+  PG_DATABASE: mlflow-db
+  PG_HOST: postgres-0
+  PG_PORT: 5432
+kind: ConfigMap
+metadata:
+  name: mlflow-configmap
+  namespace: local-mlflow
+---
+apiVersion: v1
+data:
+  PGDATA: /var/lib/postgresql/mlflow/data
+  POSTGRES_DB: mlflow-db
+kind: ConfigMap
+metadata:
+  labels:
+    app: mlflow-postgres
+  name: mlflow-postgres-config
+  namespace: local-mlflow
+---
+apiVersion: v1
+data:
+  PG_PASSWORD: mlflow
+  PG_USER: mlflow
+kind: Secret
+metadata:
+  name: db-creds
+  namespace: local-mlflow
+---
+apiVersion: v1
+data:
+  postgresql-password: mlflow
+kind: Secret
+metadata:
+  name: db-secret
+  namespace: local-mlflow
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mlflow-minio-service
+  namespace: local-mlflow
+spec:
+  ports:
+  - port: 9000
+    protocol: TCP
+    targetPort: 9000
+  selector:
+    app: mlflow-minio
+  type: NodePort
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: mlflow-tracking-server
+  name: mlflow-tracking-server
+  namespace: local-mlflow
+spec:
+  ports:
+  - port: 5000
+    protocol: TCP
+  selector:
+    app: mlflow-tracking-server
+  type: NodePort
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: postgres
+  name: postgres
+  namespace: local-mlflow
+spec:
+  clusterIP: None
+  ports:
+  - port: 5432
+    protocol: TCP
+    targetPort: 5432
+  selector:
+    app: postgres
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mlflow-minio
+  namespace: local-mlflow
+spec:
+  selector:
+    matchLabels:
+      app: mlflow-minio
+  template:
+    metadata:
+      labels:
+        app: mlflow-minio
+    spec:
+      containers:
+      - args:
+        - server
+        - /data
+        env:
+        - name: MINIO_ACCESS_KEY
+          value: minio
+        - name: MINIO_SECRET_KEY
+          value: minio123
+        image: minio/minio:latest
+        name: mlflow-minio
+        ports:
+        - containerPort: 9000
+        volumeMounts:
+        - mountPath: /data
+          name: mlflow-pvc
+      volumes:
+      - name: mlflow-pvc
+        persistentVolumeClaim:
+          claimName: mlflow-pvc
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mlflow-tracking-server
+  namespace: local-mlflow
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mlflow-tracking-server
+  template:
+    metadata:
+      labels:
+        app: mlflow-tracking-server
+    spec:
+      containers:
+      - envFrom:
+        - secretRef:
+            name: db_creds
+        - configMapRef:
+            name: example-configmap-1-t4567kcf8f
+        image: foxy7887/mlflow-tracking-server:1.0
+        name: mlflow-tracking-server
+        ports:
+        - containerPort: 5000
+          name: http
+          protocol: TCP
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    app: mlflow-postgres
+  name: mlflow-postgres
+  namespace: local-mlflow
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mlflow-postgres
+  serviceName: mlflow-postgres-service
+  template:
+    metadata:
+      labels:
+        app: mlflow-postgres
+    spec:
+      containers:
+      - env:
+        - name: POSTGRES_USER
+          value: mlflow
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: postgresql-password
+              name: db-secret
+        envFrom:
+        - configMapRef:
+            name: mlflow-postgres-config
+        image: postgres
+        name: mlflow-postgres
+        ports:
+        - containerPort: 5432
+          protocol: TCP
+        resources:
+          requests:
+            cpu: 500m
+            memory: 1Gi
+        volumeMounts:
+        - mountPath: /var/lib/postgresql/mlflow
+          name: mlflow-pvc
+  volumeClaimTemplates:
+  - metadata:
+      name: mlflow-pvc
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 100Mi
+---
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.il/add-base-url: "true"
+  name: mlflow-ingress
+  namespace: local-mlflow
+spec:
+  rules:
+  - host: mlflow-server.local
+    http:
+      paths:
+      - backend:
+          serviceName: mlflow-service
+          servicePort: 5000
+        path: /
+---
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.il/add-base-url: "true"
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+  name: mlflow-minio-ingress
+  namespace: local-mlflow
+spec:
+  rules:
+  - host: mlflow-minio.local
+    http:
+      paths:
+      - backend:
+          serviceName: mlflow-minio-service
+          servicePort: 9000
+        path: /
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mlflow-pvc
+  namespace: local-mlflow
+spec:
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 100Mi

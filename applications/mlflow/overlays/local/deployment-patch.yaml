@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mlflow-tracking-server
+  namespace: mlflow
+spec:
+  selector:
+    matchLabels:
+      app: mlflow-tracking-server
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: mlflow-tracking-server
+    spec:
+      containers:
+      - name: mlflow-tracking-server
+        envFrom:
+        - secretRef:
+            name: db_creds
+        - configMapRef:
+            name: example-configmap-1
