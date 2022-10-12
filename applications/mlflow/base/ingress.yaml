@@ -7,10 +7,10 @@ metadata:
     nginx.ingress.kubernetes.il/add-base-url: "true"
 spec:
   rules:
-  - host: mlflow-server.local
+  - host: mlflow-tracking-server.local
     http:
       paths:
         - backend:
-            serviceName: mlflow-service
+            serviceName: mlflow-tracking-server
             servicePort: 5000
           path: /
