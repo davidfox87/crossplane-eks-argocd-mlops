@@ -1,15 +1,15 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: mlflow-minio
+  name: minio
 spec:
   selector:
     matchLabels:
-      app: mlflow-minio
+      app: minio
   template:
     metadata:
       labels:
-        app: mlflow-minio
+        app: minio
     spec:
       volumes:
       - name: mlflow-pvc
