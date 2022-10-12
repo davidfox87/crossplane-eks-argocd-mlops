@@ -11,6 +11,6 @@ ENV BACKEND_URI postgresql://${PG_USER}:${PG_PASSWORD}@${PG_HOST}:${PG_PORT}/${P
 
 CMD mlflow server \
     --backend-store-uri ${BACKEND_URI} \
-    --default-artifact-root s3://${AWS_MLFLOW_BUCKET}/artifacts \
+    --default-artifact-root s3://${AWS_MLFLOW_BUCKET}/ \
     --host 0.0.0.0 \
     --port 5000

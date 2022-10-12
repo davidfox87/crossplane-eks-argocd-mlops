@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mlflow-minio
+spec:
+  selector:
+    matchLabels:
+      app: mlflow-minio
+  template:
+    metadata:
+      labels:
+        app: mlflow-minio
+    spec:
+      volumes:
+      - name: mlflow-pvc
+        persistentVolumeClaim:
+          claimName: mlflow-pvc
+      containers:
+      - name: mlflow-minio
+        image: minio/minio:latest
+        args:
+        - server
+        - /data
+        volumeMounts:
+        - name: mlflow-pvc
+          mountPath: '/data'
+        env:
+        - name: MINIO_ACCESS_KEY
+          value: "minio"
+        - name: MINIO_SECRET_KEY
+          value: "minio123"
+        ports:
+        - containerPort: 9000
