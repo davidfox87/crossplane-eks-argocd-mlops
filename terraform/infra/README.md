@@ -14,19 +14,6 @@ terraform apply
 ```
 
 
-Run the following command to retrieve the access credentials for your cluster and configure kubectl.
-
-``` 
-aws eks --region $(terraform output -raw region) update-kubeconfig \
-    --name $(terraform output -raw cluster_name)
-```
-
-Create an OIDC provider and associate it with for your EKS cluster with the following command:
-```
-eksctl utils associate-iam-oidc-provider --cluster $(terraform output -raw cluster_name) \
---region $(terraform output -raw region) --approve
-```
-
 First, get information about the cluster.
 ```
 kubectl cluster-info
@@ -117,8 +104,6 @@ https://aws.amazon.com/premiumsupport/knowledge-center/eks-access-kubernetes-ser
 
 Use the NGINX ingress controller or AWS Load Balancer Controller for Kubernetes to provide external access to multiple Kubernetes services in your Amazon EKS cluster. 
 
-Prerequisite: Install the AWS Load Balancer Controller. It's a best practice to use the AWS Load Balancer Controller to create and manage a Network Load Balancer for the LoadBalancer type service objects in Amazon EKS.
-
 
 # Clean up your workspace
 
@@ -127,12 +112,3 @@ You have now provisioned an EKS cluster, configured kubectl, and verified that y
 ```
 terraform destroy
 ```
-
-
-
-https://learn.hashicorp.com/tutorials/terraform/eks
-
-
-kubectl apply -f pods/commands.yaml
-kubectl get pods
-kubectl logs command-demo

@@ -1,6 +1,6 @@
 # Using ArgoCD to deploy Secure end-to-end traffic on Amazon EKS using TLS certificate in ACM, ALB, and Istio gateway and service mesh.
 
-# Deploy to the AWS EKS using Terraform! 
+## Deploy to the AWS EKS using Terraform! 
 Our AWS infrastructure will consist of the following:
 
 - EKS Cluster: AWS managed Kubernetes cluster of master servers
@@ -27,7 +27,7 @@ kubectl get deployment -n kube-system aws-load-balancer-controller
 In the following steps, I implement end-to-end encryption using a TLS certificate in AWS Certificate Manager (ACM), Application Load Balancer (ALB), and Istio gateway and service mesh in an AWS EKS environment. Istio generates detailed telemetry for all service communications within a service mesh. This telemetry provides full observability of traffic in and out of the mesh and between services inside the mesh. Istio integrates extremely well with Prometheus and Grafana, which we will also install using ArgoCD.
 ![tls](SecureEndtoEndTrafficOnEKS2.jpg)
 
-# Installing Argo-cd 
+## Installing Argo-cd 
 [Getting started with ArgoCD](https://argo-cd.readthedocs.io/en/stable/getting_started/)
 ```
 kubectl create namespace argocd
@@ -46,7 +46,7 @@ echo akRjVGZmNjhxbTdJWHB3OA== | base64 --decode
 ```
 Take the decoded password and login to the ui
 
-# clone the repo which has our ArgoCD manifests for the project and app
+## clone the repo which has our ArgoCD manifests for the project and app
 ```
 git clone git@github.com:davidfox87/argocd-production.git
 ```
@@ -108,7 +108,6 @@ httpGet:
 path: /healthz/ready
 ...
 ```
-kubectl -n istio-system get svc istio-ingressgateway -o yaml
 
 Set annotations for the istio-ingressgateway Service: 
 - in the healthchek-port set the nodePort from the status-port 
@@ -122,6 +121,11 @@ It should look like this
     alb.ingress.kubernetes.io/healthcheck-port: "30829"
 ```
 
+Add these annotations to the existing istio-ingressgateway service manifest
+```
+kubectl -n istio-system edit svc istio-ingressgateway
+```
+
 ## apply ingress object
 Ingress object will spawn aws-load-balancer-controler, which has a backend that points to istio-ingressgateway
 Important!!! The ingress object has to go into the istio-system namespace.
@@ -133,14 +137,14 @@ kubectl apply -f istio-gw-ingress/ingress.yaml -n istio-system
 AWS ALB Ingress Controller will create a TargetGroup to be used with the ALB
 The Gateway and VirtualService that will configure Envoy of the Istio Ingress Gateway to route traffic to the Service of the application
 
-# map the domain name that is associated with ACM certificate to the ALB just spawned
+## Map the domain name that is associated with ACM certificate to the ALB just spawned
 ![route53](route53.png)
 
-# Our true GitOps CI/CD platform
+## Our true GitOps CI/CD platform
 ![GitOps ArgoCD](https://www.eksworkshop.com/images/argocd/argocd_architecture.png)
 
 
-# installing MLflow server with ingress and s3 artifact store
+## installing MLflow server with ingress and s3 artifact store
 [MLflow](https://mlflow.org/) is an open source platform to manage the ML lifecycle, including experimentation, reproducibility, deployment, and a central model registry. It offers the following features:
 - it allows you to store models artifacts in a central repository
 - record and query the results of machine learning modeling experiments: code, data, config, results
@@ -148,7 +152,7 @@ The Gateway and VirtualService that will configure Envoy of the Istio Ingress Ga
 
 In ```applications/mlflow```, we run the MLflow tracking server from a containerized service and deploy through a kubernetes deployment manifest. The DB metadata connection parameters and artifact store are mounted to the container as environment variables through secrets and configmaps.
 
-# Clean up your workspace
+## Clean up your workspace
 
 Delete the application in argo-cd
 
