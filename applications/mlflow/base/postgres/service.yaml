@@ -8,8 +8,7 @@ metadata:
 spec:
   ports:
   - port: 5432
-    targetPort: 5432
-    protocol: TCP
+    name: mlflow-postgres # forward traffic on port 5432 to statefulset pods with mlflow-postgres label
   clusterIP: None
   selector:
     app: postgres
