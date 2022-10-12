@@ -17,13 +17,21 @@ spec:
     spec:
       containers:
       - name: mlflow-postgres
-        image: postgres:11
+        image: postgres
         ports:
         - containerPort: 5432
           protocol: TCP
-        envFrom:
+        envFrom: # contains PGDATA and POSTGRES_DB
         - configMapRef:
             name: mlflow-postgres-config
+        env:
+          - name: POSTGRES_USER
+            value: "mlflow"
+          - name: POSTGRES_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: db-secret
+                key: postgresql-password
         resources:
           requests:
             memory: "1Gi"

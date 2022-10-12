@@ -25,12 +25,5 @@ spec:
             name: db_creds
         - configMapRef:
             name: mlflow-configmap
-        env:
-        - name: MLFLOW_S3_ENDPOINT_URL
-          value: http://10.111.110.13:9000/
-        - name: AWS_ACCESS_KEY_ID
-          value: "minio"
-        - name: AWS_SECRET_ACCESS_KEY
-          value: "minio123"
       
 

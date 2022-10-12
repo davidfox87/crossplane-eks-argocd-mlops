@@ -5,7 +5,5 @@ metadata:
   labels:
     app: mlflow-postgres
 data:
-  POSTGRES_DB: mlflow_db
-  POSTGRES_USER: mlflow_user
-  POSTGRES_PASSWORD: mlflow_pwd
+  POSTGRES_DB: mlflow-db
   PGDATA: /var/lib/postgresql/mlflow/data

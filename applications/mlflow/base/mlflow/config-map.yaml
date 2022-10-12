@@ -5,6 +5,6 @@ metadata:
   namespace: mlflow
 data:
   AWS_MLFLOW_BUCKET: mlflow
-  PG_DATABASE: "mlflow"
-  PG_HOST: "postgresql.mlflow.svc.cluster.local"
+  PG_DATABASE: "mlflow-db"
+  PG_HOST: "postgres-0"
   PG_PORT: 5432
