@@ -1,16 +1,16 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: mlflow
+  name: local-mlflow
 ---
 apiVersion: v1
 data:
   AWS_ACCESS_KEY_ID: minio
   AWS_SECRET_ACCESS_KEY: minio123
-  MLFLOW_S3_ENDPOINT_URL: minio.mlflow
+  MLFLOW_S3_ENDPOINT_URL: minio.local-mlflow
 kind: ConfigMap
 metadata:
-  name: example-configmap-1-fhht6mbdfm
+  name: example-configmap-1-dd8t277h5h
   namespace: local-mlflow
 ---
 apiVersion: v1
@@ -152,7 +152,7 @@ spec:
         - secretRef:
             name: db_creds
         - configMapRef:
-            name: example-configmap-1-fhht6mbdfm
+            name: example-configmap-1-dd8t277h5h
         image: foxy7887/mlflow-tracking-server:1.0
         name: mlflow-tracking-server
         ports:
