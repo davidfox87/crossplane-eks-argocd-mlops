@@ -8,10 +8,10 @@ metadata:
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
 spec:
   rules:
-  - host: mlflow-minio.local
+  - host: minio.local
     http:
       paths:
         - backend:
-            serviceName: mlflow-minio-service
+            serviceName: minio
             servicePort: 9000
           path: /
