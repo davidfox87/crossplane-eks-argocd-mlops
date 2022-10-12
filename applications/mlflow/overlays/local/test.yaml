@@ -1,16 +1,16 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: local-mlflow
+  name: mlflow
 ---
 apiVersion: v1
 data:
   AWS_ACCESS_KEY_ID: minio
   AWS_SECRET_ACCESS_KEY: minio123
-  MLFLOW_S3_ENDPOINT_URL: http://10.111.110.13:9000/
+  MLFLOW_S3_ENDPOINT_URL: minio.mlflow
 kind: ConfigMap
 metadata:
-  name: example-configmap-1-t4567kcf8f
+  name: example-configmap-1-fhht6mbdfm
   namespace: local-mlflow
 ---
 apiVersion: v1
@@ -55,7 +55,7 @@ metadata:
 apiVersion: v1
 kind: Service
 metadata:
-  name: mlflow-minio-service
+  name: minio
   namespace: local-mlflow
 spec:
   ports:
@@ -63,7 +63,7 @@ spec:
     protocol: TCP
     targetPort: 9000
   selector:
-    app: mlflow-minio
+    app: minio
   type: NodePort
 ---
 apiVersion: v1
@@ -100,16 +100,16 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: mlflow-minio
+  name: minio
   namespace: local-mlflow
 spec:
   selector:
     matchLabels:
-      app: mlflow-minio
+      app: minio
   template:
     metadata:
       labels:
-        app: mlflow-minio
+        app: minio
     spec:
       containers:
       - args:
@@ -152,7 +152,7 @@ spec:
         - secretRef:
             name: db_creds
         - configMapRef:
-            name: example-configmap-1-t4567kcf8f
+            name: example-configmap-1-fhht6mbdfm
         image: foxy7887/mlflow-tracking-server:1.0
         name: mlflow-tracking-server
         ports:
@@ -241,11 +241,11 @@ metadata:
   namespace: local-mlflow
 spec:
   rules:
-  - host: mlflow-minio.local
+  - host: minio.local
     http:
       paths:
       - backend:
-          serviceName: mlflow-minio-service
+          serviceName: minio
           servicePort: 9000
         path: /
 ---
