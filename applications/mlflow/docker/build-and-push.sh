@@ -1,5 +1,5 @@
 #!/bin/bash -e
-docker login --username=foxy7887 -p MGSGiw550!
+docker login --username=xxxxx -p xxxxx
 
 image_name=foxy7887/mlflow
 image_tag=v1
