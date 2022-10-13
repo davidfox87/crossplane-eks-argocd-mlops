@@ -43,3 +43,8 @@ tenant:
       topologySpreadConstraints: [ ]
       ## Configure Runtime Class
       # runtimeClassName: ""
+  # pool metrics to be read by Prometheus
+  metrics:
+    enabled: false
+    port: 9000
+    protocol: http
