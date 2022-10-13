@@ -11,11 +11,11 @@ spec:
   - host: minio.local
     http:
       paths:
-        - path: /minio
+        - path: /
           pathType: Prefix
           backend:
             service:
-              name: minio
+              name: minio-service
               port: 
                 number: 9000
 

@@ -16,9 +16,9 @@ spec:
       - name: mlflow-tracking-server
         env:
         - name: MLFLOW_S3_ENDPOINT_URL
-          value: http://minio.local-mlflow.svc.cluster.local:9000
+          value: http://minio.local/ # this is the host name in the minio ingress
         - name: AWS_ACCESS_KEY_ID
-          value: minio
+          value: "minio"
         - name: AWS_SECRET_ACCESS_KEY
-          value: minio123
+          value: "minio123"
 
