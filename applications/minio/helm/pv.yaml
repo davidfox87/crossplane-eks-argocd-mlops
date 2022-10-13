@@ -5,55 +5,55 @@ metadata:
   labels:
     type: local
 spec:
-  storageClassName: standard
+  storageClassName: manual
   capacity:
-    storage: 1Gi
+    storage: 10Gi
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: "/media/working/minio-volume/0"
+    path: "/export/data"
 ---
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: minio-pv-volume-1
-  labels:
-    type: local
-spec:
-  storageClassName: standard
-  capacity:
-    storage: 1Gi
-  accessModes:
-    - ReadWriteOnce
-  hostPath:
-    path: "/media/working/minio-volume/1"
----
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: minio-pv-volume-2
-  labels:
-    type: local
-spec:
-  storageClassName: standard
-  capacity:
-    storage: 1Gi
-  accessModes:
-    - ReadWriteOnce
-  hostPath:
-    path: "/media/working/minio-volume/2"
----
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: minio-pv-volume-3
-  labels:
-    type: local
-spec:
-  storageClassName: standard
-  capacity:
-    storage: 1Gi
-  accessModes:
-    - ReadWriteOnce
-  hostPath:
-    path: "/media/working/minio-volume/3"
+# apiVersion: v1
+# kind: PersistentVolume
+# metadata:
+#   name: minio-pv-volume-1
+#   labels:
+#     type: local
+# spec:
+#   storageClassName: manual
+#   capacity:
+#     storage: 5Gi
+#   accessModes:
+#     - ReadWriteOnce
+#   hostPath:
+#     path: "/media/working/minio-volume/1"
+# ---
+# apiVersion: v1
+# kind: PersistentVolume
+# metadata:
+#   name: minio-pv-volume-2
+#   labels:
+#     type: local
+# spec:
+#   storageClassName: manual
+#   capacity:
+#     storage: 5Gi
+#   accessModes:
+#     - ReadWriteOnce
+#   hostPath:
+#     path: "/media/working/minio-volume/2"
+# ---
+# apiVersion: v1
+# kind: PersistentVolume
+# metadata:
+#   name: minio-pv-volume-3
+#   labels:
+#     type: local
+# spec:
+#   storageClassName: manual
+#   capacity:
+#     storage: 5Gi
+#   accessModes:
+#     - ReadWriteOnce
+#   hostPath:
+#     path: "/media/working/minio-volume/3"

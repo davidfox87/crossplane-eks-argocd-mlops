@@ -2,11 +2,7 @@
 https://kubernetes.io/docs/tasks/configure-pod-container/configure-persistent-volume-storage/
 ```
 minikube ssh
-sudo mkdir -p /media/working/minio-volume/0
-sudo mkdir -p /media/working/minio-volume/1
-sudo mkdir -p /media/working/minio-volume/2
-sudo mkdir -p /media/working/minio-volume/3
-
+sudo mkdir -p /export/data
 kubectl apply -f pv.yaml -n  local-minio
 
 helm install \
