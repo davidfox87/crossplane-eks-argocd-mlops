@@ -22,7 +22,7 @@ The commands above creates 1 Pod, each running a postgres db. Get the postgres S
 kubectl get service postgres
 ```
 
-...then get the web StatefulSet, to verify that both were created successfully:
+...then get the postgres StatefulSet, to verify that both were created successfully:
 
 ```
 kubectl get statefulset mlflow-postgres

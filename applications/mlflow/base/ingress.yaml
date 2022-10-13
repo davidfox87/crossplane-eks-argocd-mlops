@@ -1,4 +1,4 @@
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: mlflow-ingress
@@ -10,7 +10,14 @@ spec:
   - host: mlflow-tracking-server.local
     http:
       paths:
-        - backend:
-            serviceName: mlflow-tracking-server
-            servicePort: 5000
-          path: /
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: mlflow-tracking-server
+              port: 
+                number: 5000
+
+
+
+

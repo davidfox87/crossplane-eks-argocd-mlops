@@ -8,9 +8,5 @@ resources:
 patchesStrategicMerge:
 - deployment-patch.yaml
 
-configMapGenerator:
-- name: example-configmap-1
-  envs:
-  - .env
 
 namespace: local-mlflow

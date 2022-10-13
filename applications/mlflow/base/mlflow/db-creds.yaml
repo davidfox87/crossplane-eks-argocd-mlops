@@ -1,8 +1,0 @@
-apiVersion: v1
-kind: Secret
-metadata:
-  name: db-creds
-  namespace: mlflow
-data:
-  PG_USER: mlflow
-  PG_PASSWORD: mlflow

@@ -2,9 +2,8 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: mlflow-configmap
-  namespace: mlflow
-data:
-  AWS_MLFLOW_BUCKET: mlflow
+data: 
+  AWS_MLFLOW_BUCKET: "mlflow"
+  PG_USER: "mlflow"
   PG_DATABASE: "mlflow-db"
-  PG_HOST: "mlflow-postgres-0"
-  PG_PORT: 5432
+  PG_HOST: "postgres"
