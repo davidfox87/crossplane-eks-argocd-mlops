@@ -8,8 +8,7 @@ RUN apt-get install -y --fix-missing \
     iputils-ping \
     telnet \
     procps \
-    git \
-    openjdk-11-jdk && apt-get clean && rm -rf /tmp/* /var/tmp/*
+    git  && rm -rf /tmp/* /var/tmp/*
 
 
 COPY requirements.txt .
