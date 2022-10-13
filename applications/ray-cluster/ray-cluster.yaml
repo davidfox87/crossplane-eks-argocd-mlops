@@ -66,3 +66,16 @@ spec:
             name: dashboard
           - containerPort: 10001
             name: client
+          volumeMounts:
+            - name: ray-logs
+              mountPath: /tmp/ray
+            - name: prism-configs
+              mountPath: /etc/config
+              readOnly: true
+        volumes:
+          - name: ray-logs
+            emptyDir: {}
+          - name: prism-configs
+            configMap:
+              # provide the name of the ConfigMap containing the files you want to add to the container
+              name: example-configmap 
