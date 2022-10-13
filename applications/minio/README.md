@@ -3,6 +3,7 @@ https://kubernetes.io/docs/tasks/configure-pod-container/configure-persistent-vo
 ```
 minikube ssh
 sudo mkdir -p /export/data
+sudo chown 1000 -R /export/data
 kubectl apply -f pv.yaml -n  local-minio
 
 helm install \
