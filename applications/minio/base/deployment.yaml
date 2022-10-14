@@ -29,9 +29,9 @@ spec:
         - name: minio-http
           image: quay.io/minio/minio:latest
           ports:
-            - name: minio-http
+            - name: minio
               containerPort: 9000
-            - name: minio-http-console
+            - name: minio-console
               containerPort: 9001
           imagePullPolicy: IfNotPresent
           command: 
@@ -51,8 +51,8 @@ spec:
                   name: minio-creds
                   key: password
                   optional: false
-  ## This VolumeClaimTemplate will claim the first available pv with the requested storage class
-  volumes:
-    - name: minio-vol
-      persistentVolumeClaim:
-        claimName: minio-pvc
+      ## This VolumeClaimTemplate will claim the first available pv with the requested storage class
+      volumes:
+        - name: minio-vol
+          persistentVolumeClaim:
+            claimName: minio-pvc
