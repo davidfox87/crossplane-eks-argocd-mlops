@@ -8,29 +8,16 @@ spec:
   replicas: 2
   selector:
     matchLabels:
-      app: minio-operator
+      app: minio-console
   template:
     metadata:
       labels:
-        app: minio-operator
+        app: minio-console
     spec:
       serviceAccountName: console-sa
-      securityContext:
-        runAsUser: 1000
-        runAsGroup: 1000
-        runAsNonRoot: true
-        fsGroup: 2000
-    affinity:
-      nodeAffinity:
-        requiredDuringSchedulingIgnoredDuringExecution:
-          nodeSelectorTerms:
-          - matchExpressions:
-            - key: name
-              operator: In
-              values:
-              - minio-operator
+
       containers:
-        - name: minio-operator
+        - name: minio-console
           image: minio/console:v0.20.5
           imagePullPolicy: IfNotPresent
           ports:
@@ -40,13 +27,5 @@ spec:
               name: https
           args:
             - server
-              resources:
-          requests:
-            memory: "256Mi"
-            cpu: "200m"
-            ephemeral-storage: "500Mi"
-          limits:
-            memory: "256Mi"
-            cpu: "200m"
-            ephemeral-storage: "500Mi"
+          
 

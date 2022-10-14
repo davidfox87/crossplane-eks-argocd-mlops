@@ -4,4 +4,4 @@ kind: Kustomization
 
 resources:
 - operator
-- tenant.yaml
+- tenant

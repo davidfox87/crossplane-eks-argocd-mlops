@@ -11,4 +11,4 @@ spec:
   - name: https
     port: 9443
   selector:
-    app: minio-operator
+    app: minio-console
