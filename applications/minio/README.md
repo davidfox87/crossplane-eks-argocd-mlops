@@ -3,31 +3,18 @@ See this guide on understanding PersistentVolumes and how Pods use PersistentVol
 
 https://kubernetes.io/docs/tasks/configure-pod-container/configure-persistent-volume-storage/
 ```
-minikube ssh
-sudo mkdir -p /export/data
-sudo chown 1000 -R /export/data
-kubectl create namespace local-minio
-kubectl apply -f pv.yaml -n  local-minio
+In the overlays/standard directory, run:
+```
+kustomize build | kubectl apply -f -
+```
 
-helm install \
-  --namespace local-minio \
-  --create-namespace \
-  minio-operator minio/operator
-
-helm upgrade --namespace local-minio \
-   --create-namespace local-minio \
-   minio/tenant --values values.yaml
+Set up port forward to minio-console:
+```
+kubectl port-forward service/minio-nodeport 9001:9001 -n minio-nodeport
+```
 
 
-kubectl get pv -n local-minio
-kubectl get pvc -n local-minio
-kubectl -n local-minio get all
-kubectl get pods --namespace local-minio
 
-kubectl port-forward service/console 9090:9090 --namespace local-minio
-kubectl port-forward service/minio-s3-console 9443:9443 --namespace local-minio
-
-kubectl -n local-minio  get secret console-sa-secret -o jsonpath="{.data.token}" | base64 --decode
 ```
 
 

@@ -19,14 +19,9 @@ spec:
       labels:
         app: minio
     spec:
-      securityContext:
-        runAsUser: 1000
-        runAsGroup: 1000
-        runAsNonRoot: true
-        fsGroup: 1000
       serviceAccountName: minio-sa
       containers:
-        - name: minio-http
+        - name: minio
           image: quay.io/minio/minio:latest
           ports:
             - name: minio
