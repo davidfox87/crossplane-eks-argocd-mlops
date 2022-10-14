@@ -16,7 +16,7 @@ spec:
         app: minio
     spec:
       containers:
-        - name: minio
+        - name: minio-http
           image: quay.io/minio/minio:latest
           ports:
           - containerPort: 9090
