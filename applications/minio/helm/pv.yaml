@@ -33,20 +33,3 @@ spec:
     path: "/export/data/1"
 
 ---
-
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: minio-pv-volume-2
-  labels:
-    type: local
-spec:
-  storageClassName: standard
-  capacity:
-    storage: 10Gi
-  volumeMode: Filesystem
-  accessModes:
-    - ReadWriteOnce
-  persistentVolumeReclaimPolicy: Retain
-  hostPath:
-    path: "/export/data/2"

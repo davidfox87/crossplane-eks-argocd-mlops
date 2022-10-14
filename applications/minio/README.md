@@ -21,4 +21,6 @@ kubectl -n local-minio get all
 kubectl get pods --namespace local-minio
 
 kubectl port-forward service/console 9090:9090 9443:9443 --namespace local-minio
+
+kubectl -n local-minio  get secret console-sa-secret -o jsonpath="{.data.token}" | base64 --decode
 ```

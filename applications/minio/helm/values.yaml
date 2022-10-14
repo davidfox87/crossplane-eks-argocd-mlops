@@ -290,7 +290,7 @@ tenant:
 
 ingress:
   api:
-    enabled: true
+    enabled: false
     ingressClassName: ""
     labels: { }
     annotations: { }
@@ -299,7 +299,7 @@ ingress:
     path: /
     pathType: Prefix
   console:
-    enabled: true
+    enabled: false
     ingressClassName: ""
     labels: { }
     annotations: { }
