@@ -6,14 +6,6 @@ resources:
 namespace: tenant-nodeport
 
 
-patchesJson6902:
-  - target:
-      group: minio.min.io
-      version: v2
-      kind: Tenant
-      name: storage
-    path: tenantNamePatch.yaml
-
 patchesStrategicMerge:
   - tenant.yaml
 patchesJson6902:
@@ -22,4 +14,4 @@ patchesJson6902:
       version: v2
       kind: Tenant
       name: storage
-    path: tenantNamePatch.yaml
+    path: tenant-name-patch.yaml
