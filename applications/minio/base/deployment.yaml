@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: minio
+  labels:
+    app: minio
+spec:
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 100%
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: minio
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: minio
+    spec:
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
+        runAsNonRoot: true
+        fsGroup: 1000
+      serviceAccountName: minio-sa
+      containers:
+        - name: minio-http
+          image: quay.io/minio/minio:latest
+          ports:
+            - name: minio-http
+              containerPort: 9000
+            - name: minio-http-console
+              containerPort: 9001
+          imagePullPolicy: IfNotPresent
+          command: 
+          - /bin/bash
+          - -c
+          args: 
+          - minio server /data --address :9000 --console-address :9001
+          volumeMounts:
+          - mountPath: /data
+            name: minio-vol # Corresponds to the `spec.volumes` Persistent Volume
+          env:
+            - name: MINIO_ACCESS_KEY
+              value: "minio"
+            - name: MINIO_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: minio-creds
+                  key: password
+                  optional: false
+  ## This VolumeClaimTemplate will claim the first available pv with the requested storage class
+  volumes:
+    - name: minio-vol
+      persistentVolumeClaim:
+        claimName: minio-pvc
