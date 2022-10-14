@@ -15,10 +15,15 @@ spec:
       containers:
       - name: mlflow-tracking-server
         env:
+        # "Normal" (not headless) Services are assigned a DNS A or AAAA record, 
+        # depending on the IP family of the Service, for a name of the form 
+        # my-svc.my-namespace.svc.cluster-domain.example. 
+        # This resolves to the cluster IP of the Service.
         - name: MLFLOW_S3_ENDPOINT_URL
-          value: http://minio.minio-nodeport.svc.cluster.local/ # this is the host name in the minio ingress
+          value: http://minio-svc.minio-local.svc.cluster.local/ 
         - name: AWS_ACCESS_KEY_ID
           value: "minio"
         - name: AWS_SECRET_ACCESS_KEY
           value: "minio123"
 
+usybox-1.default-subdomain.my-namespace.svc.cluster-domain.example

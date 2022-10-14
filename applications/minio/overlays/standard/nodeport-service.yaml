@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: minio-nodeport
+  name: minio-svc
   labels:
-    app: storage-nodeport
+    app: minio
 spec:
   type: NodePort
   ports:
