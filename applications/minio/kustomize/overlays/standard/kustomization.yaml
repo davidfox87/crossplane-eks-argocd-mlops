@@ -1,7 +1,8 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-  - ../base
+  - ../../base
+  - pv.yaml
   - nodeport-service.yaml
 namespace: tenant-nodeport
 
@@ -15,3 +16,4 @@ patchesJson6902:
       kind: Tenant
       name: storage
     path: tenant-name-patch.yaml
+
