@@ -6,6 +6,7 @@ https://kubernetes.io/docs/tasks/configure-pod-container/configure-persistent-vo
 minikube ssh
 sudo mkdir -p /export/data
 sudo chown 1000 -R /export/data
+kubectl create namespace local-minio
 kubectl apply -f pv.yaml -n  local-minio
 
 helm install \
@@ -13,7 +14,7 @@ helm install \
   --create-namespace \
   minio-operator minio/operator
 
-helm install --namespace local-minio \
+helm upgrade --namespace local-minio \
    --create-namespace local-minio \
    minio/tenant --values values.yaml
 
@@ -28,3 +29,10 @@ kubectl port-forward service/minio-s3-console 9443:9443 --namespace local-minio
 
 kubectl -n local-minio  get secret console-sa-secret -o jsonpath="{.data.token}" | base64 --decode
 ```
+
+
+
+
+kubectl create secret generic minio-creds \
+  --from-file=./password.txt
+

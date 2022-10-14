@@ -1,0 +1,19 @@
+---
+apiVersion: v1
+kind: Service
+  name: minio-nodeport
+  labels:
+    app: storage-nodeport
+spec:
+  type: NodePort
+  ports:
+    - name: http-console
+      port: 9090
+      targetPort: 9090
+    - name: https-console
+      port: 9443
+      targetPort: 9443
+  selector:
+    app: storage-nodeport
+
+---

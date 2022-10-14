@@ -12,9 +12,9 @@ namespace: tenant-nodeport
 
 patchesJson6902:
   - target:
-      group: minio.min.io
-      version: v2
-      kind: Tenant
-      name: storage
-    path: tenant-name-patch.yaml
+      group: apps
+      version: v1
+      kind: StatefulSet
+      name: minio
+    path: statefulset-patch.yaml
 
