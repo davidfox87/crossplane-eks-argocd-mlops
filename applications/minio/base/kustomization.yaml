@@ -3,6 +3,7 @@ kind: Kustomization
 namespace: minio
 resources:
   - secret.yaml
-  - stateful-set.yaml
+  - pvc.yaml
+  - deployment.yaml
 
   

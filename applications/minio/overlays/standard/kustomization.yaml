@@ -14,7 +14,7 @@ patchesJson6902:
   - target:
       group: apps
       version: v1
-      kind: StatefulSet
+      kind: Deployment
       name: minio
-    path: statefulset-patch.yaml
+    path: deployment-patch.yaml
 

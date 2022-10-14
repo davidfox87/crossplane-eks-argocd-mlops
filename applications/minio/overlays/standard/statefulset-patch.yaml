@@ -1,7 +1,0 @@
-- op: replace
-  path: /metadata/name
-  value: storage-nodeport
-
-- op: replace
-  path: /spec/serviceName
-  value: storage-nodeport

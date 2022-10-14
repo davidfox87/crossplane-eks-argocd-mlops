@@ -7,8 +7,11 @@ metadata:
 spec:
   type: NodePort
   ports:
+    - name: minio-http-console
+      port: 9001
+      targetPort: 9001
     - name: minio-http
-      port: 9090
-      targetPort: 9090
+      port: 9000
+      targetPort: 9000
   selector:
     app: minio
