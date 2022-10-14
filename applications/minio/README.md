@@ -16,6 +16,7 @@ helm install --namespace local-minio \
    minio/tenant --values values.yaml
 
 
+kubectl get pv -n local-minio
 kubectl get pvc -n local-minio
 kubectl -n local-minio get all
 kubectl get pods --namespace local-minio
