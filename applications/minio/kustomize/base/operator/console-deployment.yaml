@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "console"
+  labels:
+    app: minio-console
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: minio-operator
+  template:
+    metadata:
+      labels:
+        app: minio-operator
+    spec:
+      serviceAccountName: console-sa
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
+        runAsNonRoot: true
+        fsGroup: 2000
+    affinity:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+          - matchExpressions:
+            - key: name
+              operator: In
+              values:
+              - minio-operator
+      containers:
+        - name: minio-operator
+          image: minio/console:v0.20.5
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 9090
+              name: http
+            - containerPort: 9443
+              name: https
+          args:
+            - server
+              resources:
+          requests:
+            memory: "256Mi"
+            cpu: "200m"
+            ephemeral-storage: "500Mi"
+          limits:
+            memory: "256Mi"
+            cpu: "200m"
+            ephemeral-storage: "500Mi"
+

@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: console
+  labels:
+    app: console
+spec:
+  ports:
+  - name: http
+    port: 9090
+  - name: https
+    port: 9443
+  selector:
+    app: minio-operator
