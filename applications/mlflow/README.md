@@ -15,11 +15,9 @@ kubectl port-forward service/minio-svc 9001:9001 -n minio-local
 
 
 
+Port forward to mlflow tracking server
+```
+kubectl port-forward service/mlflow-tracking-server 5555:5000 -n local-mlflow
 ```
 
-
-
-
-kubectl create secret generic minio-creds \
-  --from-file=./password.txt
 

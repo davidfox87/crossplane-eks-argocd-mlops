@@ -5,7 +5,7 @@ metadata:
   labels:
     app: minio
 spec:
-  type: NodePort
+  type: ClusterIP
   ports:
     - name: minio-console
       port: 9001
