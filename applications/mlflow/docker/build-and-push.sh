@@ -1,8 +1,8 @@
 #!/bin/bash -e
-docker login --username=foxy7887 -p MGSGiw550!
+docker login --username=xxxxx -p xxxxxx!
 
 image_name=foxy7887/mlflow
-image_tag=v4
+image_tag=v7
 full_image_name=${image_name}:${image_tag}
 
 cd "$(dirname "$0")" 

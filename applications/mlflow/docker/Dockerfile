@@ -2,7 +2,7 @@ FROM python:3.7-slim
 
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt && \
-  rm requirements.txt
+  rm requirements.txt && mkdir /mlflow/
 
 # Expose the port that the MLFlow tracking server runs on
 EXPOSE 5000

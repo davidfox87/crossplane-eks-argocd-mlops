@@ -14,13 +14,13 @@ spec:
     spec:
       containers:
       - name: mlflow-tracking-server
-        image: foxy7887/mlflow:v4
+        image: foxy7887/mlflow:v7
         imagePullPolicy: Always
         args:
         - --host=0.0.0.0
         - --port=5000
         - --backend-store-uri=postgresql://mlflow:mlflow@postgres:5432/mlflow-db 
-        - --default-artifact-root=s3://artifacts/
+        - --default-artifact-root=s3://mlflow/
         - --workers=2
         ports:
         - containerPort: 5000
