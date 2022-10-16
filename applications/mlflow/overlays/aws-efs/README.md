@@ -1,1 +1,0 @@
-https://docs.aws.amazon.com/eks/latest/userguide/efs-csi.html

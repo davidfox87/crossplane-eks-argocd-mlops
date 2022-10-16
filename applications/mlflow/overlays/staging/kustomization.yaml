@@ -4,4 +4,12 @@ resources:
 - namespace.yaml
 - ../../base
 
-namespace: staging-mlflow
+patchesStrategicMerge:
+- deployment-patch.yaml # adds serviceAccountName: s3-artifact-storage in deployment manifest 
+                        # to make pods it is supervising use the service account we defined in terraform
+                        # AWS will automatically inject AWS_ROLE_ARN envs. All we had to do was annotate 
+                        # the service account with eks.amazonaws.com/role-arn annotation. The service account
+                        # can assume the IAM role that has the s3 access policy.
+                        # Thus, the pod, via its service account, assumes the IAM role powers.
+
+namespace: mlflow
