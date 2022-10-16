@@ -4,8 +4,12 @@ resources:
 - namespace.yaml
 - ../../base
 
-patchesStrategicMerge:
-- deployment-patch.yaml
-
-
 namespace: local-mlflow
+
+configMapGenerator:
+- name: mlflow-configmap
+  behavior: merge
+  envs:
+  - .env
+  
+
