@@ -7,7 +7,7 @@ spec:
   - staging.mlops-playground.com
   - task-tracker-app-ui
   gateways:
-  - public-gateway.istio-system.svc.cluster.local
+  - istio-system/public-gateway
   http:
   - match:
     - uri:
@@ -19,3 +19,19 @@ spec:
           number: 8000
 
  
+---
+# apiVersion: networking.istio.io/v1alpha3
+# kind: VirtualService
+# metadata:
+#   name: taskinfo-mongo
+# spec:
+#   hosts:
+#   - mongo.staging.svc.cluster.local
+#   tcp:
+#   - match:
+#     - port: 27017
+#     route:
+#     - destination:
+#         host: mongo
+#         port:
+#           number: 5555
