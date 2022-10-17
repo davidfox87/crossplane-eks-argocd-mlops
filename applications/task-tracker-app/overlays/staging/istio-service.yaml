@@ -11,7 +11,7 @@ spec:
   http:
   - match:
     - uri:
-        prefix: /
+        prefix: / # match only requests where the URL path starts with /
     route:
     - destination:
         host: task-tracker-app-ui
@@ -35,3 +35,32 @@ spec:
 #         host: mongo
 #         port:
 #           number: 5555
+
+---
+# Service versions (a.k.a. subsets) - In a continuous deployment scenario, for a given service,
+# there can be distinct subsets of instances running different variants of the application binary. 
+# These variants are not necessarily different API versions. They could be iterative changes to
+# the same service, deployed in different environments (prod, staging, dev, etc.). Common scenarios
+# where this occurs include A/B testing, canary rollouts, etc. The choice of a particular
+# version can be decided based on various criterion (headers, url, etc.) and/or by weights
+# assigned to each version. Each service has a default version consisting of all its instances.
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: ratings-route
+spec:
+  hosts:
+  - tasks.staging.svc.cluster.local
+  http:
+  - match:
+    - uri:
+        prefix: /tasks # lets say the user wants to make an api call to the tasks api
+    rewrite:
+      uri: /v1/add-tasks  # but we want to reqrute the URL prefix for the api call /tasks 
+                          # to the tasks service before making the actual API call
+                          # This would be useful if we have multiple versions of an API service that
+                          # we were testing
+    route:
+    - destination:
+        host: tasks.staging.svc.cluster.local
+        subset: v1
