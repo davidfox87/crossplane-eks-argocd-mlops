@@ -11,7 +11,7 @@ spec:
   http:
   - match:
     - uri:
-        exact: /
+        prefix: /
     route:
     - destination:
         host: task-tracker-app-ui
