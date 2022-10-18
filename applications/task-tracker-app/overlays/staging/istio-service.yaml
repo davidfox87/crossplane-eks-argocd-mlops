@@ -8,7 +8,7 @@ spec:
   - task-tracker-app-ui
     # - '*'
   gateways:
-  - istio-system/public-gateway
+  - istio-system/task-tracker-gateway
   http:
   - match:
     - uri:
