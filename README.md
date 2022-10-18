@@ -118,7 +118,7 @@ Note that the nodeport for the status-port will change so you will have to edit 
 It should look like this 
 ```
     alb.ingress.kubernetes.io/healthcheck-path: /healthz/ready
-    alb.ingress.kubernetes.io/healthcheck-port: "30829"
+    alb.ingress.kubernetes.io/healthcheck-port: "31575"
 ```
 
 Add these annotations to the existing istio-ingressgateway service manifest
