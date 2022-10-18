@@ -110,7 +110,15 @@ resource "aws_iam_policy" "s3_access" {
 
 
 
+resource "kubernetes_namespace" "example" {
+  metadata {
+    labels = {
+      app = "mlflow-tracking-server"
+    }
 
+    name = "mlflow"
+  }
+}
 resource "kubernetes_service_account" "s3-access-service-account" {
   metadata {
     name = local.k8s_service_account_name_s3access # This is used as the serviceAccountName in the spec section of the k8 pod manifest

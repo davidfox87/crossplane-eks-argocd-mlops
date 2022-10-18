@@ -41,6 +41,7 @@ xdg-open https://localhost:31719
 The API server can then be accessed using https://localhost:31719
 
 ```
+kubectl get pods -n argocd -l app=argocd-server -o name | cut -d'/' -f 2
 kubectl get secret argocd-initial-admin-secret -n argocd -o yaml
 echo akRjVGZmNjhxbTdJWHB3OA== | base64 --decode
 ```
