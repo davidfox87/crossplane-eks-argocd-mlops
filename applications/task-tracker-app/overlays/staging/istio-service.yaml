@@ -4,9 +4,9 @@ metadata:
   name: task-tracker-app-ui # name of the k8s service
 spec:
   hosts:
-  # - staging.mlops-playground.com
-  # - task-tracker-app-ui
-    - '*'
+  - staging.mlops-playground.com
+  - task-tracker-app-ui
+    # - '*'
   gateways:
   - istio-system/public-gateway
   http:
