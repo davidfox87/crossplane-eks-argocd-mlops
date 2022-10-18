@@ -12,6 +12,8 @@ spec:
   - match:
     - uri:
         prefix: / # match only requests where the URL path starts with /
+    rewrite:
+      uri: /
     route:
     - destination:
         host: task-tracker-app-ui
