@@ -4,3 +4,4 @@ metadata:
   name: staging
   labels:
     istio-injection: enabled
+    cert-manager-tls: staging # Define namespace label for kubed

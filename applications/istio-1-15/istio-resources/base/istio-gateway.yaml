@@ -19,7 +19,7 @@ spec:
         protocol: HTTPS
       tls:
         mode: SIMPLE
-        credentialName: tls-secret
+        credentialName: cert-secret
       hosts:
         - "*"
 
