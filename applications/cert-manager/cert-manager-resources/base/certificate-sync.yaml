@@ -16,4 +16,4 @@ spec:
     group: cert-manager.io
   secretTemplate:
     annotations:
-      kubed.appscode.com/sync: "cert-manager-tls=istio-system" # Sync certificate to matching namespaces
+      kubed.appscode.com/sync: "cert-manager-tls=test2" # Sync certificate to matching namespaces
