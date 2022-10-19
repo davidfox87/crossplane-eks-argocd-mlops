@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: local
+  labels:
+    istio-injection: enabled
+    cert-manager-tls: local # Define namespace label for kubed

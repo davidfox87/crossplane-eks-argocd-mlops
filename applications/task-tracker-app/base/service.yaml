@@ -6,12 +6,19 @@ metadata:
     app: task-tracker-app-ui
     service: task-tracker-app-ui
 spec:
+  type: NodePort
   ports:
     # Service object named "task-tracker-app-ui", which targets 
-    # TCP port 80 on any Pod with the app=task-tracker-app-ui label.
-    - protocol: TCP
+    # TCP port 80 on any Pod with the app=task-tracker-app-ui label and 
+    # TCP port 443 on any Pod with the app=task-tracker-app-ui label
+    - name: http
+      protocol: TCP
       port: 8000
       targetPort: 80
+    - name: https
+      protocol: TCP
+      port: 8443
+      targetPort: 443
   selector:
     app: task-tracker-app-ui
 

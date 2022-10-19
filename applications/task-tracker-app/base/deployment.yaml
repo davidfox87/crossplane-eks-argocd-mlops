@@ -13,12 +13,23 @@ spec:
     metadata:
       labels:
         app: task-tracker-app-ui
-        istio-injection: enabled
     spec:
       serviceAccountName: task-tracker
       containers:
       - name: task-tracker-app-ui
-        image: foxy7887/task-tracker-app:v26
+        image: foxy7887/task-tracker-app:v28
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 80
+          name: http
+        - containerPort: 443
+          name: https
+        volumeMounts:
+        - mountPath: /etc/nginx/ssl
+          name: secret-volume
+
+      volumes:
+      - name: secret-volume
+        secret:
+           secretName: tls-cert
+
