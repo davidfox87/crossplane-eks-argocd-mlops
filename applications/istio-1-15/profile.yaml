@@ -93,7 +93,7 @@ spec:
         - mountPath: /etc/istio/ingressgateway-ca-certs
           name: ingressgateway-ca-certs
           secretName: istio-ingressgateway-ca-certs
-        type: NodePort
+        type: LoadBalancer
     global:
       configValidation: true
       defaultNodeSelector: {}

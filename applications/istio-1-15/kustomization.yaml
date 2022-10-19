@@ -7,5 +7,6 @@ resources:
 - istio-crds/base
 - istio-namespace/base
 - istio-install/base
-- istio-resources/base
+#- istio-resources/base
 
+namespace: istio-system
