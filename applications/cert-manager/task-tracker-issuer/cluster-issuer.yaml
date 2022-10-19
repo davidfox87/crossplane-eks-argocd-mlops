@@ -19,6 +19,8 @@ spec:
   isCA: true
   commonName: my-selfsigned-ca
   secretName: tls-cert
+  dnsNames:
+  - staging.mlops-playground.com
   privateKey:
     algorithm: ECDSA
     size: 256
