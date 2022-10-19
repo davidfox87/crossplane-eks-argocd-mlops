@@ -5,6 +5,14 @@ resources:
 
 namespace: istio-system
 
-patchesStrategicMerge:
-- patches/service.yaml
-- patches/remove-pdb.yaml
+# patchesStrategicMerge:
+# - patches/service.yaml
+# - patches/remove-pdb.yaml
+
+patchesJson6902:
+- target:
+    version: v1 
+    kind: Service
+    name: istio-ingressgateway
+    namespace: istio-system
+  path: patches/status-port-patch.yaml
