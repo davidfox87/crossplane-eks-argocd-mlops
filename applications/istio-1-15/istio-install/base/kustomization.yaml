@@ -5,9 +5,8 @@ resources:
 
 namespace: istio-system
 
-# patchesStrategicMerge:
-# - patches/service.yaml
-# - patches/remove-pdb.yaml
+patchesStrategicMerge:
+- patches/remove-pdb.yaml
 
 patchesJson6902:
 - target:
