@@ -6,7 +6,7 @@ metadata:
     kubernetes.io/ingress.class: "nginx"
     nginx.ingress.kubernetes.io/rewrite-target: /$1
     nginx.ingress.kubernetes.io/service-upstream: "true"
-    nginx.ingress.kubernetes.io/upstream-vhost: task-tracker-app-ui.local.svc.cluster.local
+    #nginx.ingress.kubernetes.io/upstream-vhost: task-tracker-app-ui.local.svc.cluster.local
 spec:
   rules:
   - host: staging.mlops-playground.com
@@ -16,7 +16,7 @@ spec:
           pathType: Prefix
           backend:
             service:
-              name: task-tracker-app-ui
+              name: istio-ingressgateway
               port:
-                number: 8000 # even though ingress traffic will be directed to the service
+                number: 443 # even though ingress traffic will be directed to the service
                             # it will be intercepted bt the istio- sidecar proxy and redirected to the mesh

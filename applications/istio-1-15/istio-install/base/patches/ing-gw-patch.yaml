@@ -6,3 +6,6 @@
 - op: add
   path: "/spec/ports/0/nodePort"
   value: 30621
+- op: add
+  path: "/spec/type"
+  value: NodePort
