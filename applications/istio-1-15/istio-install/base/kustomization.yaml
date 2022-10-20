@@ -14,4 +14,4 @@ patchesJson6902:
     kind: Service
     name: istio-ingressgateway
     namespace: istio-system
-  path: patches/status-port-patch.yaml
+  path: patches/ing-gw-patch.yaml

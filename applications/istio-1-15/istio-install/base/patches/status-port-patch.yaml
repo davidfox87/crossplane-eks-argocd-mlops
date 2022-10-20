@@ -1,8 +1,0 @@
-- op: add
-  path: metadata/annotation
-  value: 
-    alb.ingress.kubernetes.io/healthcheck-port: '30621'
-    alb.ingress.kubernetes.io/healthcheck-path: /healthz/ready
-- op: add
-  path: "/spec/ports/0/nodePort"
-  value: 30621
