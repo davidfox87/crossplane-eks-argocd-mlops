@@ -4,4 +4,4 @@ metadata:
   name: local
   labels:
     istio-injection: enabled
-    cert-manager-tls: local # Define namespace label for kubed
+    #cert-manager-tls: local # Define namespace label for kubed

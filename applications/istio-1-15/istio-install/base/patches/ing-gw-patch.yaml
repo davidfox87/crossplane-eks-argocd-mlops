@@ -1,11 +1,13 @@
-- op: add
-  path: metadata/annotation
+- op: replace
+  path: "/metadata/annotations"
   value: 
     alb.ingress.kubernetes.io/healthcheck-port: '30621'
     alb.ingress.kubernetes.io/healthcheck-path: /healthz/ready
+    
 - op: add
   path: "/spec/ports/0/nodePort"
   value: 30621
+
 - op: add
   path: "/spec/type"
   value: NodePort

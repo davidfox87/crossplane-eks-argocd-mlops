@@ -4,22 +4,21 @@ metadata:
   name: task-tracker-app-ui # name of the k8s service
 spec:
   hosts:
-  - staging.mlops-playground.com
-  - task-tracker-app-ui
-    # - '*'
+  - "staging.mlops-playground.com"
+  - task-tracker-app-ui.local.svc.cluster.local
   gateways:
   - istio-system/task-tracker-gateway
   http:
   - match:
     - uri:
-        exact: / # match only requests where the URL path starts with /
+        prefix: / # match only requests where the URL path starts with /
     - uri:
         regex: ^.*\.(ico|png|jpg|css|js|img|jpeg|map)$
     route:
     - destination:
         host: task-tracker-app-ui
         port:
-          number: 8000
+          number: 80
 
  
 ---

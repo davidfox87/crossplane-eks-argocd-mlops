@@ -17,19 +17,16 @@ spec:
       serviceAccountName: task-tracker
       containers:
       - name: task-tracker-app-ui
-        image: foxy7887/task-tracker-app:v28
+        image: foxy7887/task-tracker-app:v31
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 80
           name: http
-        - containerPort: 443
-          name: https
-        volumeMounts:
-        - mountPath: /etc/nginx/ssl
-          name: secret-volume
-
-      volumes:
-      - name: secret-volume
-        secret:
-           secretName: tls-cert
+      #   volumeMounts:
+      #   - mountPath: /etc/ssl/certs
+      #     name: secret-volume
+      # volumes:
+      # - name: secret-volume
+      #   secret:
+      #      secretName: tls-cert
 

@@ -3,7 +3,6 @@ kind: Kustomization
 resources:
 - istio-service.yaml
 - namespace.yaml
-- ingress.yaml
 - ../../base
 
 namespace: local

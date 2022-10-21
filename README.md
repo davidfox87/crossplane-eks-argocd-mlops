@@ -98,32 +98,28 @@ The following screenshot shows the applications that argocd has deployed into ou
 ![route53](argocd.png)
 
 ## configure healthcheck path for alb
+To configure the alb.ingress.kubernetes.io/alb.ingress.kubernetes.io/healthcheck-path get a readinessProbe from the  Deployment, which creates pods with the istio-ingressgateway
+
+## configure healthcheck path for alb
 To configure the alb.ingress.kubernetes.io/alb.ingress.kubernetes.io/healthcheck-path get a readinessProbe from the  Deployment, which creates pods with the istio-ingressgateway:
-```
-kubectl -n istio-system get deploy istio-ingressgateway -o yaml
-...
-readinessProbe:
-failureThreshold: 30
-httpGet:
-path: /healthz/ready
-...
-```
 
-Set annotations for the istio-ingressgateway Service: 
-- in the healthchek-port set the nodePort from the status-port 
-- in the healthcheck-path – a path from the readinessProbe:
+We installed istio using Kustomize, which allowed us to define overlays and apply patches to the existing istio install. Specifically, we added annotations for the aws alb ingress controller health check, hardcoded the nodeport value for the 'status-port' and changed the service to NodePort
 
-Note that the nodeport for the status-port will change so you will have to edit it after the service has come up
-
-It should look like this 
 ```
+- op: replace
+  path: "/metadata/annotations"
+  value: 
+    alb.ingress.kubernetes.io/healthcheck-port: '30621'
     alb.ingress.kubernetes.io/healthcheck-path: /healthz/ready
-    alb.ingress.kubernetes.io/healthcheck-port: "31575"
-```
+    
+- op: add
+  path: "/spec/ports/0/nodePort"
+  value: 30621
 
-Add these annotations to the existing istio-ingressgateway service manifest
-```
-kubectl -n istio-system edit svc istio-ingressgateway
+- op: add
+  path: "/spec/type"
+  value: NodePort
+
 ```
 
 ## apply ingress object
@@ -163,6 +159,52 @@ terraform destroy
 
 
 
+# explanation of Routing TLS traffic locally using minikube and nginx ingress.
+## Configure an ingress gateway
+Define a Gateway with a server section for port 443. Note the SIMPLE TLS mode which instructs the gateway to terminate TLS traffic before routing it to the service.
+
+## Generate client and server certificates and keys
+For this task you can use your favorite tool to generate certificates and keys. The commands below use openssl
+1. Create a root certificate and private key to sign the certificates for your services
+```
+openssl req -x509 -sha256 -nodes -days 365 -newkey rsa:2048 -subj '/O=example Inc./CN=mlops-playground.com' -keyout mlops-playground.com.key -out mlops-playground.com.crt
+```
+2. Create a certificate and a private key for staging.mlops-playground.com
+```
+openssl req -out staging.mlops-playground.com.csr -newkey rsa:2048 -nodes -keyout staging.mlops-playground.com.key -subj "/CN=staging.mlops-playground.com/O=my organization"
 
 
+openssl x509 -req -sha256 -days 365 -CA mlops-playground.com.crt -CAkey mlops-playground.com.key -set_serial 0 -in staging.mlops-playground.com.csr -out staging.mlops-playground.com.crt
+```
 
+3. inspect with:
+```
+openssl x509 -in certs/tls.crt -noout -text
+```
+## configure a TLS ingress gateway for a single host
+1. Make sure the task-tracker-app service has been deployed
+2. Create a secret for the ingress gateway:
+```
+kubectl create -n istio-system secret tls tlscert --key=staging.mlops-playground.com.key --cert=staging.mlops-playground.com.crt
+```
+3. Define a gateway with a servers: section for port 443, and specify values for credentialName to be tls-cert. The values are the same as the secret’s name. The TLS mode should have the value of SIMPLE.
+
+4. Configure the gateway’s ingress traffic routes. Define the corresponding virtual service and reference the gateway within the virtual service.
+
+
+In local minikube env:
+```
+minikube addons enable ingress
+minikube tunnel
+```
+
+add an entry to ```/etc/hosts```
+```
+172.17.0.2  staging.mlops-playground.com
+```
+
+Send an HTTPS request to access the task-tracker-app service through HTTPS:
+```
+curl -k "https://staging.mlops-playground.com"
+
+```
