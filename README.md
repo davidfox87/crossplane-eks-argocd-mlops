@@ -97,9 +97,6 @@ The following screenshot shows the applications that argocd has deployed into ou
 ![route53](argocd.png)
 
 ## configure healthcheck path for alb
-To configure the alb.ingress.kubernetes.io/alb.ingress.kubernetes.io/healthcheck-path get a readinessProbe from the  Deployment, which creates pods with the istio-ingressgateway
-
-## configure healthcheck path for alb
 To configure the alb.ingress.kubernetes.io/alb.ingress.kubernetes.io/healthcheck-path get a readinessProbe from the  Deployment, which creates pods with the istio-ingressgateway:
 
 We installed istio using Kustomize, which allowed us to define overlays and apply patches to the existing istio install. Specifically, we added annotations for the aws alb ingress controller health check, hardcoded the nodeport value for the 'status-port' and changed the service to NodePort
@@ -220,3 +217,7 @@ Then type into the browser the forwarding address:
 https://eb27-135-84-103-250.ngrok.io
 
 
+# Install argo-events and argo-workflows
+Go into ```argo-events/overlays/production``` and run ```kustomize build | kubectl apply -f -``` to install argo-events
+
+Go into ```argo-workflows/overlays/staging``` and run ```kustomize build | kubectl apply -f -``` to install argo-workflows
