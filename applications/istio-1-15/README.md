@@ -1,0 +1,1 @@
+Check out kubeflow readme for using istioctl for generating manifests for istio
