@@ -1,0 +1,20 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: example-ingress
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    ingress.kubernetes.io/ssl-redirect: "false"
+spec:
+  rules:
+  - host: webhook.mlops-playground.com
+    http:
+      paths:     
+        - path: /push
+          pathType: Prefix
+          backend:
+            service:
+              name: github
+              port:
+                number: 12000 

@@ -29,21 +29,20 @@ In the following steps, I implement end-to-end encryption using a TLS certificat
 
 ## Installing Argo-cd 
 [Getting started with ArgoCD](https://argo-cd.readthedocs.io/en/stable/getting_started/)
+From the applications/argocd folder:
 ```
-kubectl create namespace argocd
-kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/v2.4.12/manifests/install.yaml
+kustomize build | kubectl apply -f -
 
-kubectl port-forward svc/argocd-server -n argocd 31719:443
+kubectl port-forward svc/argocd-server -n argocd 9443:443
 
-xdg-open https://localhost:31719
+xdg-open https://localhost:9443
 ```
 
-The API server can then be accessed using https://localhost:31719
+The API server can then be accessed using https://localhost:9443
 
 ```
-kubectl get pods -n argocd -l app=argocd-server -o name | cut -d'/' -f 2
 kubectl get secret argocd-initial-admin-secret -n argocd -o yaml
-echo WVRUS05sOFpUMW9rdnhXVA== | base64 --decode
+echo VHpYa0VyRUhTeFZNMFd2MA== | base64 --decode
 ```
 Take the decoded password and login to the ui
 
@@ -208,3 +207,16 @@ Send an HTTPS request to access the task-tracker-app service through HTTPS:
 curl -k "https://staging.mlops-playground.com"
 
 ```
+
+
+
+
+# to test github webhook events locally in minikube use ngrok service
+```
+ngrok http https://localhost:9443  
+```
+
+Then type into the browser the forwarding address:
+https://eb27-135-84-103-250.ngrok.io
+
+

@@ -1,0 +1,13 @@
+# in ngrok.yml
+version: 2
+
+authtoken: 274YBCBK4UiyLVJZrY9hYSpS91r_22cJ11eCX6r1jFRw7iF5C
+
+tunnels:
+  webhook:
+    proto: http
+    addr: 12000
+    # hostname: webhook.ngrok.io
+
+
+
