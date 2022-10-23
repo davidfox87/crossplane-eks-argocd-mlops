@@ -7,6 +7,7 @@
 | Argo CD | [README](applications/argo-cd/README.md) |
 | Argo events | [README](applications/argo-events/README.md) |
 | Argo workflows | [README](applications/argo-workflows/README.md) |
+| Prometheus and Grafana | Coming soon |
 | MLflow | [README](applications/mlflow/README.md) |
 | minio artifact storage | [README](applications/minio/README.md) |
 | ngrok | [README](applications/ngrok_/README.md) |
