@@ -12,22 +12,26 @@ spec:
   triggers:
     - template:
         name: github-workflow-trigger
-        k8s:
-          operation: create
+        argoWorkflow:
+          group: argoproj.io
+          version: v1alpha1
+          resource: workflows
+          operation: submit
           source:
             resource:
               apiVersion: argoproj.io/v1alpha1
               kind: Workflow
               metadata:
                 generateName: hello-
+                namespace: workflows # invoke workflow in argo namespace where workflows service account lives
               spec:
                 entrypoint: whalesay
+                serviceAccountName: workflow
                 arguments:
                   parameters:
                   - name: message
                     # the value will get overridden by the event payload from test-dep
                     value: hello world
-                serviceAccountName: operate-workflow-sa
                 templates:
                 - name: whalesay
                   inputs:
