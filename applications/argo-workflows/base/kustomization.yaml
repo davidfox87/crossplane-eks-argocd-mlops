@@ -5,6 +5,7 @@ namespace: argo
 resources:
 - namespace.yaml
 - github.com/argoproj/argo-workflows/manifests/cluster-install
+- argo-artifacts-secret.yaml
 
 patchesStrategicMerge:
 - config.yaml

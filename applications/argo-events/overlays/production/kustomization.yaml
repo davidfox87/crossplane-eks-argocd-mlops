@@ -3,7 +3,7 @@ kind: Kustomization
 resources:
 - ../../base
 - event-sources.yaml
-# - sensors.yaml
+- sensors.yaml
 # - ingress.yaml
 - github-access.yaml
 namespace: argo-events

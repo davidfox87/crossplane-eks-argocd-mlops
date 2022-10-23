@@ -8,12 +8,12 @@ data:
     s3:
       endpoint: argo-artifacts.default:9000
       bucket: my-bucket
-      insecure: false
+      insecure: true
       accessKeySecret:
-        name: argo-artfacts
+        name: argo-artifacts
         key: accesskey
       secretKeySecret:
-        name: argo-artfacts
+        name: argo-artifacts
         key: secretkey
 
 
