@@ -38,3 +38,7 @@ override.tf.json
 kubeconfig.yaml
 
 rsa
+
+git-ssh.yaml
+git-ssh-known-hosts.yaml
+github-access.yaml
