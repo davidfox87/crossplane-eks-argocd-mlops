@@ -8,13 +8,14 @@ spec:
       probes: 3
   components:
     ingressGateways:
-      # Cluster-local gateway for KFServing
       - enabled: true
         name: cluster-local-gateway
-        # https://github.com/istio/istio/issues/19263#issuecomment-615833092
         label:
           app: cluster-local-gateway
           istio: cluster-local-gateway
+        serviceAnnotations:
+          alb.ingress.kubernetes.io/healthcheck-port: '30621'
+          alb.ingress.kubernetes.io/healthcheck-path: /healthz/ready
         k8s:
           env:
           - name: ISTIO_META_ROUTER_MODE
@@ -44,6 +45,7 @@ spec:
             - name: status-port
               port: 15020
               targetPort: 15020
+              nodePort: 30621
             - name: http2
               port: 80
               targetPort: 8080

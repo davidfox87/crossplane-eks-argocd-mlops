@@ -4,7 +4,7 @@ In the following steps, I implement end-to-end encryption using a TLS certificat
 
 
 ## Upgrade Istio Manifests using Istioctl
-Istio ships with an installer called istioctl, which is a deployment / debugging / configuration management tool for Istio all in one package. In this section, we explain how to upgrade our istio kustomize packages by leveraging istioctl. 
+Istio ships with an installer called istioctl, which is a deployment / debugging / configuration management tool for Istio all in one package. In this section, we explain how to upgrade our istio kustomize packages by leveraging istioctl. For more info see the ![istio docs](https://istio.io/latest/docs/setup/additional-setup/customize-installation/)
 
 1. Download istioctl for version X.Y.Z:
 ```
