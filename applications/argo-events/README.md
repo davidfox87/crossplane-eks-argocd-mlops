@@ -1,3 +1,6 @@
+# install argo-events
+Go into ```argo-events/overlays/production``` and run ```kustomize build | kubectl apply -f -``` to install argo-events
+
 # info on creating the github token
 https://docs.triggermesh.io/cloud/sources/github/#deploying-an-instance-of-the-source
 

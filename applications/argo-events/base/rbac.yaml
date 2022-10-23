@@ -12,7 +12,7 @@ metadata:
   namespace: argo-events
 rules:
   # - apiGroups:
-  #     - argoproj.io
+  #     - workflows.argoproj.io
   #   verbs:
   #     - "*"
   #   resources:

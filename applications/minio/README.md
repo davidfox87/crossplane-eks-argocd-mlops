@@ -19,10 +19,6 @@ kubectl port-forward service/minio-svc 9001:9001 -n minio-local
 
 
 ```
-
-
-
-
 kubectl create secret generic minio-creds \
   --from-file=./password.txt
-
+```
