@@ -190,7 +190,7 @@ spec:
   template:
     serviceAccountName: operate-workflow-sa
   dependencies:
-    - name: webhook
+    - name: test-dep
       eventSourceName: github
       eventName: test
   triggers:
@@ -209,10 +209,17 @@ spec:
                 generateName: clone-
                 namespace: workflows # invoke workflow in argo namespace where workflows service account lives
               spec:
-                entrypoint: clone
+                entrypoint: unit-test
                 serviceAccountName: workflow
+                volumes:
+                - name: regcred
+                  secret:
+                    secretName: regcred
+                    items:
+                      - key: .dockerconfigjson
+                        path: config.json
                 templates:
-                - name: clone
+                - name: unit-test
                   inputs:
                     artifacts:
                     - name: source
@@ -228,3 +235,87 @@ spec:
                     command: [sh, -c]
                     args: ["git status && ls"]
                     workingDir: /src
+                
+---
+
+apiVersion: argoproj.io/v1alpha1
+kind: Sensor
+metadata:
+  name: build-webhook
+spec:
+  template:
+    serviceAccountName: operate-workflow-sa
+  dependencies:
+    - name: test-dep
+      eventSourceName: github
+      eventName: test
+  triggers:
+    - template:
+        name: github-workflow-trigger
+        argoWorkflow:
+          group: argoproj.io
+          version: v1alpha1
+          resource: workflows
+          operation: submit
+          source:
+            resource:
+              apiVersion: argoproj.io/v1alpha1
+              kind: Workflow
+              metadata:
+                generateName: build-
+                namespace: workflows # invoke workflow in argo namespace where workflows service account lives
+              spec:
+                entrypoint: build
+                serviceAccountName: workflow
+                volumes:
+                - name: regcred
+                  secret:
+                    secretName: regcred
+                    items:
+                      - key: .dockerconfigjson
+                        path: config.json
+                templates:
+                - name: build
+                  dag:
+                    tasks:
+                    - name: build
+                      templateRef:
+                        name: container-image
+                        template: build-kaniko-git
+                        clusterScope: true
+                      arguments:
+                        parameters:
+                        - name: repo_url
+                          value: ""
+                        - name: repo_ref
+                          value: ""
+                        - name: repo_commit_id
+                          value: ""
+                        - name: container_image
+                          value: foxy7887/
+                        - name: container_tag
+                          value: ""
+                        - name: subfolder
+                          value: frontend
+          parameters:
+          - src:
+              dependencyName: test-dep
+              dataKey: body.repository.git_url
+            dest: spec.templates.0.dag.tasks.0.arguments.parameters.0.value
+          - src:
+              dependencyName: test-dep
+              dataKey: body.ref
+            dest: spec.templates.0.dag.tasks.0.arguments.parameters.1.value
+          - src:
+              dependencyName: test-dep
+              dataKey: body.after
+            dest: spec.templates.0.dag.tasks.0.arguments.parameters.2.value
+          - src:
+              dependencyName: test-dep
+              dataKey: body.repository.name
+            dest: spec.templates.0.dag.tasks.0.arguments.parameters.3.value
+            operation: append
+          - src:
+              dependencyName: test-dep
+              dataKey: body.after
+            dest: spec.templates.0.dag.tasks.0.arguments.parameters.4.value
