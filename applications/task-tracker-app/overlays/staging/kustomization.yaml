@@ -9,4 +9,4 @@ namespace: staging
 images:
 - name: foxy7887/task-tracker
   newName: foxy7887/task-tracker
-  newTag: "32"
+  newTag: "1"

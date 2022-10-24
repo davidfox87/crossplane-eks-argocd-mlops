@@ -17,7 +17,7 @@ spec:
       serviceAccountName: task-tracker
       containers:
       - name: task-tracker-app-ui
-        image: foxy7887/task-tracker:v31
+        image: foxy7887/task-tracker:v1
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 80
