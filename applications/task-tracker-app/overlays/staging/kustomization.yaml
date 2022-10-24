@@ -7,6 +7,6 @@ resources:
 
 namespace: staging
 images:
-- name: foxy7887/task-tracker-app
-  newName: foxy7887/task-tracker-app
-  newTag: v32
+- name: foxy7887/task-tracker
+  newName: foxy7887/task-tracker
+  newTag: "32"
