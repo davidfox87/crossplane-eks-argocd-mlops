@@ -36,17 +36,11 @@ metadata:
   name: promote
 spec:
   serviceAccountName: workflow
-  volumes:
-  - name: sshkey
-    secret:
-      secretName: git-ssh
-  - name: known-hosts
-    secret:
-      secretName: git-known-hosts
   templates:
   - name: promote
     inputs:
       parameters:
+      - name: subfolder
       - name: environment
       - name: repo_owner
       - name: repo_name
@@ -59,7 +53,7 @@ spec:
       source: |
         set -e
         git clone https://$(cat /.github/token)@github.com/{{inputs.parameters.repo_owner}}/{{inputs.parameters.repo_name}}
-        cd {{inputs.parameters.repo_name}}
+        cd {{inputs.parameters.repo_name}}/{{inputs.parameter.subfolder}}
         sleep 2
         echo BEFORE:
         cat {{inputs.parameters.environment}}/{{inputs.parameters.image_name}}.yaml
@@ -69,7 +63,5 @@ spec:
         git commit -m "Upgraded {{inputs.parameters.environment}}/{{inputs.parameters.image_name}}.yaml with the tag {{inputs.parameters.tag}}"
         git push origin main
       volumeMounts:
-        - mountPath: /.ssh
-          name: sshkey
-        - mountPath: /etc/ssh
-          name: known-hosts
+      - name: github-access
+        mountPath: /.github/
