@@ -13,7 +13,7 @@ kustomize build | kubectl apply -f -
 
 Set up port forward to minio-console:
 ```
-kubectl port-forward service/minio-svc 9001:9001 -n minio-local
+kubectl port-forward service/minio-svc 9001:9001 
 ```
 
 

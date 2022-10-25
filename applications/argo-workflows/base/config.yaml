@@ -6,7 +6,7 @@ data:
   artifactRepository: |    
     archiveLogs: true
     s3:
-      endpoint: argo-artifacts.default:9000
+      endpoint: minio.default:9000
       bucket: my-bucket
       insecure: true
       accessKeySecret:
