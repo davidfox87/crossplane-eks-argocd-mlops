@@ -52,7 +52,7 @@ spec:
       source: |
         set -e
         git clone https://$(cat /.github/token)@github.com/{{inputs.parameters.repo_owner}}/{{inputs.parameters.repo_name}}
-        cd {{inputs.parameters.repo_name}}/{{inputs.parameter.subfolder}}
+        cd {{inputs.parameters.repo_name}}/{{inputs.parameters.subfolder}}
         sleep 2
         echo BEFORE:
         cat kustomization.yaml
