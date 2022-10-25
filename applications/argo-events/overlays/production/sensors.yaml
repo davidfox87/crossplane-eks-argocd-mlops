@@ -280,6 +280,13 @@ spec:
                     items:
                       - key: token
                         path: token
+                - name: sshkey
+                  secret:
+                    secretName: git-ssh
+                  # e.g. create the secret by running, kubectl -n argo-events create secret generic git-known-hosts --from-file=ssh_known_hosts=.ssh/known_hosts
+                - name: known-hosts
+                  secret:
+                    secretName: git-known-hosts
                 templates:
                 - name: build
                   dag:

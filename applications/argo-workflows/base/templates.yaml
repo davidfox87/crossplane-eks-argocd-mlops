@@ -53,7 +53,7 @@ spec:
         set -e
         git config --global user.email "davidmfox87@gmail.com"
         git config --global user.name "David Fox"
-        git clone https://$(cat /.github/token)@github.com/{{inputs.parameters.repo_owner}}/{{inputs.parameters.repo_name}}
+        git clone git@github.com/{{inputs.parameters.repo_owner}}/{{inputs.parameters.repo_name}}.git
         cd {{inputs.parameters.repo_name}}/{{inputs.parameters.subfolder}}
         sleep 2
         echo BEFORE:
@@ -67,3 +67,7 @@ spec:
       volumeMounts:
       - name: github-access
         mountPath: /.github/
+      - name: sshkey
+        mountPath: /secret
+      - name: known-hosts
+        mountPath: /etc/ssh
