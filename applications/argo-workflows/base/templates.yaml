@@ -68,6 +68,6 @@ spec:
       - name: github-access
         mountPath: /.github/
       - name: sshkey
-        mountPath: /secret
+        mountPath: /root/.ssh
       - name: known-hosts
         mountPath: /etc/ssh
