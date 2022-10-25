@@ -3,7 +3,7 @@
 | application   | View  |
 | -----------   | ---   |
 | Deploy an EKS cluster using Terraform | [README](terraform/infra/README.md) |
-| Secure end-to-end traffic on Amazon EKS using TLS certificate in ACM, ALB, and Istio |  [README](applications/istio-1-15/README.md) |
+| Istio ingress gateway and secure service mesh |  [README](applications/istio-1-15/README.md) |
 | Argo CD | [README](applications/argo-cd/README.md) |
 | Argo events | [README](applications/argo-events/README.md) |
 | Argo workflows | [README](applications/argo-workflows/README.md) |
