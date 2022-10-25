@@ -60,7 +60,7 @@ spec:
         kustomize edit set image {{inputs.parameters.image_owner}}/{{inputs.parameters.image_name}}={{inputs.parameters.image_owner}}/{{inputs.parameters.image_name}}:{{inputs.parameters.tag}}
         cat kustomization.yaml
         git add kustomization.yaml
-        git commit -m "Upgraded {{inputs.parameters.environment}}/{{inputs.parameters.image_name}}.yaml with the tag {{inputs.parameters.tag}}"
+        git commit -m "Upgraded {{inputs.parameters.subfolder}}/{{inputs.parameters.image_name}}.yaml with the tag {{inputs.parameters.tag}}"
         git push origin main
       volumeMounts:
       - name: github-access

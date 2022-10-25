@@ -304,8 +304,8 @@ spec:
                         clusterScope: true
                       arguments:
                         parameters:
-                        - name: environment
-                          value: staging
+                        - name: subfolder
+                          value: applications/task-tracker-app/overlays/staging
                         - name: repo_owner
                           value: davidfox87
                         - name: repo_name
