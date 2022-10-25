@@ -3,6 +3,7 @@ kind: Kustomization
 resources:
 - namespace.yaml
 - rbac.yaml
+- config.yaml
 
 # - githubcred.yaml
 namespace: workflows
