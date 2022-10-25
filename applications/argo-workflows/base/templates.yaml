@@ -47,7 +47,7 @@ spec:
       - name: image_name
       - name: tag
     script:
-      image: foxy7887/kustomize
+      image: foxy7887/kustomize:v1
       command: [sh]
       source: |
         set -e
