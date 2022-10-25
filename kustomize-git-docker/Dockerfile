@@ -10,3 +10,4 @@ FROM alpine:latest AS runtime
 
 COPY --from=downloader kustomize /usr/local/bin/kustomize
 RUN apk --no-cache add git
+RUN apk add openssh

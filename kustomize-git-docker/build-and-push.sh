@@ -1,8 +1,8 @@
 #!/bin/bash -e
-docker login --username=xxxx -p xxxxx!
+docker login --username=xxxxx -p xxxxx!
 
 image_name=foxy7887/kustomize
-image_tag=v1
+image_tag=v2
 full_image_name=${image_name}:${image_tag}
 
 cd "$(dirname "$0")" 
