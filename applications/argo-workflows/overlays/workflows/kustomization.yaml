@@ -5,5 +5,4 @@ resources:
 - rbac.yaml
 - config.yaml
 
-# - githubcred.yaml
 namespace: workflows

@@ -297,6 +297,27 @@ spec:
                           value: ""
                         - name: subfolder
                           value: frontend
+                    - name: promote-staging
+                      templateRef:
+                        name: promote
+                        template: promote
+                        clusterScope: true
+                      arguments:
+                        parameters:
+                        - name: environment
+                          value: staging
+                        - name: repo_owner
+                          value: vfarcic
+                        - name: repo_name
+                          value: argo-combined-demo
+                        - name: image_owner
+                          value: vfarcic
+                        - name: image_name
+                          value: ""
+                        - name: tag
+                          value: ""
+                      dependencies:
+                      - build
           parameters:
           - src:
               dependencyName: test-dep
@@ -319,3 +340,11 @@ spec:
               dependencyName: test-dep
               dataKey: body.after
             dest: spec.templates.0.dag.tasks.0.arguments.parameters.4.value
+          - src:
+              dependencyName: test-dep
+              dataKey: body.repository.name
+            dest: spec.templates.0.dag.tasks.1.arguments.parameters.4.value
+          - src:
+              dependencyName: test-dep
+              dataKey: body.after
+            dest: spec.templates.0.dag.tasks.1.arguments.parameters.5.value
