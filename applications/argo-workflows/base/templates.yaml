@@ -41,7 +41,6 @@ spec:
     inputs:
       parameters:
       - name: subfolder
-      - name: environment
       - name: repo_owner
       - name: repo_name
       - name: image_owner
@@ -56,9 +55,10 @@ spec:
         cd {{inputs.parameters.repo_name}}/{{inputs.parameter.subfolder}}
         sleep 2
         echo BEFORE:
-        cat {{inputs.parameters.environment}}/{{inputs.parameters.image_name}}.yaml
+        cat kustomization.yaml
         echo AFTER:
         kustomize edit set image {{inputs.parameters.image_owner}}/{{inputs.parameters.image_name}}={{inputs.parameters.image_owner}}/{{inputs.parameters.image_name}}:{{inputs.parameters.tag}}
+        cat kustomization.yaml
         git add kustomization.yaml
         git commit -m "Upgraded {{inputs.parameters.environment}}/{{inputs.parameters.image_name}}.yaml with the tag {{inputs.parameters.tag}}"
         git push origin main

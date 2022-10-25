@@ -307,11 +307,11 @@ spec:
                         - name: environment
                           value: staging
                         - name: repo_owner
-                          value: vfarcic
+                          value: davidfox87
                         - name: repo_name
-                          value: argo-combined-demo
+                          value: terraform-eks-acm-alb-istio
                         - name: image_owner
-                          value: vfarcic
+                          value: foxy7887
                         - name: image_name
                           value: ""
                         - name: tag

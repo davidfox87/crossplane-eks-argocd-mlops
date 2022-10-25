@@ -16,3 +16,5 @@ kubectl create secret generic regcred --from-file=.dockerconfigjson=/home/david/
 
 ## configure argo artifacts minio storage
 kubectl -n workflows create secret generic argo-artifacts --from-literal=username=minio --from-literal=password=minio123
+
+## apply github-access secret that encode the personal access token
