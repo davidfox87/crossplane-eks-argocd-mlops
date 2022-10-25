@@ -51,6 +51,8 @@ spec:
       command: [sh]
       source: |
         set -e
+        git config --global user.email "davidmfox87@gmail.com"
+        git config --global user.name "David Fox"
         git clone https://$(cat /.github/token)@github.com/{{inputs.parameters.repo_owner}}/{{inputs.parameters.repo_name}}
         cd {{inputs.parameters.repo_name}}/{{inputs.parameters.subfolder}}
         sleep 2
