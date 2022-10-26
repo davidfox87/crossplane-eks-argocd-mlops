@@ -5,5 +5,5 @@ resources:
 - event-sources.yaml
 - sensors.yaml
 # - ingress.yaml
-- github-access.yaml
+- github-access.yaml # sealed-secret
 namespace: argo-events

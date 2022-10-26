@@ -5,7 +5,7 @@
 # spec:
 #   template:
 #     serviceAccountName: operate-workflow-sa
-#   depends:
+#   dependencies:
 #     - name: test-dep
 #       eventSourceName: github
 #       eventName: test
@@ -55,7 +55,7 @@
 # spec:
 #   template:
 #     serviceAccountName: operate-workflow-sa
-#   depends:
+#   dependencies:
 #     - name: test-dep
 #       eventSourceName: github
 #       eventName: test
@@ -160,7 +160,7 @@
 #         secret:
 #           secretName: git-known-hosts
 #     serviceAccountName: operate-workflow-sa
-#   depends:
+#   dependencies:
 #     - name: test-dep
 #       eventSourceName: github
 #       eventName: test
@@ -189,7 +189,7 @@ metadata:
 spec:
   template:
     serviceAccountName: operate-workflow-sa
-  depends:
+  dependencies:
     - name: test-dep
       eventSourceName: github
       eventName: test
@@ -245,7 +245,7 @@ metadata:
 spec:
   template:
     serviceAccountName: operate-workflow-sa
-  depends:
+  dependencies:
     - name: test-dep
       eventSourceName: github
       eventName: test
@@ -329,17 +329,21 @@ spec:
                           value: ""
                         - name: tag
                           value: ""
-                      depends: build
+                      dependencies: 
+                      - build
                     - name: test-functional
                       template: test
-                      depends: promote-staging
+                      dependencies: 
+                      - promote-staging
                     - name: test-integration
                       template: test
-                      depends: promote-staging
+                      dependencies: 
+                      - promote-staging
                     - name: promote-production
                       template: test
-                      depends: test-functional && test-integration
-                    
+                      dependencies: 
+                      - test-functional 
+                      - test-integration
                 - name: test
                   script:
                     image: alpine

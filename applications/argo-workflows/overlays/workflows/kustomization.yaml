@@ -4,5 +4,6 @@ resources:
 - namespace.yaml
 - rbac.yaml
 - config.yaml
+- github-access.yaml # sealed-secret
 
 namespace: workflows
