@@ -331,6 +331,24 @@ spec:
                           value: ""
                       dependencies:
                       - build
+                  - name: test-functional
+                    template: test
+                    dependencies:
+                    - promote-staging
+                  - name: test-integration
+                    template: test
+                    dependencies:
+                    - promote-staging
+                - name: test
+                  script:
+                    image: alpine
+                    command: [sh]
+                    source: |
+                      echo This is a testing simulation...
+                      sleep 5
+                    volumeMounts:
+                    - name: github-access
+                      mountPath: /.github/
           parameters:
           - src:
               dependencyName: test-dep

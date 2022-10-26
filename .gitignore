@@ -42,3 +42,4 @@ rsa
 git-ssh.yaml
 git-ssh-known-hosts.yaml
 github-access.yaml
+github-personal-access-token
