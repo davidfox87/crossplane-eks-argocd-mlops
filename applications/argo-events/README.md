@@ -4,9 +4,12 @@ Go into ```argo-events/overlays/production``` and run ```kustomize build | kubec
 # info on creating the github token
 https://docs.triggermesh.io/cloud/sources/github/#deploying-an-instance-of-the-source
 
-echo -n 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 | base64
 
-when you make the github personal access token, make sure to check the following boxes:
+
+kubectl get secret github-access -n argo-events -o yaml | kubeseal --controller-namespace kube-system \
+                                                 --controller-name sealed-secrets \
+                                                 --format yaml github-access.yaml > github-access.yaml
+
 
 
 

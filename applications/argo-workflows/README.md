@@ -18,3 +18,10 @@ kubectl create secret generic regcred --from-file=.dockerconfigjson=/home/david/
 kubectl -n workflows create secret generic argo-artifacts --from-literal=username=minio --from-literal=password=minio123
 
 ## apply github-access secret that encode the personal access token
+
+
+
+kubectl get secret github-access -n workflows -o yaml | kubeseal --controller-namespace kube-system \
+                                                 --controller-name sealed-secrets \
+                                                 --format yaml github-access.yaml > github-access.yaml
+

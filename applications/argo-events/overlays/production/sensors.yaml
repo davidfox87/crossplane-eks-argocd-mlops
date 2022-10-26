@@ -336,6 +336,10 @@ spec:
                     - name: test-integration
                       template: test
                       depends: promote-staging
+                    - name: promote-production
+                      template: test
+                      depends: test-functional && test-integration
+                    
                 - name: test
                   script:
                     image: alpine
