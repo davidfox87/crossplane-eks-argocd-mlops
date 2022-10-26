@@ -13,6 +13,7 @@
 | ngrok | [README](applications/ngrok_/README.md) |
 | task-tracker app (MERN stack demo) | [README](applications/task-tracker-app/README.md) |
 | sealed-secrets | |
+| Seldon-core | Coming soon |
 ## Use argocd to deploy applications to our Kubernetes cluster 
 In a different project folder, clone the repo which has our ArgoCD project and application manifests 
 ```
