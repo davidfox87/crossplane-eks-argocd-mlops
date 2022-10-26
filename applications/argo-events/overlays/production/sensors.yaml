@@ -5,7 +5,7 @@
 # spec:
 #   template:
 #     serviceAccountName: operate-workflow-sa
-#   dependencies:
+#   depends:
 #     - name: test-dep
 #       eventSourceName: github
 #       eventName: test
@@ -55,7 +55,7 @@
 # spec:
 #   template:
 #     serviceAccountName: operate-workflow-sa
-#   dependencies:
+#   depends:
 #     - name: test-dep
 #       eventSourceName: github
 #       eventName: test
@@ -160,7 +160,7 @@
 #         secret:
 #           secretName: git-known-hosts
 #     serviceAccountName: operate-workflow-sa
-#   dependencies:
+#   depends:
 #     - name: test-dep
 #       eventSourceName: github
 #       eventName: test
@@ -189,7 +189,7 @@ metadata:
 spec:
   template:
     serviceAccountName: operate-workflow-sa
-  dependencies:
+  depends:
     - name: test-dep
       eventSourceName: github
       eventName: test
@@ -245,7 +245,7 @@ metadata:
 spec:
   template:
     serviceAccountName: operate-workflow-sa
-  dependencies:
+  depends:
     - name: test-dep
       eventSourceName: github
       eventName: test
@@ -329,16 +329,13 @@ spec:
                           value: ""
                         - name: tag
                           value: ""
-                      dependencies:
-                      - build
-                  - name: test-functional
-                    template: test
-                    dependencies:
-                    - promote-staging
-                  - name: test-integration
-                    template: test
-                    dependencies:
-                    - promote-staging
+                      depends: build
+                    - name: test-functional
+                      template: test
+                      depends: promote-staging
+                    - name: test-integration
+                      template: test
+                      depends: promote-staging
                 - name: test
                   script:
                     image: alpine
