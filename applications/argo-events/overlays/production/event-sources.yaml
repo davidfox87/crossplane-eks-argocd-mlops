@@ -18,7 +18,7 @@ spec:
         endpoint: /push
         port: "12000"
         method: POST
-        url: https://1b2a-135-84-103-250.ngrok.io
+        url: https://e422-135-84-103-250.ngrok.io
       events:
         - "*"
       apiToken:
