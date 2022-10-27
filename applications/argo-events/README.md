@@ -14,10 +14,13 @@ kubeseal --controller-namespace kube-system \
 kubectl apply -f github-access-sealedsecret.json -n argo-events
 
 
-
-
+## start ngrok server
+1. take forwarding url and put it in the webhook url in the argo-events events-source url
+2. port forward to the webhook service
 
 kubectl -n argo-events port-forward $(kubectl -n argo-events get pod -l eventsource-name=github -o name) 12000:12000 &
+
+kubectl -n argo-events port-forward svc/github-eventsource-svc 12000:12000 &
 
 # Trigger sources
 Git trigger source refers to K8s trigger refers to the K8s resource stored in Git. 
