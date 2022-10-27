@@ -5,10 +5,14 @@ Go into ```argo-events/overlays/production``` and run ```kustomize build | kubec
 https://docs.triggermesh.io/cloud/sources/github/#deploying-an-instance-of-the-source
 
 
+kubectl create secret generic github-access -n argo-events --dry-run=client --from-file=token=.env -o json > github-access.json
 
-kubectl get secret github-access -n argo-events -o yaml | kubeseal --controller-namespace kube-system \
-                                                 --controller-name sealed-secrets \
-                                                 --format yaml github-access.yaml > github-access.yaml
+kubeseal --controller-namespace kube-system \
+         --controller-name sealed-secrets \
+        < github-access.json  > github-access-sealedsecret.json
+
+kubectl apply -f github-access-sealedsecret.json -n argo-events
+
 
 
 

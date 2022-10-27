@@ -20,8 +20,11 @@ kubectl -n workflows create secret generic argo-artifacts --from-literal=usernam
 ## apply github-access secret that encode the personal access token
 
 
+kubectl create secret generic github-access -n workflows --dry-run=client --from-file=token=.env -o json > github-access.json
 
-kubectl get secret github-access -n workflows -o yaml | kubeseal --controller-namespace kube-system \
-                                                 --controller-name sealed-secrets \
-                                                 --format yaml github-access.yaml > github-access.yaml
+kubeseal --controller-namespace kube-system \
+         --controller-name sealed-secrets \
+        < github-access.json  > github-access-sealedsecret.json
+
+kubectl apply -f github-access-sealedsecret.json -n workflows
 

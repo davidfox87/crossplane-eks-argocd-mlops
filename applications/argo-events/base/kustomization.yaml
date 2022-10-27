@@ -5,4 +5,5 @@ resources:
 - install.yaml
 - github.com/argoproj/argo-events/manifests/extensions/validating-webhook
 - rbac.yaml
+- event-bus.yaml
 namespace: argo-events
