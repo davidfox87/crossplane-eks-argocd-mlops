@@ -20,14 +20,6 @@ def preprocess_data(data=None):
 def train_test_split(training_test_data, train_test_ratio=0.8):
   """Splits the data into a training and test set according to the provided ratio.
     """
-  predictors = training_test_data[training_test_data.columns[2:]]
-  classes = training_test_data[training_test_data.columns[:2]]
+  # split 
 
-  training_set_size = int(len(training_test_data) * train_test_ratio)
-
-  train_test_dict = {'training_predictors_tf': predictors[:training_set_size],
-                     'training_classes_tf': classes[:training_set_size],
-                     'test_predictors_tf': predictors[training_set_size:],
-                     'test_classes_tf': classes[training_set_size:]}
-
-  return train_test_dict
+  # write train and test to json, which can be passed as artifacts
