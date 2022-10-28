@@ -48,7 +48,7 @@ def parse_arguments(argv):
         return args
 
 
-def train_model(argv=None):
+def run_training(argv=None):
         """Train the model using XGBRegressor."""
         args = parse_arguments(sys.argv if argv is None else argv)
          # get the data
@@ -77,3 +77,7 @@ def train_model(argv=None):
         save_model(model, s3_path)
 
 
+
+if __name__ == '__main__':
+  logging.basicConfig(level=logging.INFO)
+  run_training()

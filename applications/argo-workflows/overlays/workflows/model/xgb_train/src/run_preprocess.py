@@ -41,3 +41,7 @@ def run_preprocess(argv=None):
   args = parse_arguments(sys.argv if argv is None else argv)
 
   preprocess.load_data()
+
+if __name__ == '__main__':
+  logging.basicConfig(level=logging.INFO)
+  run_preprocess()
