@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-docker login --username=foxy7887 -p MGSGiw550!
+docker login --username=xxx -p xxx!
 
 image_name=foxy7887/xgb_train
 image_tag=v5

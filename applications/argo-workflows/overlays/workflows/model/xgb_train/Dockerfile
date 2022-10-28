@@ -1,13 +1,12 @@
 FROM python:3.9-slim-buster
-WORKDIR /app
 
 # copy requirements.txt into /app working dir
 COPY requirements.txt requirements.txt 
 
-# install our dependencies
+# install python packages
 RUN pip3 install -r requirements.txt
 
 # copy source files into /app working dir
-COPY ./src . 
+COPY ./src /opt/workdir
+WORKDIR /opt/workdir
 
-#ENTRYPOINT ["python3", "./cli.py"]

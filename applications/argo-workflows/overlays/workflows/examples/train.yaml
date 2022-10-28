@@ -10,27 +10,43 @@ spec:
   - name: train-workflow
     dag:
       tasks:
+      - name: preprocess
+        outputs:
+ 	        artifacts:
+ 	          - name: output
+	            path: /tmp/output.csv
+
       - name: train
+        dependencies: [preprocess]
         template: train
         arguments:
+          artifacts:
+            - name: data
+              from: "{{tasks.preprocess.outputs.artifacts.output}}"
           parameters:
             - name: outfile
               value: "iris-xgb.pkl"
-      - name: evaluate
-        dependencies: [train]
-        template: evaluate
-        arguments:
-          parameters: [{name: message, value: evaluate}]
-          artifacts:
-            - name: model
-              from: "{{tasks.train.outputs.artifacts.model}}"
+  - name: preprocess
+    outputs:
+      artifacts:
+        - name: output
+          path: /tmp/output.csv
+    container:
+      name: preprocess
+      image: foxy7887/xgb_train:v5
+      command: ["python3", "./run_preprocess.py"]
+
   - name: train
     inputs:
       parameters:
       - name: outfile
+      artifacts:
+      - name: data
+        path: /tmp/input.csv
     container:
+      name: train
       image: foxy7887/xgb_train:v5
-      command: ["python3", "./cli.py"]
+      command: ["python3", "./run_train.py"]
       args: ["--model_file", "{{inputs.parameters.outfile}}", "--bucket", "test"]
     outputs:
       artifacts:
