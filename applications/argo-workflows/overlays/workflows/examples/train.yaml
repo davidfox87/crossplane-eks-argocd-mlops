@@ -11,26 +11,22 @@ spec:
     dag:
       tasks:
       - name: preprocess
-        outputs:
- 	        artifacts:
- 	          - name: output
-	            path: /tmp/output.csv
+        template: preprocess
 
       - name: train
         dependencies: [preprocess]
         template: train
         arguments:
+          parameters: [{name: model_path, value: models/model.pkl}]
           artifacts:
             - name: data
               from: "{{tasks.preprocess.outputs.artifacts.output}}"
-          parameters:
-            - name: outfile
-              value: "iris-xgb.pkl"
+
   - name: preprocess
     outputs:
       artifacts:
         - name: output
-          path: /tmp/output.csv
+          path: /tmp/data.csv
     container:
       name: preprocess
       image: foxy7887/xgb_train:v5
@@ -39,20 +35,20 @@ spec:
   - name: train
     inputs:
       parameters:
-      - name: outfile
+      - name: model_path
       artifacts:
       - name: data
-        path: /tmp/input.csv
+        path: /tmp/data.csv
     container:
       name: train
       image: foxy7887/xgb_train:v5
       command: ["python3", "./run_train.py"]
-      args: ["--model_file", "{{inputs.parameters.outfile}}", "--bucket", "test"]
+      args: ["--model_file", "{{inputs.parameters.model_path}}", "--bucket", "my-bucket"]
     outputs:
       artifacts:
       - name: model
         path: /tmp/model
-    
+
 
 
      # inputs:

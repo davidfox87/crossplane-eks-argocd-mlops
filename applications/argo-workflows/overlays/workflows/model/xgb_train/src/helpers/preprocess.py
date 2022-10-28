@@ -7,12 +7,12 @@ from sklearn import datasets
 logging.basicConfig(format='%(message)s')
 logging.getLogger().setLevel(logging.INFO)
 
-iris = datasets.load_iris()
+
 def load_data():
-        iris = datasets.load_iris(as_frame=True)
-        df = pd.concat([iris.data, iris.target], axis=1)
-        logging.info('loading of data complete...')        
-        df.to_csv('/tmp/out.csv')
+    iris = datasets.load_iris(as_frame=True)
+    df = pd.concat([iris.data, iris.target], axis=1)
+    logging.info('loading of data complete...')        
+    df.to_csv('/tmp/out.csv')
 
 def preprocess_data(data=None):
     ...

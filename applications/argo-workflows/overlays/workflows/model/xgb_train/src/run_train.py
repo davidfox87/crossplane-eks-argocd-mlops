@@ -8,13 +8,6 @@ from sklearn import datasets
 import argparse
 import sys
 
-iris = datasets.load_iris()
-def load_data():
-        iris = datasets.load_iris(as_frame=True)
-        df = pd.concat([iris.data, iris.target], axis=1)
-        logging.info('loading of data complete...')        
-        df.to_csv('/tmp/iris.csv')
-
 def save_model(model, model_file):
         """Save XGBoost model for serving."""
         joblib.dump(model, model_file)
