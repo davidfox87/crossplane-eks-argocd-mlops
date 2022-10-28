@@ -38,10 +38,10 @@ def parse_arguments(argv):
                         help='s3 bucket to store data and ML models',
                         default='<your-bucket-name>')
 
-        parser.add_argument('--blob_path',
+        parser.add_argument('--model_file',
                         type=str,
-                        help='s3 blob path where data is saved',
-                        default='data')
+                        help='s3 blob model file name',
+                        default='model.pkl')
 
         args, _ = parser.parse_known_args(args=argv[1:])
 
@@ -54,6 +54,7 @@ def train_model(argv=None):
          # get the data
         logging.info('getting the data...')
         df = pd.read_csv("/tmp/input.csv")
+
         X = df.drop('target', axis=1)
         y = df.loc[:, 'target']
 
@@ -70,22 +71,9 @@ def train_model(argv=None):
                 (model.best_score,
                 model.best_iteration+1))
 
-        s3_path = bucket + "/" + model_file
+        s3_path = args.bucket + "/" + args.model_file
         print("path is ", s3_path)
 
         save_model(model, s3_path)
 
-if __name__ == '__main__':
-
-        parser = argparse.ArgumentParser()
-        parser.add_argument(
-        '--model_file', type=str, required=True, help='Name of the model file.')
-        parser.add_argument(
-        '--bucket', type=str, required=True, help='S3 bucket name.')
-        args = parser.parse_args()
-
-        bucket=args.bucket
-        model_file=args.model_file # 'iris-xgb.pkl'
-
-        train_model(bucket, model_file)
 
