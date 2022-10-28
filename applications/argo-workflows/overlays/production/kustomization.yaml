@@ -1,0 +1,25 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+- ../../base
+- ../workflows
+
+
+# patchesStrategicMerge:
+#   - |
+#     apiVersion: v1
+#     kind: ServiceAccount
+#     metadata:
+#       name: argo-server
+#       annotations:
+#         <endpoint>/role-arn: <role-arn>  # must be identical to annotation of the service account in rbac.yaml file
+#   - |
+#     apiVersion: v1
+#     kind: ConfigMap
+#     metadata:
+#       name: workflow-controller-configmap
+#     data:
+#       workflowDefaults: |
+#         spec:
+#           serviceAccountName: <service-account-name> # must be identical to the service account name in rbac.yaml       

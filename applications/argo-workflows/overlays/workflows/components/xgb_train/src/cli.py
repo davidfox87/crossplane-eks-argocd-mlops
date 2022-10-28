@@ -2,14 +2,11 @@ import argparse
 import logging
 import joblib
 import pandas as pd
-from sklearn.metrics import mean_absolute_error
 from sklearn.model_selection import train_test_split
-from sklearn.impute import SimpleImputer
 from xgboost import XGBRegressor
 from sklearn import datasets
-
 import argparse
-from datetime import datetime
+
 
 logging.basicConfig(format='%(message)s')
 logging.getLogger().setLevel(logging.INFO)
@@ -21,15 +18,14 @@ def save_model(model, model_file):
         joblib.dump(model, model_file)
         logging.info("Model export success: %s", model_file)
 
+
 def train_model(bucket, model_file,
                 n_estimators=100, learning_rate=0.1):
         """Train the model using XGBRegressor."""
 
         X = iris.data[:, :2]  # we only take the first two features.
         y = iris.target
-        train_X, test_X, train_y, test_y = train_test_split(X.values,
-                                                        y.values,
-                                                        test_size=0.25)
+        train_X, test_X, train_y, test_y = train_test_split(X, y, test_size=0.25)
 
         model = XGBRegressor(n_estimators=n_estimators, learning_rate=learning_rate)
 
@@ -43,8 +39,8 @@ def train_model(bucket, model_file,
                 model.best_iteration+1))
 
         s3_path = bucket + "/" + model_file
-
-        save_model(model, s3_path)
+        print("path is ", s3_path)
+        #save_model(model, s3_path)
 
 if __name__ == '__main__':
 
@@ -56,7 +52,7 @@ if __name__ == '__main__':
         args = parser.parse_args()
 
         bucket=args.bucket
-        model_file=args.model_file
+        model_file=args.model_file # 'iris-xgb.pkl'
 
-        train_model('my-bucket', 'iris-xgb.pkl')
+        train_model(bucket, model_file)
 

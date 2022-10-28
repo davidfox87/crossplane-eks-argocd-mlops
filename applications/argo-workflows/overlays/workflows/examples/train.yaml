@@ -1,0 +1,56 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Workflow
+metadata:
+  generateName: input-artifact-s3-
+  namespace: workflows
+spec:
+  entrypoint: train-workflow
+  serviceAccountName: workflow
+  templates:
+  - name: train-workflow
+    dag:
+      tasks:
+      - name: train
+        template: train
+        arguments:
+          parameters:
+            - name: outfile
+              value: "iris-xgb.pkl"
+      - name: evaluate
+        dependencies: [train]
+        template: evaluate
+        arguments:
+          parameters: [{name: message, value: evaluate}]
+          artifacts:
+            - name: model
+              from: "{{tasks.train.outputs.artifacts.model}}"
+  - name: train
+    inputs:
+      parameters:
+      - name: outfile
+    container:
+      image: foxy7887/xgb_train:v5
+      command: ["python3", "./cli.py"]
+      args: ["--model_file", "{{inputs.parameters.outfile}}", "--bucket", "test"]
+    outputs:
+      artifacts:
+      - name: model
+        path: /tmp/model
+    
+
+
+     # inputs:
+    #   artifacts:
+    #   - name: my-art
+    #     path: /datasets
+    #     s3:
+    #       endpoint: minio.default:9000
+    #       insecure: true
+    #       bucket: my-bucket
+    #       key: my-bucket/data/
+    #       accessKeySecret:
+    #         name: argo-artifacts
+    #         key: accesskey
+    #       secretKeySecret:
+    #         name: argo-artifacts
+    #         key: secretkey

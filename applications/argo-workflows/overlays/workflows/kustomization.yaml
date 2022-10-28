@@ -4,5 +4,6 @@ resources:
 - namespace.yaml
 - rbac.yaml
 - config.yaml
+#- ingress.yaml
 
 namespace: workflows
