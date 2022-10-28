@@ -8,9 +8,6 @@ from sklearn import datasets
 import argparse
 import sys
 
-logging.basicConfig(format='%(message)s')
-logging.getLogger().setLevel(logging.INFO)
-
 iris = datasets.load_iris()
 def load_data():
         iris = datasets.load_iris(as_frame=True)

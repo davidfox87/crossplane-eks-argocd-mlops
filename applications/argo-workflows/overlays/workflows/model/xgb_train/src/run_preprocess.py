@@ -4,8 +4,6 @@ Scripts that performs all the steps to get the train and perform preprocessing.
 import logging
 import argparse
 import sys
-import shutil
-import os
 
 #pylint: disable=no-name-in-module
 from helpers import preprocess
