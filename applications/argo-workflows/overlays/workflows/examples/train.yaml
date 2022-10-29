@@ -29,7 +29,7 @@ spec:
           path: /tmp/data.csv
     container:
       name: preprocess
-      image: foxy7887/xgb_train:v5
+      image: foxy7887/xgb_train:v8
       command: ["python3", "./run_preprocess.py"]
 
   - name: train
@@ -41,13 +41,13 @@ spec:
         path: /tmp/data.csv
     container:
       name: train
-      image: foxy7887/xgb_train:v5
+      image: foxy7887/xgb_train:v8
       command: ["python3", "./run_train.py"]
       args: ["--model_file", "{{inputs.parameters.model_path}}", "--bucket", "my-bucket"]
     outputs:
       artifacts:
       - name: model
-        path: /tmp/model
+        path: /tmp/model.pkl
 
 
 

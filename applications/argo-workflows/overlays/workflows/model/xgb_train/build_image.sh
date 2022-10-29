@@ -1,9 +1,9 @@
 #!/bin/bash -e
 
-docker login --username=xxx -p xxx!
+docker login --username=foxy7887 -p MGSGiw550!
 
 image_name=foxy7887/xgb_train
-image_tag=v5
+image_tag=v8
 full_image_name=${image_name}:${image_tag}
 
 cd "$(dirname "$0")" 

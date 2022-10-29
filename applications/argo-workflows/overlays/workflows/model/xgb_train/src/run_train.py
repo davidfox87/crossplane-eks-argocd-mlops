@@ -43,7 +43,7 @@ def run_training(argv=None):
         args = parse_arguments(sys.argv if argv is None else argv)
          # get the data
         logging.info('getting the data...')
-        df = pd.read_csv("/tmp/input.csv")
+        df = pd.read_csv("/tmp/data.csv")
 
         X = df.drop('target', axis=1)
         y = df.loc[:, 'target']
@@ -64,7 +64,7 @@ def run_training(argv=None):
         s3_path = args.bucket + "/" + args.model_file
         print("path is ", s3_path)
 
-        save_model(model, s3_path)
+        save_model(model, '/tmp/model.pkl')
 
 
 
