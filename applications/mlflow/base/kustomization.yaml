@@ -3,5 +3,5 @@ kind: Kustomization
 resources:
 - postgres
 - mlflow
-- ingress.yaml
+# - ingress.yaml
 
