@@ -1,0 +1,14 @@
+apiVerstion: machinelearning.seldon.io/v1
+kind: SeldonDeployment
+metadata: 
+  name: wine-model
+  namespace: seldon
+spec:
+  name: iris
+  predictors:
+  - graph:
+      implementation: SKLEARN_SERVER
+      modelUri: s3://seldon-models/v1/sklearn/iris
+      name: classifier
+    name: default
+    replicas: 1
