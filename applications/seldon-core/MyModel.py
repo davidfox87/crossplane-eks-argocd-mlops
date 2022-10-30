@@ -1,3 +1,5 @@
+import mlflow
+
 class MyModel(object):
     """
     Model template. 
@@ -9,6 +11,8 @@ class MyModel(object):
         Add any initialization parameters. These will be passed at runtime from the graph definition parameters 
         defined in your seldondeployment kubernetes resource manifest.
         """
+        
+        mlflow.pyfunc.load_model('s3://my_bucket/path/to/model')        
         print("Initializing")
 
     def predict(self, X, features_names=None):
@@ -21,4 +25,5 @@ class MyModel(object):
         feature_names : array of feature names (optional)
         """
         print("Predict called - will run identity function")
+        
         return X

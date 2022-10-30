@@ -4,11 +4,11 @@ metadata:
   name: wine-model
   namespace: seldon
 spec:
-  name: iris
+  name: wines
   predictors:
   - graph:
-      implementation: SKLEARN_SERVER
-      modelUri: s3://seldon-models/v1/sklearn/iris
+      implementation: MLFLOW_SERVER
+      modelUri: s3://my_bucket/path/to/model
       name: classifier
     name: default
     replicas: 1
