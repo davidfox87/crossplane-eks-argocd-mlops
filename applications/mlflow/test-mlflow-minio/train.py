@@ -11,7 +11,7 @@ import os
 os.environ['MLFLOW_S3_ENDPOINT_URL'] = 'http://localhost:9200' #minio API
 os.environ['AWS_ACCESS_KEY_ID'] = 'minio'
 os.environ['AWS_SECRET_ACCESS_KEY'] = 'minio123'
-mlflow.set_tracking_uri("http://localhost:5555")
+mlflow.set_tracking_uri("http://localhost:5566")
 
 
 print("MLflow Version:", mlflow.__version__)
@@ -90,4 +90,5 @@ if __name__ == "__main__":
     if args.experiment_name:
         mlflow.set_experiment(args.experiment_name)
     model_name = None if not args.model_name or args.model_name == "None" else args.model_name
+    
     train(args.data_path, args.max_depth, args.min_child_weight, args.estimators, model_name)

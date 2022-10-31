@@ -21,15 +21,26 @@ spec:
           artifacts:
             - name: data
               from: "{{tasks.preprocess.outputs.artifacts.output}}"
+      - name: serve
+        dependencies: [train]
+        template: seldon-serve
+        
+      # - name: print-model-uri
+      #   dependencies: [train]
+      #   template: print-model-uri
+      #   arguments:
+      #     artifacts:
+      #       - name: model-uri
+      #         from: "{{steps.train.outputs.artifacts.model_uri}}"
 
   - name: preprocess
     outputs:
       artifacts:
-        - name: output
-          path: /tmp/data.csv
+      - name: output
+        path: /tmp/data.csv
     container:
       name: preprocess
-      image: foxy7887/xgb_train:v8
+      image: foxy7887/xgb_train:v16
       command: ["python3", "./run_preprocess.py"]
 
   - name: train
@@ -41,28 +52,64 @@ spec:
         path: /tmp/data.csv
     container:
       name: train
-      image: foxy7887/xgb_train:v8
+      image: foxy7887/xgb_train:v16
       command: ["python3", "./run_train.py"]
       args: ["--model_file", "{{inputs.parameters.model_path}}", "--bucket", "my-bucket"]
     outputs:
       artifacts:
-      - name: model
-        path: /tmp/model.pkl
+      - name: model_uri
+        path: /tmp/model-uri
+
+  - name: seldon-serve
+    resource:                   #indicates that this is a resource template
+    action: apply             #can be any kubectl action (e.g. create, delete, apply, patch)
+    manifest: |   #put your kubernetes spec here
+      apiVersion: "machinelearning.seldon.io/v1alpha2"
+      kind: "SeldonDeployment"
+      metadata:
+        name: seldon-model
+      spec:
+        name: test-deployment
+        predictors:
+        - componentSpecs:
+          - spec:
+              containers:
+              - name: wine-reg
+                image: foxy7887/wine-model:v1  
+          graph:
+            children: []
+            endpoint:
+              type: REST
+            name: regressor
+            type: MODEL
+          name: wine-reg
+          replicas: 1
+
+# - name: print-model-uri
+#   inputs:
+#     artifacts:
+#     - name: model-uri
+#       path: /tmp/model-uri
+#   container:
+#     image: alpine:latest
+#     command: [sh, -c]
+#     args: ["cat /tmp/model-uri"]
 
 
 
-     # inputs:
-    #   artifacts:
-    #   - name: my-art
-    #     path: /datasets
-    #     s3:
-    #       endpoint: minio.default:9000
-    #       insecure: true
-    #       bucket: my-bucket
-    #       key: my-bucket/data/
-    #       accessKeySecret:
-    #         name: argo-artifacts
-    #         key: accesskey
-    #       secretKeySecret:
-    #         name: argo-artifacts
-    #         key: secretkey
+
+    # inputs:
+  #   artifacts:
+  #   - name: my-art
+  #     path: /datasets
+  #     s3:
+  #       endpoint: minio.default:9000
+  #       insecure: true
+  #       bucket: my-bucket
+  #       key: my-bucket/data/
+  #       accessKeySecret:
+  #         name: argo-artifacts
+  #         key: accesskey
+  #       secretKeySecret:
+  #         name: argo-artifacts
+  #         key: secretkey

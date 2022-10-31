@@ -7,11 +7,13 @@ from xgboost import XGBRegressor
 import mlflow
 import argparse
 import sys
+import os 
 
-os.environ['MLFLOW_S3_ENDPOINT_URL'] = 'minio.default:9000' #minio API
+# consider injecting these env vars into the container using configmaps
+os.environ['MLFLOW_S3_ENDPOINT_URL'] = 'http://minio.default:9000' #minio API
 os.environ['AWS_ACCESS_KEY_ID'] = 'minio'
 os.environ['AWS_SECRET_ACCESS_KEY'] = 'minio123'
-mlflow.set_tracking_uri("tracking-server.mlflow:5000")
+mlflow.set_tracking_uri("http://mlflow-tracking-server.mlflow:5000")
 
 
 logging.info("MLflow Version: %s", mlflow.__version__)
@@ -69,28 +71,33 @@ def run_training(argv=None):
                 print("  run_id:", run_id)
                 print("  experiment_id:", experiment_id)
                 print("  experiment_name:", client.get_experiment(experiment_id).name)
-                
+
                 mlflow.log_param("max_depth", learning_rate)
                 mlflow.log_param("estimators", n_estimators)
 
-                model = XGBRegressor(n_estimators=100, learning_rate=0.1)
+                model = XGBRegressor(n_estimators=100, learning_rate=0.1, early_stopping_rounds=10)
 
                 model.fit(train_X,
                         train_y,
-                        early_stopping_rounds=40,
                         eval_set=[(test_X, test_y)])
 
                 print("Best RMSE on eval: %.2f with %d rounds" %
                         (model.best_score,
                         model.best_iteration+1))
+
                 # Log model
-                mlflow.xgboost.log_model(model, "xgboost-model", 
-                                        registered_model_name=model_name)
+                result = mlflow.xgboost.log_model(model, "xgboost-model", 
+                                        registered_model_name='wine')
+                model_uri = result.artifact_path
+                logging.info('The MLflow model uri is %s', model_uri)
 
-                s3_path = args.bucket + "/" + args.model_file
-                print("path is ", s3_path)
+                # This model_uri will be passed to the seldon-core deploy step
+                with open('/tmp/model-uri', 'w') as out_file:
+ 	                out_file.write(model_uri)
 
-                save_model(model, '/tmp/model.pkl')
+                # s3_path = args.bucket + "/" + args.model_file
+                # print("path is ", s3_path)
+                # save_model(model, '/tmp/model.pkl')
 
 
 

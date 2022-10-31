@@ -4,6 +4,17 @@ from sklearn.model_selection import train_test_split
 import xgboost as xgb
 import mlflow
 import mlflow.xgboost
+import os 
+
+
+os.environ['MLFLOW_S3_ENDPOINT_URL'] = 'http://localhost:9200' #minio API
+os.environ['AWS_ACCESS_KEY_ID'] = 'minio'
+os.environ['AWS_SECRET_ACCESS_KEY'] = 'minio123'
+
+print("MLflow Version:", mlflow.__version__)
+mlflow.set_tracking_uri("http://localhost:5566")
+print("Tracking URI:", mlflow.tracking.get_tracking_uri())
+
 
 print("Tracking URI:", mlflow.tracking.get_tracking_uri())
 print("MLflow Version:", mlflow.__version__)
@@ -25,20 +36,14 @@ if __name__ == "__main__":
         print(f"  {arg}: {getattr(args, arg)}")
 
     X,y  = build_data(args.data_path)
-    X_xgb = xgb.DMatrix(X, label=y)
         
-    print("\n=== mlflow.xgboost.load_model")
-    model = mlflow.xgboost.load_model(args.model_uri)
-    print("model:", model)
-    predictions = model.predict(X_xgb)
-    print("predictions.type:", type(predictions))
-    print("predictions.shape:", predictions.shape)
-    print("predictions:", predictions)
-
+    # model = mlflow.xgboost.load_model(args.model_uri)
+    model_uri = 's3://mlflow/1/ce3d84082d924370b971e39ad2cc1366/artifacts/xgboost-model/'
     print("\n=== mlflow.pyfunc.load_model")
     model = mlflow.pyfunc.load_model(args.model_uri)
     print("model:", model)
-    predictions = model.predict(X)
+    print("predicting for: ", X.iloc[:2, :])
+    predictions = model.predict(X.iloc[:2, :])
     print("predictions.type:", type(predictions))
     print("predictions.shape:", predictions.shape)
     print("predictions:", predictions)
