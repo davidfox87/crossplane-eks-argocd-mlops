@@ -1,4 +1,4 @@
-import mlflow.pyfunc
+import joblib
 
 class MyModel(object):
     """
@@ -12,12 +12,7 @@ class MyModel(object):
         defined in your seldondeployment kubernetes resource manifest.
         """
         
-        model_name = "wine"
-        model_version = 2
-
-        self.model = mlflow.pyfunc.load_model(
-            model_uri=f"models:/{model_name}/{model_version}"
-        )   
+        self.model = joblib.load('/tmp/model.pkl') 
 
     def predict(self, X, features_names=None):
         """

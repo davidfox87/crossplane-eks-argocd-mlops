@@ -24,7 +24,7 @@ spec:
       - name: serve
         dependencies: [train]
         template: seldon-serve
-        
+
       # - name: print-model-uri
       #   dependencies: [train]
       #   template: print-model-uri
@@ -59,7 +59,6 @@ spec:
       artifacts:
       - name: model_uri
         path: /tmp/model-uri
-
   - name: seldon-serve
     resource:                   #indicates that this is a resource template
     action: apply             #can be any kubectl action (e.g. create, delete, apply, patch)
@@ -85,31 +84,13 @@ spec:
           name: wine-reg
           replicas: 1
 
-# - name: print-model-uri
-#   inputs:
-#     artifacts:
-#     - name: model-uri
-#       path: /tmp/model-uri
-#   container:
-#     image: alpine:latest
-#     command: [sh, -c]
-#     args: ["cat /tmp/model-uri"]
+  - name: print-model-uri
+    inputs:
+      artifacts:
+      - name: model-uri
+        path: /tmp/model-uri
+    container:
+      image: alpine:latest
+      command: [sh, -c]
+      args: ["cat /tmp/model-uri"]
 
-
-
-
-    # inputs:
-  #   artifacts:
-  #   - name: my-art
-  #     path: /datasets
-  #     s3:
-  #       endpoint: minio.default:9000
-  #       insecure: true
-  #       bucket: my-bucket
-  #       key: my-bucket/data/
-  #       accessKeySecret:
-  #         name: argo-artifacts
-  #         key: accesskey
-  #       secretKeySecret:
-  #         name: argo-artifacts
-  #         key: secretkey
