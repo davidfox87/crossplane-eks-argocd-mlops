@@ -6,14 +6,11 @@ metadata:
 spec:
   entrypoint: train-workflow
   serviceAccountName: workflow
-  volumeClaimTemplates:
-  - metadata:
-      name: workspace
-    spec:
-      accessModes: [ "ReadWriteOnce" ]
-      resources:
-        requests:
-          storage: 0.5Gi
+  volumes:
+  - name: workdir
+    persistentVolumeClaim:
+      claimName: my-pvc
+
   templates:
   - name: train-workflow
     dag:
@@ -80,7 +77,7 @@ spec:
                 volumes:
                 - name: persistent-storage
                   persistentVolumeClaim:
-                    claimName: "{{workflow.name}}-my-pvc"
+                    claimName: "my-pvc"
             graph:
               children: []
               endpoint:
