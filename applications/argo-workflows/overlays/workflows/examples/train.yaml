@@ -33,11 +33,6 @@ spec:
         dependencies: [train]
         template: seldon-serve
 
-      # - name: print-model-uri
-      #   dependencies: [train]
-      #   template: print-model-uri
-
-
   - name: preprocess
     outputs:
       artifacts:
@@ -95,9 +90,9 @@ spec:
             name: wine-clf
             replicas: 1
 
-  # - name: print-model-uri
-  #   container:
-  #     image: alpine:latest
-  #     command: [sh, -c]
-  #     args: ["ls /tmp"]
+  - name: print-model-uri
+    container:
+      image: alpine:latest
+      command: [sh, -c]
+      args: ["ls /tmp/model.pkl"]
 
