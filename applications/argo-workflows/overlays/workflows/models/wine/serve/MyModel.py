@@ -12,7 +12,7 @@ class MyModel(object):
         defined in your seldondeployment kubernetes resource manifest.
         """
         
-        self.model = joblib.load('/tmp/hostpath-provisioner/workflows/my-pvc/model.pkl') 
+        self.model = joblib.load('/tmp/model.pkl') 
 
     def predict(self, X, features_names=None):
         """

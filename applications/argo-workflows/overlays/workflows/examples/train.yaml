@@ -59,14 +59,18 @@ spec:
     resource:                   #indicates that this is a resource template
       action: apply             #can be any kubectl action (e.g. create, delete, apply, patch)
       manifest: |   #put your kubernetes spec here
-        apiVersion: "machinelearning.seldon.io/v1alpha2"
+        apiVersion: "machinelearning.seldon.io/v1"
         kind: "SeldonDeployment"
         metadata:
+          labels: 
+            app: seldon
           name: seldon-model
         spec:
           name: test-deployment
           predictors:
-          - componentSpecs:
+          - annotations:
+              seldon.io/svc-name: seldon-model
+            componentSpecs:
             - spec:
                 containers:
                 - name: wine-clf
@@ -79,12 +83,11 @@ spec:
                   persistentVolumeClaim:
                     claimName: my-pvc
             graph:
-              children: []
               endpoint:
                 type: REST
               name: wine-clf
               type: MODEL
-            name: wine-clf
+            name: main
             replicas: 1
 
   - name: print-model-uri
