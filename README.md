@@ -14,6 +14,13 @@
 | task-tracker app (MERN stack demo) | [README](applications/task-tracker-app/README.md) |
 | sealed-secrets | |
 | Seldon-core | Coming soon |
+## start local cluster using minikube
+kubernetes version has to be less than 1.25 for seldon to work
+```
+minikube start --kubernetes-version v1.24.4
+```
+When you run ```kubectl api-versions | grep beta``` you will see that ```autoscaling/v2beta1``` is there and seldon won't complain.
+
 ## Use argocd to deploy applications to our Kubernetes cluster 
 In a different project folder, clone the repo which has our ArgoCD project and application manifests 
 ```
