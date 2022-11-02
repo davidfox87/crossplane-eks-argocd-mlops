@@ -60,10 +60,9 @@ spec:
       image: foxy7887/xgb_train:v17
       command: ["python3", "./run_train.py"]
       args: ["--model_file", "{{inputs.parameters.model_path}}", "--bucket", "my-bucket"]
-    outputs:
-      artifacts:
-      - name: model
-        path: /tmp/model.pkl
+      volumeMounts:
+      - name: workspace
+        mountPath: /tmp
   - name: seldon-serve
     resource:                   #indicates that this is a resource template
       action: apply             #can be any kubectl action (e.g. create, delete, apply, patch)
@@ -80,6 +79,13 @@ spec:
                 containers:
                 - name: wine-clf
                   image: foxy7887/wine-model:v1  
+                  volumeMounts:
+                  - name: mypvc
+                    mountPath: /tmp
+                volumes:
+                - name: persistent-storage
+                  persistentVolumeClaim:
+                    claimName: "{{workflow.name}}-my-pvc"
             graph:
               children: []
               endpoint:
