@@ -46,3 +46,9 @@ rules:
   verbs:
   - create
   - get
+- apiGroups:
+    - machinelearning.seldon.io
+  verbs:
+    - '*'
+  resources:
+    - '*'

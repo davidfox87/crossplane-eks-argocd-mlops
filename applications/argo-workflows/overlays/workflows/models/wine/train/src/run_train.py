@@ -57,6 +57,7 @@ def run_training(argv=None):
                                 learning_rate=learning_rate, 
                                 early_stopping_rounds=10)
 
+        logging.info('Training the classifier...')
         model.fit(train_X,
                 train_y,
                 eval_set=[(test_X, test_y)])
@@ -67,7 +68,9 @@ def run_training(argv=None):
 
 
         s3_path = args.bucket + "/" + args.model_file
-        print("path is ", s3_path)
+        s3_path = '/tmp/model.pkl'
+        logging.info('saving the classifier model artifact to %s', s3_path)
+        
         save_model(model, '/tmp/model.pkl')
 
 
