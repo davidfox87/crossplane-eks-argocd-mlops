@@ -49,11 +49,11 @@ spec:
         path: /tmp/data.csv
     container:
       name: train
-      image: foxy7887/xgb_train:v17
+      image: foxy7887/xgb_train:v19
       command: ["python3", "./run_train.py"]
       args: ["--model_file", "{{inputs.parameters.model_path}}", "--bucket", "my-bucket"]
       volumeMounts:
-      - name: workspace
+      - name: workdir
         mountPath: /tmp
   - name: seldon-serve
     resource:                   #indicates that this is a resource template
@@ -70,19 +70,19 @@ spec:
             - spec:
                 containers:
                 - name: wine-clf
-                  image: foxy7887/wine-model:v1  
+                  image: foxy7887/wine-model:v3 
                   volumeMounts:
-                  - name: my-pvc
+                  - name: persistent-storage
                     mountPath: /tmp
                 volumes:
                 - name: persistent-storage
                   persistentVolumeClaim:
-                    claimName: "my-pvc"
+                    claimName: my-pvc
             graph:
               children: []
               endpoint:
                 type: REST
-              name: classifier
+              name: wine-clf
               type: MODEL
             name: wine-clf
             replicas: 1

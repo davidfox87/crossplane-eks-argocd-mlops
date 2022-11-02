@@ -70,7 +70,7 @@ def run_training(argv=None):
         s3_path = args.bucket + "/" + args.model_file
         s3_path = '/tmp/model.pkl'
         logging.info('saving the classifier model artifact to %s', s3_path)
-        
+
         save_model(model, '/tmp/model.pkl')
 
 
