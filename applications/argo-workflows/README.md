@@ -49,9 +49,11 @@ kubectl port-forward -n istio-system svcstio-ingressgateway 8080:80
 ```
 Send requests to our prediction service
 ```
-curl  -X POST http://localhost:8080/seldon/workflows/seldon-model/api/v1.0/predictions \
--H 'Content-Type: application/json' \
--d  '{ "data": { "ndarray": [[2,1,2,3,4]] } }' | json_pp
+curl -X POST      -H 'Content-Type: application/json'  \
+    -d '{"data": { "ndarray": [[1,2,3,4,5]]}}'   \
+        http://localhost:8080/seldon/workflows/seldon-deployment-deploy-wine-clf-j6wp2/api/v1.0/predictions
+        
+{"data":{"names":["t:0","t:1","t:2","t:3","t:4"],"ndarray":[[1,2,3,4,5]]},"meta":{"requestPath":{"wine-clf":"foxy7887/wine-model:v10"}}}
 ```
 
 The internal url to reach the prediction service is:

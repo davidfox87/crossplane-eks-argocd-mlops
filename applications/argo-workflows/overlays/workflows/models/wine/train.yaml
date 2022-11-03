@@ -64,42 +64,39 @@ spec:
         metadata:
           labels: 
             app: seldon
-          name: seldon-model
+          name: "seldon-deployment-{{workflow.name}}"
         spec:
-          name: test-deployment
+          annotations:
+            project_name: test Pipeline
+            deployment_version: v1
+          name: "seldon-deployment-{{workflow.name}}"
           predictors:
           - annotations:
-              seldon.io/svc-name: seldon-model
               sidecar.istio.io/inject: "false"
             componentSpecs:
             - spec:
                 containers:
                 - name: wine-clf
-                  image: foxy7887/wine-model:v9
-                  livenessProbe:
-                    initialDelaySeconds: 80
-                    failureThreshold: 200
-                    periodSeconds: 5
-                    successThreshold: 1
-
-                  readinessProbe:
-                    initialDelaySeconds: 80
-                    failureThreshold: 200
-                    periodSeconds: 5
-                    successThreshold: 1
+                  image: foxy7887/wine-model:v10
+                  imagePullPolicy: IfNotPresent
 
                   volumeMounts:
                   - name: persistent-storage
                     mountPath: /tmp
+                terminationGracePeriodSeconds: 20
                 volumes:
                 - name: persistent-storage
                   persistentVolumeClaim:
                     claimName: my-pvc
             graph:
               name: wine-clf
+              endpoint:
+                type: REST
               type: MODEL
-            name: main
+            name: single-model
             replicas: 1
+            annotations:
+              predictor_version: v1
 
   - name: print-model-uri
     container:

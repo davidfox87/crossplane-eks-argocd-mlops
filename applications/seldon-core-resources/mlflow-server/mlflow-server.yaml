@@ -1,0 +1,16 @@
+apiVersion: machinelearning.seldon.io/v1alpha2
+kind: SeldonDeployment
+metadata:
+  name: minio-mlflow
+spec:
+  name: wines
+  predictors:
+  - componentSpecs:
+    graph:
+      children: []
+      implementation: MLFLOW_SERVER
+      modelUri: s3://mlflow/xgboost-model
+      envSecretRefName: seldon-init-container-secret
+      name: classifier
+    name: default
+    replicas: 1
