@@ -56,9 +56,9 @@ spec:
       - name: workdir
         mountPath: /tmp
   - name: seldon-serve
-    resource:                   #indicates that this is a resource template
-      action: apply             #can be any kubectl action (e.g. create, delete, apply, patch)
-      manifest: |   #put your kubernetes spec here
+    resource:                   # indicates that this is a resource template
+      action: apply             # can be any kubectl action (e.g. create, delete, apply, patch)
+      manifest: |               # put your kubernetes spec here
         apiVersion: "machinelearning.seldon.io/v1"
         kind: "SeldonDeployment"
         metadata:
@@ -75,7 +75,19 @@ spec:
             - spec:
                 containers:
                 - name: wine-clf
-                  image: foxy7887/wine-model:v6
+                  image: foxy7887/wine-model:v9
+                  livenessProbe:
+                    initialDelaySeconds: 80
+                    failureThreshold: 200
+                    periodSeconds: 5
+                    successThreshold: 1
+
+                  readinessProbe:
+                    initialDelaySeconds: 80
+                    failureThreshold: 200
+                    periodSeconds: 5
+                    successThreshold: 1
+
                   volumeMounts:
                   - name: persistent-storage
                     mountPath: /tmp

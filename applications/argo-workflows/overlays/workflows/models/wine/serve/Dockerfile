@@ -7,6 +7,10 @@ RUN pip install -r requirements.txt
 
 # Copy source code
 COPY . .
+
+# Port for GRPC
+EXPOSE 5000
+# Port for REST
 EXPOSE 9000
 
 # Define environment variable

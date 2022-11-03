@@ -35,10 +35,43 @@ kubectl -n argo port-forward deployment/argo-server 2746:2746
 This will serve the UI on https://localhost:2746. Due to the self-signed certificate, you will receive a TLS error which you will need to manually approve.
 
 
+kubectl get sdep -n workflows
+
+kubectl -n workflows get sdep seldon-model -o json | jq .status
+
+Docs and predictions can be access with the following url:
+
+This can be accessed through the endpoint http://<ingress_url>/seldon/<namespace>/<model-name>/api/v1.0/doc/ which will allow you to send requests directly through your browser.
+
+Locally we can port-forward to the istio-ingressgateway service and send requests to that:
+```
+kubectl port-forward -n istio-system svcstio-ingressgateway 8080:80
+```
+Send requests to our prediction service
+```
 curl  -X POST http://localhost:8080/seldon/workflows/seldon-model/api/v1.0/predictions \
 -H 'Content-Type: application/json' \
--d  '{"data": { "names": ["","sepal length (cm)","sepal width (cm)","petal length (cm)","petal width (cm)"], "ndarray": [[1,2,3,4,5]]}}'
- | json_pp
+-d  '{ "data": { "ndarray": [[2,1,2,3,4]] } }' | json_pp
+```
 
-'{"data": { "names": ["","sepal length (cm)","sepal width (cm)","petal length (cm)","petal width (cm)"], "ndarray": [[1,2,3,4,5]]}}'
+The internal url to reach the prediction service is:
+http://seldon-model.workflows.svc.cluster.local:8000/api/v1.0/predictions
 
+kubectl -n workflows describe sdep mysdep
+
+curl -X POST \
+     -H 'Content-Type: application/json' \
+     -d '{"data": { "ndarray": [[1,2,3,4,5]]}}' \
+         http://localhost:9998/api/v1.0/predictions
+
+
+curl -X POST \
+     -H 'Content-Type: application/json' \
+     -d '{"data": { "ndarray": [[1,2,3,4,5]]}}' \
+         http://localhost:8080/seldon/workflows/seldon-model/api/v1.0/predictions
+
+{"data":{"names":[],"ndarray":["hello","world"]},"meta":{}}
+
+curl  -X POST http://localhost:9998/api/v1.0/predictions \
+-H 'Content-Type: application/json' \
+-d  '{ "data": { "ndarray": [[2,1,2,3,4]] } }' | json_pp
