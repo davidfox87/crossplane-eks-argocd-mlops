@@ -32,6 +32,12 @@ kubectl apply -f projects.yaml
 kubectl apply -f apps.yaml
 ```
 
+## deploy the secrets in the workflows namespace
+Inside ```terraform-argocd/applications/argo-workflows/overlays/workflows/```
+```
+./deploy_secrets
+```
+
 ## wait for everything to sync and be healthy in the argo-cd UI
 The following screenshot shows the applications that argocd has deployed into our EKS cluster either from our own kustomize application manifests or third-party helm charts.
 ![argocd](argocd.png)

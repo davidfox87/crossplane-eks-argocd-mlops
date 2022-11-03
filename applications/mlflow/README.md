@@ -9,7 +9,7 @@ In ```applications/mlflow```, we run the MLflow tracking server from a container
 
 Port forward to mlflow tracking server
 ```
-kubectl port-forward service/mlflow-tracking-server 5555:5000 -n local-mlflow
+kubectl port-forward service/mlflow-tracking-server 5555:5000 -n mlflow
 ```
 
 

@@ -33,3 +33,12 @@ kubectl apply -f github-access-sealedsecret.json -n workflows
 kubectl -n argo port-forward deployment/argo-server 2746:2746
 
 This will serve the UI on https://localhost:2746. Due to the self-signed certificate, you will receive a TLS error which you will need to manually approve.
+
+
+curl  -X POST http://localhost:8080/seldon/workflows/seldon-model/api/v1.0/predictions \
+-H 'Content-Type: application/json' \
+-d  '{"data": { "names": ["","sepal length (cm)","sepal width (cm)","petal length (cm)","petal width (cm)"], "ndarray": [[1,2,3,4,5]]}}'
+ | json_pp
+
+'{"data": { "names": ["","sepal length (cm)","sepal width (cm)","petal length (cm)","petal width (cm)"], "ndarray": [[1,2,3,4,5]]}}'
+

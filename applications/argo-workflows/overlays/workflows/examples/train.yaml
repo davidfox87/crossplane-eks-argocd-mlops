@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Workflow
 metadata:
-  generateName: input-artifact-s3-
+  generateName: deploy-wine-clf-
   namespace: workflows
 spec:
   entrypoint: train-workflow
@@ -37,7 +37,7 @@ spec:
         path: /tmp/data.csv
     container:
       name: preprocess
-      image: foxy7887/xgb_train:v16
+      image: foxy7887/xgb_train:v19
       command: ["python3", "./run_preprocess.py"]
 
   - name: train
@@ -70,11 +70,12 @@ spec:
           predictors:
           - annotations:
               seldon.io/svc-name: seldon-model
+              sidecar.istio.io/inject: "false"
             componentSpecs:
             - spec:
                 containers:
                 - name: wine-clf
-                  image: foxy7887/wine-model:v3 
+                  image: foxy7887/wine-model:v6
                   volumeMounts:
                   - name: persistent-storage
                     mountPath: /tmp
@@ -83,8 +84,6 @@ spec:
                   persistentVolumeClaim:
                     claimName: my-pvc
             graph:
-              endpoint:
-                type: REST
               name: wine-clf
               type: MODEL
             name: main
