@@ -2,14 +2,39 @@ apiVersion: machinelearning.seldon.io/v1alpha2
 kind: SeldonDeployment
 metadata:
   name: minio-mlflow
+  namespace: seldon
 spec:
-  name: wines
+  name: wine
   predictors:
   - componentSpecs:
+    - spec:
+        # We are setting high failureThreshold as installing conda dependencies
+        # can take long time and we want to avoid k8s killing the container prematurely
+        containers:
+        - name: classifier
+          livenessProbe:
+            initialDelaySeconds: 80
+            failureThreshold: 200
+            periodSeconds: 5
+            successThreshold: 1
+            httpGet:
+              path: /health/ping
+              port: http
+              scheme: HTTP
+          readinessProbe:
+            initialDelaySeconds: 80
+            failureThreshold: 200
+            periodSeconds: 5
+            successThreshold: 1
+            httpGet:
+              path: /health/ping
+              port: http
+              scheme: HTTP
+
     graph:
       children: []
       implementation: MLFLOW_SERVER
-      modelUri: s3://mlflow/xgboost-model
+      modelUri: s3://mlflow/0/56d4c9715fab43108e407ded7db208d2/artifacts/xgboost-model
       envSecretRefName: seldon-init-container-secret
       name: classifier
     name: default
