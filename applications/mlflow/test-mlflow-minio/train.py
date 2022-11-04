@@ -72,7 +72,11 @@ def train(data_path, max_depth, min_child_weight, estimators, model_name):
         mlflow.log_metric("mae", mae)
 
         # Log model
-        mlflow.xgboost.log_model(model, "xgboost-model", registered_model_name=model_name)
+        model_info = mlflow.xgboost.log_model(model,
+                                            artifact_path="mlflow/xgboost-model",
+                                            registered_model_name="xgboost-model")
+        
+        print("artifact path is: ", model_info.artifact_path)
 
 if __name__ == "__main__":
     from argparse import ArgumentParser
