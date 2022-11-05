@@ -248,7 +248,7 @@ spec:
   dependencies:
     - name: test-dep
       eventSourceName: github
-      eventName: test
+      eventName: task-tracker
   triggers:
     - template:
         name: github-workflow-trigger
