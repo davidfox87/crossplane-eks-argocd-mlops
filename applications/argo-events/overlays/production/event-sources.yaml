@@ -32,7 +32,7 @@ spec:
       repository: "terraform-eks-acm-alb-istio"
       webhook:
         endpoint: /push
-        port: "12000"
+        port: "12000" # could be a different port
         method: POST
         url: https://dc01-135-84-103-250.ngrok.io
       events:
