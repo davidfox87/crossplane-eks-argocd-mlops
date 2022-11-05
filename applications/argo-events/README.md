@@ -2,14 +2,18 @@
 Go into ```argo-events/overlays/production``` and run ```kustomize build | kubectl apply -f -``` to install argo-events
 
 # info on creating the github token
+For information on generating your token on Github, see this ![link](https://cloud.redhat.com/blog/how-to-use-argocd-deployments-with-github-tokens)
+
 https://docs.triggermesh.io/cloud/sources/github/#deploying-an-instance-of-the-source
 
 
-kubectl create secret generic github-access -n argo-events --dry-run=client --from-file=token=.env -o json > github-access.json
+kubectl create secret generic github-access -n argo-events \
+                --dry-run=client \
+                --from-file=token=.env -o yaml | kubeseal   --controller-namespace kubeseal \
+                                                            --controller-name sealed-secrets \
+                                                            --format yaml > github-access-sealedsecret.yaml
 
-kubeseal --controller-namespace kube-system \
-         --controller-name sealed-secrets \
-        < github-access.json  > github-access-sealedsecret.json
+we could apply here, but instead commit and push the change to github and let Argo CD deploy the secret to our cluster
 
 kubectl apply -f github-access-sealedsecret.json -n argo-events
 
