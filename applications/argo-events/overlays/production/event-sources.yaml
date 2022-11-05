@@ -11,12 +11,25 @@ spec:
     selector:
       eventsource-name: github-webhook
   github:
-    test:
-      repositories:
-        - owner: davidfox87
-          names:
-            - task-tracker
-            - terraform-eks-acm-alb-istio
+    task-tracker:
+      owner: "davidfox87"
+      repository: "task-tracker"
+      webhook:
+        endpoint: /push
+        port: "12000"
+        method: POST
+        url: https://dc01-135-84-103-250.ngrok.io
+      events:
+        - "*"
+      apiToken:
+        name: github-access
+        key: token
+      insecure: true
+      active: true
+      contentType: json
+    ml-training-steps:
+      owner: "davidfox87"
+      repository: "task-tracker"
       webhook:
         endpoint: /push
         port: "12000"
