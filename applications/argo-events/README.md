@@ -9,7 +9,8 @@ https://docs.triggermesh.io/cloud/sources/github/#deploying-an-instance-of-the-s
 
 kubectl create secret generic github-access -n argo-events \
                 --dry-run=client \
-                --from-file=token=.env -o yaml | kubeseal   --controller-namespace kubeseal \
+                --from-file=password=.env \
+                -o yaml | kubeseal   --controller-namespace kubeseal \
                                                             --controller-name sealed-secrets \
                                                             --format yaml > github-access-sealedsecret.yaml
 
