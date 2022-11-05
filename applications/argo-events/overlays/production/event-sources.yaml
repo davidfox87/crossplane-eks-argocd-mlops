@@ -29,7 +29,7 @@ spec:
       contentType: json
     ml-training-steps:
       owner: "davidfox87"
-      repository: "task-tracker"
+      repository: "terraform-eks-acm-alb-istio"
       webhook:
         endpoint: /push
         port: "12000"
