@@ -9,41 +9,14 @@ spec:
     - port: 12000
       targetPort: 12000
     selector:
-      eventsource-name: github-tasktracker-webhook
+      eventsource-name: github-webhook
   github:
     test:
-      owner: davidfox87
-      repository: task-tracker
-      webhook:
-        endpoint: /push
-        port: "12000"
-        method: POST
-        url: https://dc01-135-84-103-250.ngrok.io
-      events:
-        - "*"
-      apiToken:
-        name: github-access
-        key: token
-      insecure: true
-      active: true
-      contentType: json
----
-apiVersion: argoproj.io/v1alpha1
-kind: EventSource
-metadata:
-  name: github
-  # namespace will be injected by Kustomize
-spec:
-  service:
-    ports:
-    - port: 12000
-      targetPort: 12000
-    selector:
-      eventsource-name: github-ml-pipeline-webhook
-  github:
-    test:
-      owner: davidfox87
-      repository: terraform-eks-acm-alb-istio
+      repositories:
+        - owner: davidfox87
+          names:
+            - task-tracker
+            - terraform-eks-acm-alb-istio
       webhook:
         endpoint: /push
         port: "12000"
