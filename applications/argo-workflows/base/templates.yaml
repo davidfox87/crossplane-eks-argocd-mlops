@@ -261,4 +261,4 @@ spec:
           - --local
           - dockerfile=.
           - --output
-          - type=image,name=docker.io/{{inputs.parameters.image}},push=true
+          - type=image,name={{inputs.parameters.image}},push=true
