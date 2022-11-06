@@ -80,7 +80,7 @@ spec:
 apiVersion: argoproj.io/v1alpha1
 kind: ClusterWorkflowTemplate
 metadata:
-  name: ci
+  name: cluster-workflow-template-ci
   annotations:
     workflows.argoproj.io/description: |
       This workflows builds and tests Argo Workflows.
