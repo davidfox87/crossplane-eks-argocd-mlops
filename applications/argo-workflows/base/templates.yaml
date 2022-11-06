@@ -88,13 +88,17 @@ metadata:
       It demonstrates:
 
       * Cloning git repos
+      * running unit tests
       * building docker images
       * Publishing test reports.
 spec:
   arguments:
     parameters:
+      - name: repo
+        value: ""
       - name: branch
         value: main
+      - name: path
 
   entrypoint: main
 
@@ -114,12 +118,43 @@ spec:
         tasks:
           - name: clone
             template: clone
+            arguments:
+              parameters:
+                - name: repo
+                  value: "{{workflow.parameters.repo}}"
+                - name: branch
+                  value: "{{workflow.parameters.branch}}"
           - name: list
             template: list
+            arguments:
+              parameters:
+                - name: path
+                  value: "{{workflow.parameters.path}}"
             dependencies:
               - clone
+          # - name: flake8
+          #   template: flake
+          #   arguments:
+          #     parameters:
+          #       - name: path
+          #         value: "{{workflow.parameters.path}}"
+          #   dependencies:
+          #     - clone
+          # - name: pytest
+          #   template: pytest
+          #   arguments:
+          #     parameters:
+          #       - name: path
+          #         value: "{{workflow.parameters.path}}"
+          #   dependencies:
+          #     - clone
+
           
     - name: clone
+      inputs:
+        parameters:
+          - name: repo
+          - name: branch
       container:
         volumeMounts:
           - mountPath: /app
@@ -130,19 +165,56 @@ spec:
             readOnly: true
             # container will see /root/.ssh/id_rsa as usual:
             mountPath: /root/.ssh
-        image: foxy7887/kustomize:v2
+        image: alpine/git
         workingDir: /app
         command: [ sh, -c ]
         args:
           - |
-            git clone -v -b "{{workflow.parameters.branch}}" --single-branch --depth 1 https://github.com/davidfox87/terraform-eks-acm-alb-istio.git .
+            git clone -v -b "{{inputs.parameters.branch}}" --single-branch --depth 1 "{{inputs.parameters.repo}}" .
             
     - name: list
+      inputs:
+        parameters:
+          - name: path
       container:
         image: foxy7887/kustomize:v2
         volumeMounts:
           - mountPath: /app
             name: workspace
-        workingDir: /app
+        workingDir: /app/{{inputs.parameters.path}}
         command: [sh, -c]
         args: ["git status && ls"]
+    # - name: flake8
+    #   inputs:
+    #     parameters:
+    #       - name: path
+    #   container:
+    #     image: python:3.9
+    #     command: [sh, -c]
+    #     args: 
+    #     - |
+    #       pip install flake8
+    #       flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+    #       flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+    #     volumeMounts:
+    #     - name: workspace
+    #       mountPath: /app
+    #     workingDir: /app/{{inputs.parameters.path}}
+    # - name: pytest
+    #   inputs:
+    #     parameters:
+    #     - name: python-version
+	  #     - name: path
+    #   container:
+    #     image: "python:{{inputs.parameters.python-version}}"
+    #     command: [sh, -c]
+    #     args: 
+    #     - |
+    #       pip install pytest pytest-cov coverage
+    #       cd applications/argo-workflows/overlays/workflows/models/wine/pipeline
+    #       pytest --cov=app/ --cov-report=xml
+    #     volumeMounts:
+    #     - name: workspace
+    #       mountPath: /app
+    #     workingDir: /app/{{inputs.parameters.path}}
+    

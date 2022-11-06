@@ -1,56 +1,64 @@
-# apiVersion: argoproj.io/v1alpha1
-# kind: Workflow
-# metadata:
-#   generateName: ci-
-#   namespace: workflows # invoke workflow in argo namespace where workflow service account lives
-# spec:
-#   serviceAccountName: workflow
-#   volumes:
-#   - name: regcred
-#     secret:
-#       secretName: regcred
-#       items:
-#         - key: .dockerconfigjson
-#           path: config.json
-#   - name: sshkey
-#     secret:
-#       secretName: git-ssh
-#   - name: github-access
-#     secret:
-#       secretName: github-access
-#       items:
-#         - key: token
-#           path: token
-#   workflowTemplateRef:
-#     name: cluster-workflow-template-ci
-#     clusterScope: true
-
-
-
-
-
 apiVersion: argoproj.io/v1alpha1
 kind: Workflow
 metadata:
-  generateName: input-artifact-git-
-  namespace: workflows
+  generateName: ci-
+  namespace: workflows # invoke workflow in argo namespace where workflow service account lives
 spec:
+  arguments:
+    parameters:
+    - name: repo
+      value: https://github.com/davidfox87/terraform-eks-acm-alb-istio.git
+    - name: branch
+      value: main
+    - name: path
+      value: applications/argo-workflows/overlays/workflows/models/wine/pipeline # this is the path that contains the code to test and build
   serviceAccountName: workflow
-  entrypoint: git-clone
-  templates:
-  - name: git-clone
-    inputs:
-      artifacts:
-      - name: ml-source
-        path: /src
-        git:
-          repo: "git@github.com:davidfox87/terraform-eks-acm-alb-istio.git"
-          sshPrivateKeySecret:
-            name: git-ssh
-            key: key # ssh private key
-          branch: "main"
-    container:
-      image: golang:1.10
-      command: [sh, -c]
-      args: ["git status && ls"]
-      workingDir: /src
+  volumes:
+  - name: regcred
+    secret:
+      secretName: regcred
+      items:
+        - key: .dockerconfigjson
+          path: config.json
+  - name: sshkey
+    secret:
+      secretName: git-ssh
+  - name: github-access
+    secret:
+      secretName: github-access
+      items:
+        - key: token
+          path: token
+  workflowTemplateRef:
+    name: cluster-workflow-template-ci
+    clusterScope: true
+
+
+
+
+
+# apiVersion: argoproj.io/v1alpha1
+# kind: Workflow
+# metadata:
+#   generateName: input-artifact-git-
+#   namespace: workflows
+# spec:
+#   serviceAccountName: workflow
+#   entrypoint: git-clone
+#   templates:
+#   - name: git-clone
+#     inputs:
+#       artifacts:
+#       - name: ml-source
+#         path: /src
+#         git:
+#           repo: "git@github.com:davidfox87/terraform-eks-acm-alb-istio.git"
+#           sshPrivateKeySecret:
+#             name: git-ssh
+#             key: key # ssh private key
+#           branch: "main"
+#     container:
+#       image: golang:1.10
+#       command: [sh, -c]
+#       args: ["git status && ls"]
+#       workingDir: /src
