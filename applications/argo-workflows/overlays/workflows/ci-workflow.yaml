@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Workflow
 metadata:
-  generateName: build-
+  generateName: ci-
   namespace: workflows # invoke workflow in argo namespace where workflow service account lives
 spec:
   serviceAccountName: workflow

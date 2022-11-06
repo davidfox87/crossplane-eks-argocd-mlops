@@ -52,3 +52,10 @@ rules:
     - '*'
   resources:
     - '*'
+- apiGroups:
+    - argoproj.io
+  resources:
+    - workflowtaskresults
+  verbs:
+    - create
+    - patch
