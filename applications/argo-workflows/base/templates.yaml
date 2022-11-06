@@ -237,6 +237,9 @@ spec:
         - name: docker-config
           secret:
             secretName: regcred
+            items:
+              - key: .dockerconfigjson
+                path: config.json
       container:
         image: moby/buildkit:v0.10.5-rootless
         volumeMounts:
