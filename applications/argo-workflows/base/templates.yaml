@@ -238,7 +238,7 @@ spec:
           secret:
             secretName: regcred
       container:
-        image: moby/buildkit:v0.9.3-rootless
+        image: moby/buildkit:v0.10.5-rootless
         volumeMounts:
           - name: workspace
             mountPath: /app
@@ -255,7 +255,7 @@ spec:
         args: 
           - build
           - --frontend
-          - Dockerfile
+          - dockerfile.v0
           - --local
           - context=.
           - --local
