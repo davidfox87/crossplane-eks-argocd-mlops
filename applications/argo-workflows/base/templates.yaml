@@ -99,6 +99,8 @@ spec:
       - name: branch
         value: main
       - name: path
+      - name: image
+        value: foxy7887/xgb_train:v1000
 
   entrypoint: main
 
@@ -140,8 +142,8 @@ spec:
                   value: "{{workflow.parameters.path}}"
             dependencies:
               - clone
-          - name: build
-            template: build
+          - name: list
+            template: list
             arguments:
               parameters:
                 - name: path
@@ -149,14 +151,17 @@ spec:
             dependencies:
               - flake8
               - pytest
-          - name: promote-staging
+          - name: build
             template: build
             arguments:
               parameters:
                 - name: path
                   value: "{{workflow.parameters.path}}"
+                - name: image
+                  value: "{{workflow.parameters.image}}"
             dependencies:
-              - build
+              - list
+          
     - name: clone
       inputs:
         parameters:
@@ -178,7 +183,7 @@ spec:
           - |
             git clone -v -b "{{inputs.parameters.branch}}" --single-branch --depth 1 "{{inputs.parameters.repo}}" .
 
-    - name: build
+    - name: list
       inputs:
         parameters:
           - name: path
@@ -222,3 +227,38 @@ spec:
         - name: workspace
           mountPath: /app
         workingDir: /app/{{inputs.parameters.path}}
+
+    - name: build
+      inputs:
+        parameters:
+          - name: path
+          - name: image
+      volumes:
+        - name: docker-config
+          secret:
+            secretName: regcred
+      container:
+        image: moby/buildkit:v0.9.3-rootless
+        volumeMounts:
+          - name: workspace
+            mountPath: /app
+          - name: docker-config
+            mountPath: /.docker
+        workingDir: /app/{{inputs.parameters.path}}
+        env:
+          - name: BUILDKITD_FLAGS
+            value: --oci-worker-no-process-sandbox
+          - name: DOCKER_CONFIG
+            value: /.docker
+        command: 
+          - buildctl-daemonless.sh
+        args: 
+          - build
+          - --frontend
+          - Dockerfile
+          - --local
+          - context=.
+          - --local
+          - dockerfile=.
+          - --output
+          - type=image,name=docker.io/{{inputs.parameters.image}},push=true
