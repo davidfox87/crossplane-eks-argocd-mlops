@@ -114,9 +114,13 @@ spec:
         tasks:
           - name: clone
             template: clone
+          - name: list
+            template: list
+            dependencies:
+              - clone
           
     - name: clone
-      container:
+      script:
         volumeMounts:
           - mountPath: /app
             name: workspace
@@ -132,4 +136,15 @@ spec:
         source:
           - |
             git clone -v -b "{{workflow.parameters.branch}}" --single-branch --depth 1 https://github.com/davidfox87/terraform-eks-acm-alb-istio.git .
+            
+    - name: list
+      container:
+        image: foxy7887/kustomize:v2
+        volumeMounts:
+          - mountPath: /app
+            name: workspace
+        workingDir: /app
+        command: [ sh ]
+        args: 
+          - |
             ls -la
