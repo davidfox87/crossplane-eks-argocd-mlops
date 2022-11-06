@@ -132,22 +132,22 @@ spec:
                   value: "{{workflow.parameters.path}}"
             dependencies:
               - clone
-          # - name: flake8
-          #   template: flake
-          #   arguments:
-          #     parameters:
-          #       - name: path
-          #         value: "{{workflow.parameters.path}}"
-          #   dependencies:
-          #     - clone
-          # - name: pytest
-          #   template: pytest
-          #   arguments:
-          #     parameters:
-          #       - name: path
-          #         value: "{{workflow.parameters.path}}"
-          #   dependencies:
-          #     - clone
+          - name: flake8
+            template: flake
+            arguments:
+              parameters:
+                - name: path
+                  value: "{{workflow.parameters.path}}"
+            dependencies:
+              - clone
+          - name: pytest
+            template: pytest
+            arguments:
+              parameters:
+                - name: path
+                  value: "{{workflow.parameters.path}}"
+            dependencies:
+              - clone
 
           
     - name: clone
@@ -177,44 +177,43 @@ spec:
         parameters:
           - name: path
       container:
-        image: foxy7887/kustomize:v2
+        image: alpine/git
         volumeMounts:
           - mountPath: /app
             name: workspace
         workingDir: /app/{{inputs.parameters.path}}
         command: [sh, -c]
         args: ["git status && ls"]
-    # - name: flake8
-    #   inputs:
-    #     parameters:
-    #       - name: path
-    #   container:
-    #     image: python:3.9
-    #     command: [sh, -c]
-    #     args: 
-    #     - |
-    #       pip install flake8
-    #       flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-    #       flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
-    #     volumeMounts:
-    #     - name: workspace
-    #       mountPath: /app
-    #     workingDir: /app/{{inputs.parameters.path}}
-    # - name: pytest
-    #   inputs:
-    #     parameters:
-    #     - name: python-version
-	  #     - name: path
-    #   container:
-    #     image: "python:{{inputs.parameters.python-version}}"
-    #     command: [sh, -c]
-    #     args: 
-    #     - |
-    #       pip install pytest pytest-cov coverage
-    #       cd applications/argo-workflows/overlays/workflows/models/wine/pipeline
-    #       pytest --cov=app/ --cov-report=xml
-    #     volumeMounts:
-    #     - name: workspace
-    #       mountPath: /app
-    #     workingDir: /app/{{inputs.parameters.path}}
+    - name: flake8
+      inputs:
+        parameters:
+          - name: path
+      container:
+        image: python:3.9
+        command: [sh, -c]
+        args: 
+        - |
+          pip install flake8
+          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+          flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+        volumeMounts:
+        - name: workspace
+          mountPath: /app
+        workingDir: /app/{{inputs.parameters.path}}
+    - name: pytest
+      inputs:
+        parameters:
+	      - name: path
+      container:
+        image: "python:3.9"
+        command: [sh, -c]
+        args: 
+        - |
+          pip install -r requirements.txt
+          pip install pytest pytest-cov coverage
+          pytest --cov=app/ --cov-report=xml
+        volumeMounts:
+        - name: workspace
+          mountPath: /app
+        workingDir: /app/{{inputs.parameters.path}}
     
