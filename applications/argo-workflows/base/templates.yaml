@@ -106,7 +106,7 @@ spec:
       resources:
         requests:
           storage: 64Mi
-          
+
   serviceAccountName: workflow
   templates:
     - name: main
@@ -120,6 +120,12 @@ spec:
         volumeMounts:
           - mountPath: /app
             name: workspace
+          - name: github-access
+            mountPath: /.github/
+          - name: sshkey
+            readOnly: true
+            # container will see /root/.ssh/id_rsa as usual:
+            mountPath: /root/.ssh
         image: foxy7887/kustomize:v2
         workingDir: /app
         command: [ sh ]
