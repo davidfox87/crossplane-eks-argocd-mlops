@@ -149,6 +149,14 @@ spec:
             dependencies:
               - flake8
               - pytest
+          - name: promote-staging
+            template: build
+            arguments:
+              parameters:
+                - name: path
+                  value: "{{workflow.parameters.path}}"
+            dependencies:
+              - build
     - name: clone
       inputs:
         parameters:
