@@ -1,183 +1,49 @@
-# apiVersion: argoproj.io/v1alpha1
-# kind: Sensor
-# metadata:
-#   name: unit-test
-# spec:
-#   template:
-#     serviceAccountName: operate-workflow-sa
-#   dependencies:
-#     - name: test-dep
-#       eventSourceName: github
-#       eventName: test
-#   triggers:
-#     - template:
-#         name: github-workflow-trigger
-#         argoWorkflow:
-#           group: argoproj.io
-#           version: v1alpha1
-#           resource: workflows
-#           operation: submit
-#           source:
-#             resource:
-#               apiVersion: argoproj.io/v1alpha1
-#               kind: Workflow
-#               metadata:
-#                 generateName: hello-
-#                 namespace: workflows # invoke workflow in argo namespace where workflows service account lives
-#               spec:
-#                 entrypoint: whalesay
-#                 serviceAccountName: workflow
-#                 arguments:
-#                   parameters:
-#                   - name: message
-#                     # the value will get overridden by the event payload from test-dep
-#                     value: hello world
-#                 templates:
-#                 - name: whalesay
-#                   inputs:
-#                     parameters:
-#                     - name: message
-#                   container:
-#                     image: docker/whalesay:latest
-#                     command: [cowsay]
-#                     args: ["{{inputs.parameters.message}}"]
-#           parameters:
-#             - src:
-#                 dependencyName: test-dep
-#                 dataKey: body.pusher.name
-#               dest: spec.arguments.parameters.0.value
 
-# ---
-# apiVersion: argoproj.io/v1alpha1
-# kind: Sensor
-# metadata:
-#   name: webhook
-# spec:
-#   template:
-#     serviceAccountName: operate-workflow-sa
-#   dependencies:
-#     - name: test-dep
-#       eventSourceName: github
-#       eventName: test
-#   triggers:
-#   - template:
-#       name: trigger
-#       argoWorkflow:
-#         group: argoproj.io
-#         version: v1alpha1
-#         resource: workflows
-#         operation: submit
-#         source:
-#           resource:
-#             apiVersion: argoproj.io/v1alpha1
-#             kind: Workflow
-#             metadata:
-#               generateName: build-image-
-#               namespace: workflows
-#             spec:
-#               entrypoint: build
-#               serviceAccountName: workflow
-#               volumes:
-#               - name: regcred
-#                 secret:
-#                   secretName: regcred
-#                   items:
-#                     - key: .dockerconfigjson
-#                       path: config.json
-#               - name: github-access
-#                 secret:
-#                   secretName: github-access
-#                   items:
-#                     - key: token
-#                       path: token
-#               templates:
-#               - name: build
-#                 dag:
-#                   tasks:
-#                   - name: build
-#                     templateRef:
-#                       name: container-image
-#                       template: build-kaniko-git
-#                       clusterScope: true
-#                     arguments:
-#                       parameters:
-#                       - name: repo_url
-#                         value: ""
-#                       - name: repo_ref
-#                         value: ""
-#                       - name: repo_commit_id
-#                         value: ""
-#                       - name: container_image
-#                         value: foxy7887/
-#                       - name: container_tag
-#                         value: ""
-
-#               - name: test
-#                   script:
-#                     image: alpine
-#                     command: [sh]
-#                     source: |
-#                       echo This is a testing simulation...
-#                       sleep 5
-#                     volumeMounts:
-#                     - name: github-access
-#                       mountPath: /.github/
-#         parameters:
-#         - src:
-#             dependencyName: github
-#             dataKey: body.repository.git_url
-#           dest: spec.templates.0.dag.tasks.0.arguments.parameters.0.value
-#         - src:
-#             dependencyName: github
-#             dataKey: body.ref
-#           dest: spec.templates.0.dag.tasks.0.arguments.parameters.1.value
-
-# ---
-# apiVersion: argoproj.io/v1alpha1
-# kind: Sensor
-# metadata:
-#   name: webhook
-# spec:
-#   template:
-#     container:
-#       volumeMounts:
-#         - mountPath: /git/task-tracker-app
-#           name: task-tracker-app
-#         - mountPath: /secret
-#           name: sshkey
-#         - mountPath: /etc/ssh
-#           name: known-hosts
-#     volumes:
-#       - name: task-tracker-app
-#         emptyDir: {}
-#       - name: sshkey
-#         secret:
-#           secretName: git-ssh
-#       # The name of the key in the secret must be "ssh_known_hosts"
-#       # Make sure you have your git provider added in the known hosts
-#       # e.g. create the secret by running, kubectl -n argo-events create secret generic git-known-hosts --from-file=ssh_known_hosts=.ssh/known_hosts
-#       - name: known-hosts
-#         secret:
-#           secretName: git-known-hosts
-#     serviceAccountName: operate-workflow-sa
-#   dependencies:
-#     - name: test-dep
-#       eventSourceName: github
-#       eventName: test
-#   triggers:
-#     - template:
-#         name: workflow-trigger-2
-#         k8s:
-#           operation: create
-#           source:
-#             git:
-#               url: "git@github.com:davidfox87/task-tracker.git"
-#               cloneDirectory: "/git/task-tracker-app"
-#               sshKeySecret:
-#                 name: git-ssh
-#                 key: key # ssh private key
-#               filePath: "frontend/Dockerfile"
-#               branch: "main"
+apiVersion: argoproj.io/v1alpha1
+kind: Sensor
+metadata:
+  name: webhook
+spec:
+  template:
+    container:
+      volumeMounts:
+        - mountPath: /git/task-tracker-app
+          name: task-tracker-app
+        - mountPath: /secret
+          name: sshkey
+        - mountPath: /etc/ssh
+          name: known-hosts
+    volumes:
+      - name: task-tracker-app
+        emptyDir: {}
+      - name: sshkey
+        secret:
+          secretName: git-ssh
+      # The name of the key in the secret must be "ssh_known_hosts"
+      # Make sure you have your git provider added in the known hosts
+      # e.g. create the secret by running, kubectl -n argo-events create secret generic git-known-hosts --from-file=ssh_known_hosts=.ssh/known_hosts
+      - name: known-hosts
+        secret:
+          secretName: git-known-hosts
+    serviceAccountName: operate-workflow-sa
+  dependencies:
+    - name: test-dep
+      eventSourceName: github
+      eventName: test
+  triggers:
+    - template:
+        name: workflow-trigger-2
+        k8s:
+          operation: create
+          source:
+            git:
+              url: "git@github.com:davidfox87/task-tracker.git"
+              cloneDirectory: "/git/task-tracker-app"
+              sshKeySecret:
+                name: git-ssh
+                key: key # ssh private key
+              filePath: "frontend/Dockerfile"
+              branch: "main"
           
 
 
