@@ -190,9 +190,9 @@ spec:
   template:
     serviceAccountName: operate-workflow-sa
   dependencies:
-    - name: test-dep
-      eventSourceName: github
-      eventName: test
+    - name: unit-test
+      eventSourceName: github-webhook
+      eventName: task-tracker
   triggers:
     - template:
         name: github-workflow-trigger
