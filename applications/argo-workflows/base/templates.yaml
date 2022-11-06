@@ -144,7 +144,5 @@ spec:
           - mountPath: /app
             name: workspace
         workingDir: /app
-        command: [ sh ]
-        args: 
-          - |
-            ls -la
+        command: [sh, -c]
+        args: ["git status && ls"]
