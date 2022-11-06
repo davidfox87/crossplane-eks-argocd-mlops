@@ -120,7 +120,7 @@ spec:
               - clone
           
     - name: clone
-      script:
+      container:
         volumeMounts:
           - mountPath: /app
             name: workspace
@@ -133,7 +133,7 @@ spec:
         image: foxy7887/kustomize:v2
         workingDir: /app
         command: [ sh ]
-        source:
+        args:
           - |
             git clone -v -b "{{workflow.parameters.branch}}" --single-branch --depth 1 https://github.com/davidfox87/terraform-eks-acm-alb-istio.git .
             
