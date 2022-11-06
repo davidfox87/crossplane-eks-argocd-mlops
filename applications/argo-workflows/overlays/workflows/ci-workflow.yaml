@@ -12,6 +12,9 @@ spec:
       items:
         - key: .dockerconfigjson
           path: config.json
+  - name: sshkey
+    secret:
+      secretName: git-ssh
   - name: github-access
     secret:
       secretName: github-access
