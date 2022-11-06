@@ -124,14 +124,6 @@ spec:
                   value: "{{workflow.parameters.repo}}"
                 - name: branch
                   value: "{{workflow.parameters.branch}}"
-          - name: list
-            template: list
-            arguments:
-              parameters:
-                - name: path
-                  value: "{{workflow.parameters.path}}"
-            dependencies:
-              - clone
           - name: flake8
             template: flake8
             arguments:
@@ -140,6 +132,23 @@ spec:
                   value: "{{workflow.parameters.path}}"
             dependencies:
               - clone
+          - name: pytest
+            template: pytest
+            arguments:
+              parameters:
+                - name: path
+                  value: "{{workflow.parameters.path}}"
+            dependencies:
+              - clone
+          - name: build
+            template: build
+            arguments:
+              parameters:
+                - name: path
+                  value: "{{workflow.parameters.path}}"
+            dependencies:
+              - flake8
+              - pytest
     - name: clone
       inputs:
         parameters:
@@ -153,7 +162,6 @@ spec:
             mountPath: /.github/
           - name: sshkey
             readOnly: true
-            # container will see /root/.ssh/id_rsa as usual:
             mountPath: /root/.ssh
         image: alpine/git
         workingDir: /app
@@ -162,20 +170,7 @@ spec:
           - |
             git clone -v -b "{{inputs.parameters.branch}}" --single-branch --depth 1 "{{inputs.parameters.repo}}" .
 
-    - name: list
-      inputs:
-        parameters:
-          - name: path
-      container:
-        image: alpine/git
-        volumeMounts:
-          - mountPath: /app
-            name: workspace
-        workingDir: /app/{{inputs.parameters.path}}
-        command: [sh, -c]
-        args: ["git status && ls"]
-
-    - name: list
+    - name: build
       inputs:
         parameters:
           - name: path
@@ -204,4 +199,18 @@ spec:
         - name: workspace
           mountPath: /app
         workingDir: /app/{{inputs.parameters.path}}
-        
+    - name: pytest
+      inputs:
+        parameters:
+        - name: path
+      container:
+        image: "python:3.9"
+        command: [sh, -c]
+        args: 
+        - |
+          pip install pytest pytest-cov coverage
+          pytest --cov=app/ --cov-report=xml
+        volumeMounts:
+        - name: workspace
+          mountPath: /app
+        workingDir: /app/{{inputs.parameters.path}}
