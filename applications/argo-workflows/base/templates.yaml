@@ -133,23 +133,13 @@ spec:
             dependencies:
               - clone
           - name: flake8
-            template: flake
+            template: flake8
             arguments:
               parameters:
                 - name: path
                   value: "{{workflow.parameters.path}}"
             dependencies:
               - clone
-          - name: pytest
-            template: pytest
-            arguments:
-              parameters:
-                - name: path
-                  value: "{{workflow.parameters.path}}"
-            dependencies:
-              - clone
-
-          
     - name: clone
       inputs:
         parameters:
@@ -171,7 +161,7 @@ spec:
         args:
           - |
             git clone -v -b "{{inputs.parameters.branch}}" --single-branch --depth 1 "{{inputs.parameters.repo}}" .
-            
+
     - name: list
       inputs:
         parameters:
@@ -184,6 +174,20 @@ spec:
         workingDir: /app/{{inputs.parameters.path}}
         command: [sh, -c]
         args: ["git status && ls"]
+
+    - name: list
+      inputs:
+        parameters:
+          - name: path
+      container:
+        image: alpine/git
+        volumeMounts:
+          - mountPath: /app
+            name: workspace
+        workingDir: /app/{{inputs.parameters.path}}
+        command: [sh, -c]
+        args: ["git status && ls"]
+
     - name: flake8
       inputs:
         parameters:
@@ -197,23 +201,7 @@ spec:
           flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
           flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
         volumeMounts:
-        - name: workspace
-          mountPath: /app
+        - name: workdir
+          mountPath: /workspace
         workingDir: /app/{{inputs.parameters.path}}
-    - name: pytest
-      inputs:
-        parameters:
-	      - name: path
-      container:
-        image: "python:3.9"
-        command: [sh, -c]
-        args: 
-        - |
-          pip install -r requirements.txt
-          pip install pytest pytest-cov coverage
-          pytest --cov=app/ --cov-report=xml
-        volumeMounts:
-        - name: workspace
-          mountPath: /app
-        workingDir: /app/{{inputs.parameters.path}}
-    
+        
