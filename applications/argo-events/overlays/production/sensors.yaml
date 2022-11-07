@@ -197,8 +197,6 @@ spec:
                           value: ""
                       dependencies: 
                       - build
-                    - name: delay
-                      template: delay
                     - name: test-functional
                       template: test
                       dependencies: 
@@ -222,9 +220,6 @@ spec:
                     volumeMounts:
                     - name: github-access
                       mountPath: /.github/
-                - name: delay
-                  suspend:
-                    duration: "20"
           parameters:
           - src:
               dependencyName: test-dep
