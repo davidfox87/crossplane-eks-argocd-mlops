@@ -312,5 +312,5 @@ spec:
           kustomize edit set image {{inputs.parameters.image}}={{inputs.parameters.image}}:{{inputs.parameters.tag}}
           cat kustomization.yaml
           git add kustomization.yaml
-          git commit -m "Upgraded {{inputs.parameters.subfolder}}/kustomization.yaml with the tag {{inputs.parameters.tag}}"
+          git commit -m "Upgraded kustomization.yaml with the tag {{inputs.parameters.tag}}"
           git push
