@@ -6,8 +6,10 @@ metadata:
 spec:
   arguments:
     parameters:
-    - name: repo
-      value: https://github.com/davidfox87/terraform-eks-acm-alb-istio.git
+    - name: repo_owner
+      value: davidfox87
+    - name: repo_name
+      value: terraform-eks-acm-alb-istio.git
     - name: branch
       value: main
     - name: path

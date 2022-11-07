@@ -94,8 +94,9 @@ metadata:
 spec:
   arguments:
     parameters:
-      - name: repo
-        value: ""
+      - name: repo_owner
+        value: "davidfox87"
+      - name: repo_name
       - name: branch
         value: main
       - name: path
@@ -179,7 +180,8 @@ spec:
     - name: clone
       inputs:
         parameters:
-          - name: repo
+          - name: repo_owner
+          - name: repo_name
           - name: branch
       container:
         volumeMounts:
@@ -195,7 +197,7 @@ spec:
         command: [ sh, -c ]
         args:
           - |
-            git clone -v -b "{{inputs.parameters.branch}}" --single-branch --depth 1 "{{inputs.parameters.repo}}" .
+            git clone -v -b "{{inputs.parameters.branch}}" --single-branch --depth 1 https://$(cat /.github/token)@github.com/{{inputs.parameters.repo_owner}}/{{inputs.parameters.repo_name}} .
 
     - name: list
       inputs:
