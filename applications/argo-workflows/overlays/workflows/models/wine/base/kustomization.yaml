@@ -6,7 +6,7 @@ resources:
 images:
 - name: foxy7887/xgb_train
   newName: foxy7887/xgb_train
-  newTag: v469762934
+  newTag: v1234567
 
 configurations:
 - kustomizeconfig/workflows.yaml
