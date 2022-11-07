@@ -125,8 +125,10 @@ spec:
             template: clone
             arguments:
               parameters:
-                - name: repo
-                  value: "{{workflow.parameters.repo}}"
+                - name: repo_owner
+                  value: "{{workflow.parameters.repo_owner}}"
+                - name: repo_name
+                  value: "{{workflow.parameters.repo_name}}"
                 - name: branch
                   value: "{{workflow.parameters.branch}}"
           - name: flake8
