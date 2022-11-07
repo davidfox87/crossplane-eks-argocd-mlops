@@ -12,6 +12,8 @@ spec:
       value: terraform-eks-acm-alb-istio.git
     - name: branch
       value: main
+    - name: tag
+      value: v1234567
     - name: path
       value: applications/argo-workflows/overlays/workflows/models/wine/pipeline # this is the path that contains the code to test and build
   serviceAccountName: workflow
