@@ -100,9 +100,9 @@ spec:
         value: main
       - name: path
       - name: image
-        value: foxy7887/xgb_train:v1000
+        value: foxy7887/xgb_train:v9999
       - name: tag
-        value: v1000
+        value: v9999
 
   entrypoint: main
 
