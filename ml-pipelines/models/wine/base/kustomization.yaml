@@ -1,0 +1,13 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+- train.yaml
+- pvc.yaml
+
+images:
+- name: foxy7887/xgb_train
+  newName: foxy7887/xgb_train
+  newTag: v1234567
+
+configurations:
+- kustomizeconfig/workflows.yaml

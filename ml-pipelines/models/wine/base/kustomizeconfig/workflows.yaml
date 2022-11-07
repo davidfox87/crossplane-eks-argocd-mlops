@@ -1,0 +1,4 @@
+images:
+- path: spec/templates/container/image
+  kind: Workflow
+  
