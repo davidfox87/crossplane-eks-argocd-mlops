@@ -7,9 +7,6 @@ images:
 - name: foxy7887/xgb_train
   newName: foxy7887/xgb_train
   newTag: v469762934
-- name: foxy7887/xgb_train:v9999
-  newName: foxy7887/xgb_train:v9999
-  newTag: v9999
 
 configurations:
 - kustomizeconfig/workflows.yaml

@@ -101,7 +101,7 @@ spec:
         value: main
       - name: path
       - name: image
-        value: foxy7887/xgb_train:v9999
+        value: foxy7887/xgb_train
       - name: tag
         value: v9999
 
@@ -164,6 +164,8 @@ spec:
                   value: "{{workflow.parameters.path}}"
                 - name: image
                   value: "{{workflow.parameters.image}}"
+                - name: tag
+                  value: "{{workflow.parameters.tag}}"
             dependencies:
               - list
           - name: promote-staging
@@ -251,6 +253,7 @@ spec:
         parameters:
           - name: path
           - name: image
+          - name: tag
       volumes:
         - name: docker-config
           secret:
@@ -282,7 +285,7 @@ spec:
           - --local
           - dockerfile=.
           - --output
-          - type=image,name={{inputs.parameters.image}},push=true
+          - type=image,name={{inputs.parameters.image}}:{{inputs.parameters.tag}},push=true
 
     - name: promote-staging
       inputs:
