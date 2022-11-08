@@ -1,0 +1,14 @@
+apiVersion: meta.pkg.crossplane.io/v1
+kind: Configuration
+metadata:
+  name: platform-aws
+  annotations:
+    guide: quickstart
+    provider: aws
+    vpc: default
+spec:
+  crossplane:
+    version: ">=v1.4.0"
+  dependsOn:
+    - provider: xpkg.upbound.io/crossplane-contrib/provider-aws
+      version: ">=v0.33.0"
