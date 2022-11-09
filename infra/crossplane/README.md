@@ -16,12 +16,12 @@ Save your AWS credentials in a Kubernetes secrets called aws_creds
 If you want to extend the existing package in infra/crossplane/package, then you will need to build and push the image to the docker repo:
 ```
 kubectl crossplane build configuration 
-kubectl crossplane push configuration foxy7887/crossplane-aws-platform:0.0.12
+kubectl crossplane push configuration foxy7887/crossplane-aws-platform:0.0.14
 ```
 
 Install our package
 ```
-kubectl crossplane install configuration foxy7887/crossplane-aws-platform:0.0.12
+kubectl crossplane install configuration foxy7887/crossplane-aws-platform:0.0.14
 ```
 
 The aws-provider will automatically be installed because our package specifies crossplane/provider-aws as a dependency.
@@ -35,7 +35,6 @@ kubectl apply -f provider-config.yaml
 Validate the install by inspecting the provider and configuration packages:
 ```
 kubectl get providers,providerrevision
-kubectl get configurations,configurationrevisions
 ```
 
 
