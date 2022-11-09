@@ -2,7 +2,7 @@ AWS_PROFILE=default && echo -e "[default]\naws_access_key_id = $(aws configure g
 
 kubectl create secret generic aws-creds -n crossplane-system \
             --dry-run=client \
-            --from-file=creds=./creds.conf \
+            --from-file=creds=./creds.conf -o yaml \
             | kubeseal  --controller-namespace kubeseal \
                         --controller-name sealed-secrets \
                         --format yaml > aws-creds-sealedsecret.yaml
