@@ -6,4 +6,4 @@ metadata:
 # Crossplane Package Manager will unpack that container, register CRDs and set up
 # necessary RBAC rules and then start the controllers.
 spec:
-  package: crossplane/provider-aws
+  package: crossplane/provider-aws:v0.29.0

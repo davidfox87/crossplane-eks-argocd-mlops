@@ -3,7 +3,7 @@ kind: Composition
 metadata:
   name: xpostgresqlinstances.aws.database.example.org
   labels:
-    provider: aws
+    provider: default
     guide: quickstart
     vpc: default
 spec:

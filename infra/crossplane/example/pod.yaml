@@ -6,9 +6,9 @@ metadata:
 spec:
   containers:
   - name: see-db
-    image: postgres:12
+    image: postgres
     command: ['psql']
-    args: ['-c', 'SELECT current_database();']
+    args: ["-c", "log_statement=all", '-c', 'SELECT current_database();']
     env:
     - name: PGDATABASE
       value: postgres

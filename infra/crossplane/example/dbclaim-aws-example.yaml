@@ -1,4 +1,4 @@
-apiVersion: database.example.org/v1beta1
+apiVersion: database.example.org/v1alpha1
 kind: PostgreSQLInstance
 metadata:
   name: my-db
@@ -8,7 +8,7 @@ spec:
     storageGB: 20
   compositionSelector:
     matchLabels:
-      provider: aws
-      vpc: new
+      provider: default
+      vpc: default
   writeConnectionSecretToRef:
     name: db-conn

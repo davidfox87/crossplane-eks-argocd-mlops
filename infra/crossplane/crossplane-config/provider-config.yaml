@@ -1,5 +1,3 @@
-# In order to authenticate with the external provider API, 
-# the provider controllers need to have access to credentials. 
 apiVersion: aws.crossplane.io/v1beta1
 kind: ProviderConfig
 metadata:

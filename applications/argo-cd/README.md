@@ -4,15 +4,15 @@ From the applications/argocd folder:
 ```
 kustomize build | kubectl apply -f -
 
-kubectl port-forward svc/argocd-server -n argocd 9443:443
+kubectl port-forward svc/argocd-server -n argocd 9444:443
 
-xdg-open https://localhost:9443
+xdg-open https://localhost:9444
 ```
 
 The API server can then be accessed using https://localhost:9443
 
 ```
 kubectl get secret argocd-initial-admin-secret -n argocd -o yaml
-echo UG05ZzlNQm9ZaDBwSktMcQ== | base64 --decode
+echo NkRBb1pwVHY1bVJpZkRITQ== | base64 --decode
 ```
 Take the decoded password and login to the ui
