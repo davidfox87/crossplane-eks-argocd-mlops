@@ -44,3 +44,5 @@ git-ssh-known-hosts.yaml
 github-personal-access-token
 
 .env
+
+creds.conf

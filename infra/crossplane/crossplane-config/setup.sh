@@ -51,3 +51,5 @@ metadata:
   name: aws-creds
   namespace: crossplane-system
 type: Opaque" | kubectl apply -f -
+
+
