@@ -1,21 +1,35 @@
+Install crossplane plugin for kubernetes
+```
 curl -sL https://raw.githubusercontent.com/crossplane/crossplane/master/install.sh | sh
+```
 
-if not installing the package foxy7887/crossplane-aws-platform, then install aws provider:
+If not installing the package foxy7887/crossplane-aws-platform, then install aws provider:
 ```
 kubectl crossplane install provider crossplane/provider-aws
 ```
 
-Alternatively, do 
+Save your AWS credentials in a Kubernetes secrets called aws_creds
 ```
 ./setup.sh --profile default
 ```
 
-
+If you want to extend the existing package in infra/crossplane/package, then you will need to build and push the image to the docker repo:
+```
 kubectl crossplane build configuration 
 kubectl crossplane push configuration foxy7887/crossplane-aws-platform:0.0.12
-kubectl crossplane install configuration foxy7887/crossplane-aws-platform:0.0.12
+```
 
+Install our package
+```
+kubectl crossplane install configuration foxy7887/crossplane-aws-platform:0.0.12
+```
+
+The aws-provider will automatically be installed because our package specifies crossplane/provider-aws as a dependency.
+
+Apply the provider config to associate the credentials secret with the provider:
+```
 kubectl apply -f provider-config.yaml 
+```
 
 
 Validate the install by inspecting the provider and configuration packages:
@@ -28,12 +42,9 @@ kubectl get configurations,configurationrevisions
 When you install this package, Crossplane will automatically resolve any package dependencies. For example,
 ```
 kubectl get configurations,configurationrevisions
-
-
-NAME                                                 INSTALLED   HEALTHY   PACKAGE                                        AGE
-provider.pkg.crossplane.io/crossplane-provider-aws                         crossplane/provider-aws                        23h
-provider.pkg.crossplane.io/upbound-provider-aws      True        True      xpkg.upbound.io/upbound/provider-aws:v0.19.0   158m
 ```
+
+
 
 Application developers can now use the platform to request resources which then will provisioned in AWS. This would usually done by bundling a claim as part of the application code. In our example here we simply create the claims directly:
 Create a custom defined database:
@@ -69,9 +80,11 @@ kubectl get postgresqlinstance my-db
 kubectl describe secrets db-conn
 ```
 
+To get the DB connection parameters, use the following:
+```
 kubectl get secrets db-conn -o yaml
 echo bXktZGItZzZnajctbHo5dmMuY294emhmemp4bjFlLnVzLXdlc3QtMS5yZHMuYW1hem9uYXdzLmNvbQ== | base64 --decode
-
+```
 
 for more info on aws crds:
 https://doc.crds.dev/github.com/crossplane/provider-aws
