@@ -82,7 +82,7 @@ kubectl describe secrets db-conn
 To get the DB connection parameters, use the following:
 ```
 kubectl get secrets db-conn -o yaml
-echo bXktZGItZzZnajctbHo5dmMuY294emhmemp4bjFlLnVzLXdlc3QtMS5yZHMuYW1hem9uYXdzLmNvbQ== | base64 --decode
+echo bXktZGItdDd2aGwtNW5tczguY294emhmemp4bjFlLnVzLXdlc3QtMS5yZHMuYW1hem9uYXdzLmNvbQ== | base64 --decode
 ```
 
 for more info on aws crds:
