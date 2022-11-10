@@ -5,7 +5,7 @@ metadata:
   namespace: default
 spec:
   parameters:
-    storageGB: 30
+    storageGB: 20
   compositionSelector:
     matchLabels:
       provider: default
