@@ -12,8 +12,8 @@
 | minio artifact storage | [README](applications/minio/README.md) |
 | ngrok | [README](applications/ngrok_/README.md) |
 | task-tracker app (MERN stack demo) | [README](applications/task-tracker-app/README.md) |
-| sealed-secrets | |
-| Seldon-core | Coming soon |
+| sealed-secrets | Installed from Helm charts using Argo CD |
+| Seldon-core | Installed from Helm charts using Argo CD |
 ## start local cluster using minikube
 kubernetes version has to be less than 1.25 for seldon to work
 ```
