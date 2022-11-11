@@ -1,7 +1,7 @@
 apiVersion: apiextensions.crossplane.io/v1
 kind: CompositeResourceDefinition
 metadata:
-  name: eksclusters.eks.mlops-playground.com
+  name: xeksclusters.eks.mlops-playground.com
 spec: 
   connectionSecretKeys:
   - kubeconfig
