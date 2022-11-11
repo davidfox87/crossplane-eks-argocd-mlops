@@ -1,7 +1,7 @@
 apiVersion: eks.mlops-playground.com/v1alpha1
 kind: EKSCluster
 metadata:
-  name: mlops-playground
+  name: cluster-staging
   annotations:
   namespace: default
 spec:
@@ -14,3 +14,22 @@ spec:
   writeConnectionSecretToRef:
     namespace: default
     name: cluster-staging
+
+---
+
+apiVersion: eks.mlops-playground.com/v1alpha1
+kind: EKSCluster
+metadata:
+  name: cluster-production
+  annotations:
+  namespace: default
+spec:
+  parameters:
+    nodeSize: small
+  compositionSelector:
+    matchLabels:
+      provider: default
+      service: eks
+  writeConnectionSecretToRef:
+    namespace: default
+    name: cluster-production
