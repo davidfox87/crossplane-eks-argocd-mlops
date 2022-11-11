@@ -16,4 +16,4 @@ Set up port forward to minio-console:
 kubectl port-forward svc/minio 9999:9001
 ```
 
-http://localhost:9999
+xdg-open http://localhost:9999
