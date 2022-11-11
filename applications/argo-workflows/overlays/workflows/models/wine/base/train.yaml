@@ -79,7 +79,7 @@ spec:
                 - name: wine-clf
                   image: foxy7887/wine-model:v10
                   imagePullPolicy: IfNotPresent
-
+                 
                   volumeMounts:
                   - name: persistent-storage
                     mountPath: /tmp

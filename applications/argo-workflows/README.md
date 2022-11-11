@@ -36,9 +36,20 @@ xdg-open https://localhost:2746
 This will serve the UI on https://localhost:2746. Due to the self-signed certificate, you will receive a TLS error which you will need to manually approve.
 
 
+## seldon
+The wine-model docker file is huge and I have not found a way to reduce the size yet. It seems like Minikube can't pull large images. A workaround is to run:
+```
+minikube ssh
+docker pull foxy7887/wine-model:v10
+```
+I don't know if the same issue will be present in EKS...we will see
+
+## to list the model when it comes up and get details on the internal URL of the prediction service
+```
 kubectl get sdep -n workflows
 
 kubectl -n workflows get sdep seldon-deployment-train-pipeline -o json | jq .status
+```
 
 Docs and predictions can be access with the following url:
 
@@ -52,7 +63,7 @@ Send requests to our prediction service
 ```
 curl -X POST      -H 'Content-Type: application/json'  \
     -d '{"data": { "ndarray": [[1,2,3,4,5]]}}'   \
-        http://localhost:8080/seldon/workflows/seldon-deployment-train-pipeline-mhd42-single-model/api/v1.0/predictions
+        http://localhost:8080/seldon/workflows/seldon-deployment-deploy-wine-clf-cp6nf/api/v1.0/predictions
         
 {"data":{"names":["t:0","t:1","t:2","t:3","t:4"],"ndarray":[[1,2,3,4,5]]},"meta":{"requestPath":{"wine-clf":"foxy7887/wine-model:v10"}}}
 ```
@@ -62,18 +73,6 @@ http://seldon-model.workflows.svc.cluster.local:8000/api/v1.0/predictions
 
 kubectl -n workflows describe sdep mysdep
 
-curl -X POST \
-     -H 'Content-Type: application/json' \
-     -d '{"data": { "ndarray": [[1,2,3,4,5]]}}' \
-         http://localhost:9998/api/v1.0/predictions
-
-
-curl -X POST \
-     -H 'Content-Type: application/json' \
-     -d '{"data": { "ndarray": [[1,2,3,4,5]]}}' \
-         http://localhost:8080/seldon/workflows/seldon-model/api/v1.0/predictions
-
-{"data":{"names":[],"ndarray":["hello","world"]},"meta":{}}
 
 curl  -X POST http://localhost:9998/api/v1.0/predictions \
 -H 'Content-Type: application/json' \
