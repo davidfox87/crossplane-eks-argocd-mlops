@@ -5,8 +5,11 @@ metadata:
   namespace: default
 spec:
   parameters:
-    # Possible values small, medium, large
     nodeSize: small
+  compositionSelector:
+    matchLabels:
+      provider: default
+      service: eks
   writeConnectionSecretToRef:
     namespace: default
     name: cluster-staging
