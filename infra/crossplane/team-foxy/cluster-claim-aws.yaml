@@ -3,8 +3,6 @@ kind: EKSCluster
 metadata:
   name: mlops-playground
   annotations:
-    argocd.argoproj.io/sync-wave: "300"   
-    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true    
   namespace: default
 spec:
   parameters:
