@@ -1,0 +1,14 @@
+apiVersion: mlops-playground.com/v1alpha1
+kind: EKSCluster
+metadata:
+  name: mlops-playground
+  namespace: default
+spec:
+  compositionRef:
+    name: eks-cluster
+  parameters:
+    # Possible values small, medium, large
+    nodeSize: small
+  writeConnectionSecretToRef:
+    namespace: default
+    name: cluster-staging
