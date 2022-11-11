@@ -3,7 +3,7 @@ kind: Composition
 metadata:
   name: eks-cluster
   labels:
-    provider: aws
+    provider: default
     service: eks
 spec:
   writeConnectionSecretsToNamespace: crossplane-system
