@@ -9,7 +9,7 @@ spec:
   writeConnectionSecretsToNamespace: crossplane-system
   compositeTypeRef:
     apiVersion: eks.mlops-playground.com/v1alpha1
-    kind: EKSCluster
+    kind: XEKSCluster
   patchSets:
   - name: metadata
     patches:
