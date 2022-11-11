@@ -3,6 +3,5 @@ kind: Kustomization
 resources:
 - namespace.yaml
 - github.com/argoproj/argo-cd/manifests/cluster-install
-- configmap.yaml
 
 namespace: argocd
