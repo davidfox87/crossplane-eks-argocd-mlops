@@ -278,27 +278,6 @@ spec:
               value: devops-catalog
             - key: kubernetes.io/cluster/devops-catalog
               value: shared
-  - name: subnet-nodepool-1b
-    base:
-      apiVersion: ec2.aws.crossplane.io/v1beta1
-      kind: Subnet
-      metadata:
-        labels:
-          zone: us-west-1b
-          access: public
-      spec:
-        forProvider:
-          region: us-west-1
-          availabilityZone: us-west-1b
-          cidrBlock: 10.0.2.0/24
-          vpcIdSelector:
-            matchControllerRef: true
-          mapPublicIPOnLaunch: true
-          tags:
-            - key: Name
-              value: devops-catalog
-            - key: kubernetes.io/cluster/devops-catalog
-              value: shared
   - name: gateway
     base:
       apiVersion: ec2.aws.crossplane.io/v1beta1
