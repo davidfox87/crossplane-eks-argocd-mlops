@@ -7,13 +7,13 @@
 | Argo CD | [README](applications/argo-cd/README.md) |
 | Argo events | [README](applications/argo-events/README.md) |
 | Argo workflows | [README](applications/argo-workflows/README.md) |
-| Prometheus and Grafana | Coming soon |
+| Prometheus and Grafana | Installed from Helm charts using Argo CD |
 | MLflow | [README](applications/mlflow/README.md) |
 | minio artifact storage | [README](applications/minio/README.md) |
 | ngrok | [README](applications/ngrok_/README.md) |
 | task-tracker app (MERN stack demo) | [README](applications/task-tracker-app/README.md) |
-| sealed-secrets | |
-| Seldon-core | Coming soon |
+| sealed-secrets | Installed from Helm charts using Argo CD |
+| Seldon-core | Installed from Helm charts using Argo CD |
 ## start local cluster using minikube
 kubernetes version has to be less than 1.25 for seldon to work
 ```
@@ -54,12 +54,11 @@ The AWS ALB Ingress Controller will create a TargetGroup to be used with the ALB
 The Gateway and VirtualService that will configure Envoy of the Istio Ingress Gateway to route traffic to the service of the application.
 
 ## Map the domain name that is associated with ACM certificate to the ALB just spawned
+Note this should be automated using Crossplane
 ![route53](route53.png)
 
 ## Our true GitOps CI/CD platform
-![GitOps ArgoCD](https://www.eksworkshop.com/images/argocd/argocd_architecture.png)
-
-
+Please see MLOps.pdf for a full explanation of this platform and the problems it solves
 
 
 
