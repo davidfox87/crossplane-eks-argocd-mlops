@@ -332,8 +332,3 @@ spec:
                 matchLabels:
                   zone: us-west-1b
                   access: public
-            - subnetIdSelector:
-                matchControllerRef: true
-                matchLabels:
-                  zone: us-west-1b
-                  access: public
