@@ -38,7 +38,7 @@ This will serve the UI on https://localhost:2746. Due to the self-signed certifi
 
 kubectl get sdep -n workflows
 
-kubectl -n workflows get sdep seldon-model -o json | jq .status
+kubectl -n workflows get sdep seldon-deployment-train-pipeline -o json | jq .status
 
 Docs and predictions can be access with the following url:
 
@@ -46,13 +46,13 @@ This can be accessed through the endpoint http://<ingress_url>/seldon/<namespace
 
 Locally we can port-forward to the istio-ingressgateway service and send requests to that:
 ```
-kubectl port-forward -n istio-system svcstio-ingressgateway 8080:80
+kubectl port-forward -n istio-system svc/istio-ingressgateway 8080:80
 ```
 Send requests to our prediction service
 ```
 curl -X POST      -H 'Content-Type: application/json'  \
     -d '{"data": { "ndarray": [[1,2,3,4,5]]}}'   \
-        http://localhost:8080/seldon/workflows/seldon-deployment-deploy-wine-clf-j6wp2/api/v1.0/predictions
+        http://localhost:8080/seldon/workflows/seldon-deployment-train-pipeline-mhd42-single-model/api/v1.0/predictions
         
 {"data":{"names":["t:0","t:1","t:2","t:3","t:4"],"ndarray":[[1,2,3,4,5]]},"meta":{"requestPath":{"wine-clf":"foxy7887/wine-model:v10"}}}
 ```

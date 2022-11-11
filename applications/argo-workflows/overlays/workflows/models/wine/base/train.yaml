@@ -1,7 +1,6 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Workflow
 metadata:
-  name: train-pipeline
   generateName: deploy-wine-clf-
   namespace: workflows
 spec:
@@ -73,7 +72,7 @@ spec:
           name: "seldon-deployment-{{workflow.name}}"
           predictors:
           - annotations:
-              sidecar.istio.io/inject: "false"
+              sidecar.istio.io/inject: "true"
             componentSpecs:
             - spec:
                 containers:
@@ -84,7 +83,6 @@ spec:
                   volumeMounts:
                   - name: persistent-storage
                     mountPath: /tmp
-                terminationGracePeriodSeconds: 20
                 volumes:
                 - name: persistent-storage
                   persistentVolumeClaim:
