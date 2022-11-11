@@ -101,8 +101,8 @@ spec:
       matchString: ACTIVE
   - name: iamrole-controlplane
     base:
-      apiVersion: identity.aws.crossplane.io/v1beta1
-      kind: IAMRole
+      apiVersion: iam.aws.crossplane.io/v1beta1
+      kind: Role
       metadata:
         labels:
           role: controlplane
@@ -127,8 +127,8 @@ spec:
             }
   - name: iamrole-nodegroup
     base:
-      apiVersion: identity.aws.crossplane.io/v1beta1
-      kind: IAMRole
+      apiVersion: iam.aws.crossplane.io/v1beta1
+      kind: Role
       metadata:
         labels:
           role: nodegroup
@@ -153,8 +153,8 @@ spec:
             }
   - name: iamattachment-controlplane
     base:
-      apiVersion: identity.aws.crossplane.io/v1beta1
-      kind: IAMRolePolicyAttachment
+      apiVersion: iam.aws.crossplane.io/v1beta1
+      kind: RolePolicyAttachment
       spec:
         forProvider:
           policyArn: arn:aws:iam::aws:policy/AmazonEKSClusterPolicy
@@ -164,8 +164,8 @@ spec:
               role: controlplane
   - name: iamattachment-service
     base:
-      apiVersion: identity.aws.crossplane.io/v1beta1
-      kind: IAMRolePolicyAttachment
+      apiVersion: iam.aws.crossplane.io/v1beta1
+      kind: RolePolicyAttachment
       spec:
         forProvider:
           policyArn: arn:aws:iam::aws:policy/AmazonEKSServicePolicy
@@ -175,8 +175,8 @@ spec:
               role: controlplane
   - name: iamattachment-worker
     base:
-      apiVersion: identity.aws.crossplane.io/v1beta1
-      kind: IAMRolePolicyAttachment
+      apiVersion: iam.aws.crossplane.io/v1beta1
+      kind: RolePolicyAttachment
       spec:
         forProvider:
           policyArn: arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy
@@ -186,8 +186,8 @@ spec:
               role: nodegroup
   - name: iamattachment-cni
     base:
-      apiVersion: identity.aws.crossplane.io/v1beta1
-      kind: IAMRolePolicyAttachment
+      apiVersion: iam.aws.crossplane.io/v1beta1
+      kind: RolePolicyAttachment
       spec:
         forProvider:
           policyArn: arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy
@@ -197,8 +197,8 @@ spec:
               role: nodegroup
   - name: iamattachment-registry
     base:
-      apiVersion: identity.aws.crossplane.io/v1beta1
-      kind: IAMRolePolicyAttachment
+      apiVersion: iam.aws.crossplane.io/v1beta1
+      kind: RolePolicyAttachment
       spec:
         forProvider:
           policyArn: arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly
