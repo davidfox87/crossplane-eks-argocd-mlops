@@ -32,6 +32,8 @@ spec:
             endpointPublicAccess: true
             subnetIdSelector:
               matchControllerRef: true
+              matchLabels:
+                access: public
     patches:
     - fromFieldPath: metadata.annotations[crossplane.io/external-name]
       toFieldPath: metadata.annotations[crossplane.io/external-name]
