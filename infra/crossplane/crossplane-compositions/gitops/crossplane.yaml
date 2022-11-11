@@ -1,0 +1,17 @@
+apiVersion: meta.pkg.crossplane.io/v1
+kind: Configuration
+metadata:
+  name: gitops
+  annotations:
+    meta.crossplane.io/maintainer: David Fox
+    meta.crossplane.io/source: https://github.com/davidfox87/terraform-eks-acm-alb-istio.git
+    meta.crossplane.io/license: MIT
+    meta.crossplane.io/description: Fully operational GitOps tools Argo CD
+    meta.crossplane.io/readme: |- 
+        A Configuration package that defines GitOps and GitOpsClaim 
+        types that can be used to provision Kubernetes clusters with 
+        fully operational GitOps tools Argo CD 
+spec:
+  dependsOn:
+  - provider: crossplane/provider-helm
+    version: ">=v0.9"
