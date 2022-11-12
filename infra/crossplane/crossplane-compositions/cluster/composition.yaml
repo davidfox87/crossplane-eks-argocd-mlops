@@ -325,8 +325,6 @@ spec:
           secretRef:
             key: kubeconfig
     patches:
-    - fromFieldPath: spec.id
-      toFieldPath: metadata.name
     - fromFieldPath: spec.writeConnectionSecretToRef.namespace
       toFieldPath: spec.credentials.secretRef.namespace
     - fromFieldPath: spec.id
