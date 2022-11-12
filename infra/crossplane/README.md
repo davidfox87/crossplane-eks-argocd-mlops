@@ -100,3 +100,20 @@ https://crossplane.io/docs/v1.9/reference/uninstall.html
 
 
 https://doc.crds.dev/github.com/crossplane/provider-aws/database.aws.crossplane.io/RDSInstance/v1beta1@v0.33.0
+
+
+
+# deploying EKS cluster
+Put cluster-claim-aws.yaml in the team-foxy folder
+
+commit and push to github. ArgoCD will be deploy the manifest to the management cluster and then Crossplane will detect the claim on the EKSCluster resource. Crossplane will then deploy the VPC network, EKS Cluster and Nodegroup.
+
+Once everything is up we can retrieve the kubconfig from the secret
+```
+kubectl -n crossplane-system get secret 2b06f037-1204-453e-9862-52f456d3426c-ekscluster --output jsonpath="{.data.kubeconfig}" | base64 -d > kubeconfig.yaml
+```
+
+Then we can interact with our EKS cluster
+```
+kubectl --kubeconfig kubeconfig.yaml  get namespaces
+```
