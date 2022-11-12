@@ -366,8 +366,6 @@ spec:
       - type: string
         string:
           fmt: '%s-ingress'
-    - fromFieldPath: spec.id
-      toFieldPath: spec.providerConfigRef.name
 
   - name: sealed-secrets
     base:
@@ -392,5 +390,3 @@ spec:
       - type: string
         string:
           fmt: '%s-sealed-secrets'
-    - fromFieldPath: spec.id
-      toFieldPath: spec.providerConfigRef.name
