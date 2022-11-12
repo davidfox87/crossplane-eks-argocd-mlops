@@ -324,7 +324,6 @@ spec:
           source: Secret
           secretRef:
             key: kubeconfig
-            namespace: crossplane-system
     patches:
     - fromFieldPath: spec.writeConnectionSecretToRef.namespace
       toFieldPath: spec.credentials.secretRef.namespace
