@@ -2,7 +2,6 @@ apiVersion: eks.mlops-playground.com/v1alpha1
 kind: EKSCluster
 metadata:
   name: cluster-staging
-  annotations:
   namespace: default
 spec:
   parameters:
@@ -12,8 +11,7 @@ spec:
       provider: default
       service: eks
   writeConnectionSecretToRef:
-    namespace: default
-    name: cluster-staging
+    name: aws-kubeconfig
 
 ---
 
