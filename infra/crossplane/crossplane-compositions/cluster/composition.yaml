@@ -364,3 +364,25 @@ spec:
           fmt: '%s-ingress'
     - fromFieldPath: spec.id
       toFieldPath: spec.providerConfigRef.name
+
+  - name: sealed-secrets
+    base:
+      apiVersion: helm.crossplane.io/v1beta1
+      kind: Release
+      spec:
+        rollbackLimit: 3
+        forProvider:
+          namespace: kubeseal
+          chart:
+            name: sealed-secrets
+            repository: https://bitnami-labs.github.io/sealed-secrets
+            version: 2.6.9
+    patches:
+    - fromFieldPath: spec.id
+      toFieldPath: metadata.name
+      transforms:
+      - type: string
+        string:
+          fmt: '%s-sealed-secrets'
+    - fromFieldPath: spec.id
+      toFieldPath: spec.providerConfigRef.name
