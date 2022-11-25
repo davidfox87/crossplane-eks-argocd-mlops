@@ -17,8 +17,16 @@
 ## start local cluster using minikube
 kubernetes version has to be less than 1.25 for seldon to work
 ```
-minikube start --kubernetes-version v1.24.4
+
+kind create cluster --name kind-cluster --config kind.yaml --wait 5m
 ```
+
+To delete the cluster:
+```
+kind delete cluster --name kind-cluster
+```
+
+
 When you run ```kubectl api-versions | grep beta``` you will see that ```autoscaling/v2beta1``` is there and seldon won't complain.
 
 ## Use argocd to deploy applications to our Kubernetes cluster 

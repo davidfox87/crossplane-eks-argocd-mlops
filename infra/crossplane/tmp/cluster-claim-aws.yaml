@@ -2,8 +2,8 @@ apiVersion: eks.mlops-playground.com/v1alpha1
 kind: EKSCluster
 metadata:
   name: cluster-staging
-  namespace: default
 spec:
+  id: team-foxy
   parameters:
     nodeSize: small
   compositionSelector:

@@ -14,7 +14,7 @@ kubectl crossplane push configuration foxy7887/crossplane-aws-platform:${VERSION
 Install the configuration
  
 ```
-kubectl crossplane install configuration foxy7887/crossplane-aws-platform:0.0.15  
+kubectl crossplane install configuration foxy7887/crossplane-aws-platform:0.0.16  
 ```
 
 This will automatically install the most up-to-date versions of the aws-, helm-, and kubernetes-provider and the CRDs so that users can go ahead and create claims.
