@@ -1,16 +1,19 @@
 
 docker login
 
-Assuming you already installed crossplane in the crossplane-system namespace
+Following commands assume you already installed crossplane in the crossplane-system namespace. If not, see https://crossplane.io/docs/v1.9/getting-started/install-configure.html
 
 Build the package
+```
 kubectl crossplane build configuration 
+```
 
 Push the package:
 ```
 VERSION=v0.0.15
 kubectl crossplane push configuration foxy7887/crossplane-aws-platform:${VERSION} 
 ```
+
 Install the configuration
  
 ```
