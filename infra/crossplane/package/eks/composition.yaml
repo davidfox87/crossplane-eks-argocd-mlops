@@ -333,7 +333,7 @@ spec:
       transforms:
       - type: string
         string:
-          fmt: '%s-cluster'
+          fmt: '%s-ekscluster'
     readinessChecks:
     - type: None
   - name: ingress
@@ -385,5 +385,6 @@ spec:
       - type: string
         string:
           fmt: '%s-sealed-secrets'
+      # uses the spec.id as the providerconfigref name
     - fromFieldPath: spec.id
       toFieldPath: spec.providerConfigRef.name
