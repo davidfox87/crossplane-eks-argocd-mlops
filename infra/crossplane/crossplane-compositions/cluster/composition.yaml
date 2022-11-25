@@ -355,10 +355,6 @@ spec:
                 service.beta.kubernetes.io/aws-load-balancer-backend-protocol: tcp
                 service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled: "true"
                 service.beta.kubernetes.io/aws-load-balancer-type: nlb
-        providerConfigRef:
-          name: provider-helm-config
-        providerRef:
-          name: provider-helm
     patches:
     - fromFieldPath: spec.id
       toFieldPath: metadata.name
@@ -379,10 +375,6 @@ spec:
             name: sealed-secrets
             repository: https://bitnami-labs.github.io/sealed-secrets
             version: 2.6.9
-        providerConfigRef:
-          name: provider-helm-config
-        providerRef:
-          name: provider-helm
     patches:
     - fromFieldPath: spec.id
       toFieldPath: metadata.name
