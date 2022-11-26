@@ -1,9 +1,10 @@
 apiVersion: apiextensions.crossplane.io/v1
 kind: Composition
 metadata:
-  name: app-frontend
+  name: app-backend
   labels:
-    type: frontend
+    type: backend
+    location: local
 spec:
   compositeTypeRef:
     apiVersion: devopstoolkitseries.com/v1alpha1
@@ -38,11 +39,9 @@ spec:
               template:
                 spec:
                   containers:
-                  - name: frontend
-                    imagePullPolicy: IfNotPresent
+                  - name: backend
                     ports:
                     - containerPort: 80
-                      name: http
                     livenessProbe:
                       httpGet:
                         path: /
@@ -154,9 +153,9 @@ spec:
     - fromFieldPath: spec.id
       toFieldPath: metadata.name
       transforms:
-        - type: string
-          string:
-            fmt: "%s-ingress"
+      - type: string
+        string:
+          fmt: "%s-ingress"
     - fromFieldPath: spec.id
       toFieldPath: spec.forProvider.manifest.metadata.name
     - fromFieldPath: spec.parameters.namespace
@@ -175,37 +174,4 @@ spec:
       fromFieldPath: spec.forProvider.manifest.spec.rules[0].host
       toFieldPath: status.host
     readinessChecks:
-      - type: None
-  - name: hpa
-    base:
-      apiVersion: kubernetes.crossplane.io/v1alpha1
-      kind: Object
-      spec:
-        forProvider:
-          manifest:
-            apiVersion: autoscaling/v1
-            kind: HorizontalPodAutoscaler
-            spec:
-              minReplicas: 2
-              maxReplicas: 6
-              scaleTargetRef:
-                apiVersion: apps/v1
-                kind: Deployment
-              targetCPUUtilizationPercentage: 80
-    patches:
-    - fromFieldPath: spec.id
-      toFieldPath: metadata.name
-      transforms:
-        - type: string
-          string:
-            fmt: "%s-ingress"
-    - fromFieldPath: spec.id
-      toFieldPath: spec.forProvider.manifest.metadata.name
-    - fromFieldPath: spec.parameters.namespace
-      toFieldPath: spec.forProvider.manifest.metadata.namespace
-    - fromFieldPath: spec.id
-      toFieldPath: spec.forProvider.manifest.metadata.labels.app
-    - fromFieldPath: spec.id
-      toFieldPath: spec.forProvider.manifest.spec.scaleTargetRef.name
-    readinessChecks:
-      - type: None
+    - type: None

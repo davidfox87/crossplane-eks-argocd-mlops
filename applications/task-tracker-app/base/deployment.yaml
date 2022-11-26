@@ -22,11 +22,3 @@ spec:
         ports:
         - containerPort: 80
           name: http
-      #   volumeMounts:
-      #   - mountPath: /etc/ssl/certs
-      #     name: secret-volume
-      # volumes:
-      # - name: secret-volume
-      #   secret:
-      #      secretName: tls-cert
-
