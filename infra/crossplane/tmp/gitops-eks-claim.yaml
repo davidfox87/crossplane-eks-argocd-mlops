@@ -1,37 +1,16 @@
-apiVersion: eks.mlops-playground.com/v1alpha1
-kind: EKSCluster
-metadata:
-  name: cluster-staging
-  annotations:
-  namespace: default
-spec:
-  parameters:
-    nodeSize: small
-  compositionSelector:
-    matchLabels:
-      provider: default
-      service: eks
-  writeConnectionSecretToRef:
-    namespace: default
-    name: cluster-staging
-
-
----
-
 apiVersion: devopstoolkitseries.com/v1alpha1
 kind: GitOpsClaim
 metadata:
-  name: foxy-team-gitops
+  name: a-team-gitops
   labels:
-    cluster-owner: david
+    cluster-owner: vfarcic
 spec:
-  id: foxy-team-gitops
+  id: team-foxy-gitops
   compositionSelector:
     matchLabels:
       provider: argo
   parameters:
     kubeConfig:
-      secretName: ateamaks-akscluster
+      secretName: 03777dca-4dc8-437e-a36f-cac95a200911-ekscluster
       secretNamespace: crossplane-system
-      secretKey: attribute.kube_config_raw
     gitOpsRepo: https://github.com/vfarcic/devops-toolkit-crossplane.git
