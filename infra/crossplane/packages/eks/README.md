@@ -16,24 +16,36 @@ helm upgrade --install \
 ./setup.sh --profile default
 
 
-# install EKS package
-echo "
+# install EKS package (crossplane will install package dependencies)
+cat <<EOF | kubectl apply -f -
+apiVersion: pkg.crossplane.io/v1alpha1
+kind: ControllerConfig
+metadata:
+  name: aws-config
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::880572800141:user/foxy1987
+spec:
+  podSecurityContext:
+    fsGroup: 2000
+---
+apiVersion: pkg.crossplane.io/v1
+kind: Provider
+metadata:
+  name: provider-aws
+spec:
+  package: crossplane/provider-aws:v0.29.0
+  controllerConfigRef:
+    name: aws-config
+
+---
 apiVersion: pkg.crossplane.io/v1
 kind: Configuration
 metadata:
   name: crossplane-k8s
 spec:
-  package: foxy7887/crossplane-aws-platform:0.0.19
+  package: foxy7887/crossplane-aws-platform:0.0.20
 
----
-
-apiVersion: pkg.crossplane.io/v1
-kind: Provider
-metadata:
-  name: crossplane-provider-aws
-spec:
-  package: crossplane/provider-aws:v0.24.1
-" | kubectl apply --filename -
+EOF
 
 kubectl get pkgrev
 
@@ -46,11 +58,7 @@ metadata:
   name: default
 spec:
   credentials:
-    source: Secret
-    secretRef:
-      namespace: crossplane-system
-      name: aws-creds
-      key: creds
+    source: InjectedIdentity
 " | kubectl apply --filename -
 
 kubectl create namespace team-foxy
@@ -61,26 +69,25 @@ kubectl create namespace team-foxy
 # Create a cluster
 ```
 echo "
-apiVersion: devopstoolkitseries.com/v1alpha1
-kind: ClusterClaim
+apiVersion: eks.mlops-playground.com/v1alpha1
+kind: EKSCluster
 metadata:
-  name: a-team-eks
+  name: cluster-staging
 spec:
-  id: a-team-eks
+  id: team-foxy
+  parameters:
+    nodeSize: small
   compositionSelector:
     matchLabels:
-      provider: aws
-      cluster: eks
-  parameters:
-    nodeSize: medium
-    minNodeCount: 3
+      provider: default
+      service: eks
   writeConnectionSecretToRef:
-    name: a-team-eks
-" | kubectl --namespace a-team apply --filename -
+    name: aws-kubeconfig
+" | kubectl --namespace team-foxy apply --filename -
 
 kubectl get managed
 
-kubectl --namespace a-team get clusterclaims
+kubectl --namespace team-foxy get xeksclusters
 
 # Wait until the cluster is ready
 
@@ -88,8 +95,8 @@ kubectl --namespace a-team get clusterclaims
 
 # Use the cluster
 ```
-kubectl --namespace a-team \
-    get secret a-team-eks \
+kubectl --namespace team-foxy \
+    get secret aws-kubeconfig \
     --output jsonpath="{.data.kubeconfig}" \
     | base64 -d \
     | tee kubeconfig.yaml
@@ -103,8 +110,8 @@ kubectl --kubeconfig kubeconfig.yaml \
 # Destroy the cluster
 
 ```
-kubectl --namespace a-team \
-    delete clusterclaim a-team-eks
+kubectl --namespace team-foxy \
+    delete XEKSCluster cluster-staging-sjn84
 
 kubectl get managed
 

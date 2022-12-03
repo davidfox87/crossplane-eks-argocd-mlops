@@ -11,8 +11,9 @@ spec:
   crossplane:
     version: ">=v1.4.0-0"
   dependsOn:
-  - provider: crossplane/provider-aws
-    version: "v0.29.0"
+  # we will install manually so that we can also create and reference a ControllerConfig
+  # - provider: crossplane/provider-aws
+  #   version: "v0.29.0"
   - provider: crossplane/provider-helm
     version: ">=v0.9.0"
   - provider: crossplane/provider-kubernetes
