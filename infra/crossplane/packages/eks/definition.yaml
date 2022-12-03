@@ -5,13 +5,14 @@ metadata:
 spec: 
   connectionSecretKeys:
   - kubeconfig
+  - value
   group: eks.mlops-playground.com
   names:
     kind: XEKSCluster
     plural: xeksclusters
   claimNames:
-    kind: EKSCluster # change to ClusterClaim
-    plural: ekscluster # change to clusterclaims
+    kind: ClusterClaim
+    plural: clusterclaims
   versions:
   - name: v1alpha1
     served: true

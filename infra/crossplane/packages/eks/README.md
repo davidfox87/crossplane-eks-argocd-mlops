@@ -51,9 +51,9 @@ kubectl create namespace team-foxy
 
 # Create a cluster
 ```
-cat <<EOF | kubectl apply -f -
+cat <<EOF | kubectl apply --namespace team-foxy -f -
 apiVersion: eks.mlops-playground.com/v1alpha1
-kind: EKSCluster
+kind: ClusterClaim
 metadata:
   name: team-foxy-eks
 spec:
@@ -70,7 +70,7 @@ EOF
 
 kubectl get managed
 
-kubectl --namespace team-foxy get xeksclusters
+kubectl --namespace team-foxy get clusterclaims
 
 # Wait until the cluster is ready
 
