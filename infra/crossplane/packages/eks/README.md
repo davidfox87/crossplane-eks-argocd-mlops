@@ -17,35 +17,14 @@ helm upgrade --install \
 
 
 # install EKS package (crossplane will install package dependencies)
-cat <<EOF | kubectl apply -f -
-apiVersion: pkg.crossplane.io/v1alpha1
-kind: ControllerConfig
-metadata:
-  name: aws-config
-  annotations:
-    eks.amazonaws.com/role-arn: arn:aws:iam::880572800141:user/foxy1987
-spec:
-  podSecurityContext:
-    fsGroup: 2000
----
-apiVersion: pkg.crossplane.io/v1
-kind: Provider
-metadata:
-  name: provider-aws
-spec:
-  package: crossplane/provider-aws:v0.29.0
-  controllerConfigRef:
-    name: aws-config
-
----
+echo "
 apiVersion: pkg.crossplane.io/v1
 kind: Configuration
 metadata:
   name: crossplane-k8s
 spec:
-  package: foxy7887/crossplane-aws-platform:0.0.20
-
-EOF
+  package: foxy7887/crossplane-aws-platform:0.0.19
+" | kubectl apply --filename -
 
 kubectl get pkgrev
 
@@ -58,7 +37,11 @@ metadata:
   name: default
 spec:
   credentials:
-    source: InjectedIdentity
+    source: Secret
+    secretRef:
+      namespace: crossplane-system
+      name: aws-creds
+      key: creds
 " | kubectl apply --filename -
 
 kubectl create namespace team-foxy
@@ -92,6 +75,38 @@ kubectl --namespace team-foxy get xeksclusters
 # Wait until the cluster is ready
 
 ```
+
+
+# For an in-cluster install in AWS
+cat <<EOF | kubectl apply -f -
+apiVersion: pkg.crossplane.io/v1alpha1
+kind: ControllerConfig
+metadata:
+  name: aws-config
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::880572800141:user/foxy1987
+spec:
+  podSecurityContext:
+    fsGroup: 2000
+---
+apiVersion: pkg.crossplane.io/v1
+kind: Provider
+metadata:
+  name: provider-aws
+spec:
+  package: crossplane/provider-aws:v0.29.0
+  controllerConfigRef:
+    name: aws-config
+
+---
+apiVersion: pkg.crossplane.io/v1
+kind: Configuration
+metadata:
+  name: crossplane-k8s
+spec:
+  package: foxy7887/crossplane-aws-platform:0.0.20
+
+EOF
 
 # Use the cluster
 ```
