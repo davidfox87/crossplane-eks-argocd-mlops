@@ -10,8 +10,8 @@ spec:
     kind: XEKSCluster
     plural: xeksclusters
   claimNames:
-    kind: EKSCluster
-    plural: ekscluster
+    kind: EKSCluster # change to ClusterClaim
+    plural: ekscluster # change to clusterclaims
   versions:
   - name: v1alpha1
     served: true

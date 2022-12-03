@@ -30,7 +30,7 @@ kubectl get pkgrev
 
 # Wait until all the packages are healthy
 
-echo "
+cat <<EOF | kubectl apply -f -
 apiVersion: aws.crossplane.io/v1beta1
 kind: ProviderConfig
 metadata:
@@ -42,7 +42,7 @@ spec:
       namespace: crossplane-system
       name: aws-creds
       key: creds
-" | kubectl apply --filename -
+EOF
 
 kubectl create namespace team-foxy
 
@@ -51,22 +51,22 @@ kubectl create namespace team-foxy
 
 # Create a cluster
 ```
-echo "
+cat <<EOF | kubectl apply -f -
 apiVersion: eks.mlops-playground.com/v1alpha1
 kind: EKSCluster
 metadata:
-  name: cluster-staging
+  name: team-foxy-eks
 spec:
-  id: team-foxy
-  parameters:
-    nodeSize: small
+  id: team-foxy-eks
   compositionSelector:
     matchLabels:
       provider: default
       service: eks
+  parameters:
+    nodeSize: small
   writeConnectionSecretToRef:
-    name: aws-kubeconfig
-" | kubectl --namespace team-foxy apply --filename -
+    name: team-foxy-eks
+EOF
 
 kubectl get managed
 
