@@ -17,14 +17,14 @@ helm upgrade --install \
 
 
 # install EKS package (crossplane will install package dependencies)
-echo "
+cat <<EOF | kubectl apply -f -
 apiVersion: pkg.crossplane.io/v1
 kind: Configuration
 metadata:
   name: crossplane-k8s
 spec:
-  package: foxy7887/crossplane-aws-platform:0.0.19
-" | kubectl apply --filename -
+  package: foxy7887/crossplane-aws-platform:v0.0.21
+EOF
 
 kubectl get pkgrev
 
@@ -71,6 +71,7 @@ EOF
 kubectl get managed
 
 kubectl --namespace team-foxy get clusterclaims
+
 
 # Wait until the cluster is ready
 
@@ -125,8 +126,7 @@ kubectl --kubeconfig kubeconfig.yaml \
 # Destroy the cluster
 
 ```
-kubectl --namespace team-foxy \
-    delete XEKSCluster cluster-staging-sjn84
+kubectl delete clusterclaims team-foxy-eks -n team-foxy
 
 kubectl get managed
 
@@ -145,13 +145,13 @@ kubectl crossplane build configuration
 
 Push the package:
 
-VERSION=v0.0.15
+VERSION=v0.0.21
 kubectl crossplane push configuration foxy7887/crossplane-aws-platform:${VERSION} 
 
 
 #Install the configuration
  
-kubectl crossplane install configuration foxy7887/crossplane-aws-platform:0.0.16  
+kubectl crossplane install configuration foxy7887/crossplane-aws-platform:${VERSION} 
 ```
 
 This will automatically install the most up-to-date versions of the aws-, helm-, and kubernetes-provider and the CRDs so that users can go ahead and create claims.

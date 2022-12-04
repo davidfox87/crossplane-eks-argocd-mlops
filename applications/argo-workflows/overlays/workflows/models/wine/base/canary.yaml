@@ -1,0 +1,41 @@
+apiVersion: machinelearning.seldon.io/v1alpha2
+kind: SeldonDeployment
+metadata:
+  labels:
+    app: seldon
+  name: example
+spec:
+  name: canary-example
+  predictors:
+  - componentSpecs:
+    - spec:
+        containers:
+        - image: seldonio/mock_classifier:0.1
+          imagePullPolicy: IfNotPresent
+          name: classifier
+        terminationGracePeriodSeconds: 1
+    graph:
+      children: []
+      endpoint:
+        type: REST
+      name: classifier
+      type: MODEL
+    name: main
+    replicas: 1
+    traffic: 75
+  - componentSpecs:
+    - spec:
+        containers:
+        - image: seldonio/mock_classifier:0.2
+          imagePullPolicy: IfNotPresent
+          name: classifier
+        terminationGracePeriodSeconds: 1
+    graph:
+      children: []
+      endpoint:
+        type: REST
+      name: classifier
+      type: MODEL
+    name: canary
+    replicas: 1
+    traffic: 25
