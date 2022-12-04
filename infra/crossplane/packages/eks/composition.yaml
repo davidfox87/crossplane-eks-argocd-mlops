@@ -160,7 +160,7 @@ spec:
       kind: Policy
       metadata:
         labels:
-          policy: s3-sccess-policy
+          policy: s3-access-policy
       spec:
         forProvider:
           name: s3-access
@@ -267,15 +267,14 @@ spec:
             value: devops-catalog
           - key: kubernetes.io/cluster/devops-catalog
             value: shared
-  - name: sc-nodepool
+  - name: sg-nodepool
     base:
       apiVersion: ec2.aws.crossplane.io/v1beta1
       kind: SecurityGroup
       spec:
         forProvider:
           description: Cluster communication with worker nodes
-          groupName: devops-catalog
-          region: us-west-1
+          groupName: eks-security-group
           vpcIdSelector:
             matchControllerRef: true
           egress:
@@ -284,6 +283,11 @@ spec:
             ipProtocol: "-1"
             ipRanges:
             - cidrIp: "0.0.0.0/0"
+              description: all ips
+          tags:
+            - key: Name
+              value: devops-catalog
+
   - name: subnet-nodepool-1a
     base:
       apiVersion: ec2.aws.crossplane.io/v1beta1

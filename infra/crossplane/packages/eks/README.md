@@ -23,7 +23,7 @@ kind: Configuration
 metadata:
   name: crossplane-k8s
 spec:
-  package: foxy7887/crossplane-aws-platform:v0.0.21
+  package: foxy7887/crossplane-aws-platform:v0.0.22
 EOF
 
 kubectl get pkgrev
@@ -79,6 +79,7 @@ kubectl --namespace team-foxy get clusterclaims
 
 
 # For an in-cluster install in AWS
+```
 cat <<EOF | kubectl apply -f -
 apiVersion: pkg.crossplane.io/v1alpha1
 kind: ControllerConfig
@@ -108,6 +109,7 @@ spec:
   package: foxy7887/crossplane-aws-platform:0.0.20
 
 EOF
+```
 
 # Use the cluster
 ```
@@ -145,7 +147,7 @@ kubectl crossplane build configuration
 
 Push the package:
 
-VERSION=v0.0.21
+VERSION=v0.0.22
 kubectl crossplane push configuration foxy7887/crossplane-aws-platform:${VERSION} 
 
 
