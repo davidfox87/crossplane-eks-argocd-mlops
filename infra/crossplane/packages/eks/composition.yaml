@@ -177,8 +177,8 @@ spec:
                     "s3:DeleteObject"
                   ],
                   "Resource" : [
-                    "arn:aws:s3:::*/*",
-                    "arn:aws:s3:::argo-artifacts"
+                    "arn:aws:s3:::argo-artifacts",
+                    "arn:aws:s3:::argo-artifacts/*"
                   ]
                 }
               ]
