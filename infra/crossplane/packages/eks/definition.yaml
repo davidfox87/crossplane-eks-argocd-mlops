@@ -5,7 +5,6 @@ metadata:
 spec: 
   connectionSecretKeys:
   - kubeconfig
-  - value
   group: eks.mlops-playground.com
   names:
     kind: XEKSCluster

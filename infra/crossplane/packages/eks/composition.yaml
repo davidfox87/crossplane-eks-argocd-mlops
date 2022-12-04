@@ -59,8 +59,6 @@ spec:
       matchString: ACTIVE
     connectionDetails:
       - fromConnectionSecretKey: kubeconfig
-      - fromConnectionSecretKey: kubeconfig
-        name: value
   - name: eksnodegroup
     base:
       apiVersion: eks.aws.crossplane.io/v1alpha1
@@ -155,6 +153,51 @@ spec:
                   }
               ]
             }
+
+  - name: s3-worker-access
+    base:
+      apiVersion: iam.aws.crossplane.io/v1beta1
+      kind: Policy
+      metadata:
+        labels:
+          policy: s3-sccess-policy
+      spec:
+        forProvider:
+          name: s3-access
+          document: |
+            {
+              "Version" : "2012-10-17",
+              "Statement" : [
+                {
+                  "Effect" : "Allow",
+                  "Action" : [
+                    "s3:PutObject",
+                    "s3:GetObject",
+                    "s3:ListBucket",
+                    "s3:DeleteObject"
+                  ],
+                  "Resource" : [
+                    "arn:aws:s3:::*/*",
+                    "arn:aws:s3:::argo-artifacts"
+                  ]
+                }
+              ]
+            }
+
+  - name: iamattachment-s3access
+    base:
+      apiVersion: iam.aws.crossplane.io/v1beta1
+      kind: RolePolicyAttachment
+      forProvider:
+        roleNameSelector:
+            matchControllerRef: true
+            matchLabels:
+              role: nodegroup
+        policyArnSelector:
+            matchControllerRef: true
+            matchLabels:
+              policy: s3-sccess-policy
+        
   - name: iamattachment-controlplane
     base:
       apiVersion: iam.aws.crossplane.io/v1beta1
