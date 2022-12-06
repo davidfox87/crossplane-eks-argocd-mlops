@@ -2,17 +2,18 @@ kind: Cluster
 apiVersion: kind.x-k8s.io/v1alpha4
 nodes:
 - role: control-plane
-  kubeadmConfigPatches:
-  - |
-    kind: InitConfiguration
-    nodeRegistration:
-      kubeletExtraArgs:
-        node-labels: "ingress-ready=true"
   extraPortMappings:
-  - containerPort: 80
-    hostPort: 80
-    protocol: TCP
-  - containerPort: 443
-    hostPort: 443
-    protocol: TCP
+  - containerPort: 31923
+    hostPort: 8080
   image: kindest/node:v1.23.0
+
+  # if we want to map files on our local machine to directories inside the container
+  # - role:  worker
+  #   extraMounts:
+  #   - hostPath: ./data
+  #     containerPath: /tmp/data
+
+  # - role:  worker
+  #   extraMounts:
+  #   - hostPath: ./data
+  #     containerPath: /tmp/data
