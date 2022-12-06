@@ -6,3 +6,5 @@ kubectl create secret generic aws-creds -n crossplane-system \
             | kubeseal  --controller-namespace kubeseal \
                         --controller-name sealed-secrets \
                         --format yaml > aws-creds-sealedsecret.yaml
+
+rm ./creds.conf
