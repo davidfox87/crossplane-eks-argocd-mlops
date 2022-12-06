@@ -3,4 +3,4 @@ kind: Configuration
 metadata:
   name: crossplane-k8s
 spec:
-  package: foxy7887/crossplane-aws-platform:0.0.19
+  package: foxy7887/crossplane-aws-platform:0.0.22
