@@ -30,10 +30,17 @@ kubeseal --controller-namespace kubeseal \
 kubectl apply -f github-access-sealedsecret.json -n workflows
 
 # Open a port-forward so you can access the UI:
+```
 kubectl -n argo port-forward deployment/argo-server 2746:2746
 xdg-open https://localhost:2746
+```
 
 This will serve the UI on https://localhost:2746. Due to the self-signed certificate, you will receive a TLS error which you will need to manually approve.
+
+## install argocli to submit workflows
+```
+argo submit -n workflows --watch train.yaml
+```
 
 
 ## seldon
