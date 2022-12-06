@@ -11,6 +11,7 @@ spec:
       provider: default
       service: eks
   writeConnectionSecretToRef:
+    namespace: team-foxy
     name: aws-kubeconfig
 
 ---
