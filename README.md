@@ -56,6 +56,43 @@ create argo-artifacts bucket called ```my-bucket```
 create PVC by applying ```applications/argo-workflows/overlays/workflows/models/wine/base/pvc.yaml``` in workflows namespace
 
 
+## install argocli to submit workflows
+```
+argo submit -n workflows --watch train.yaml
+```
+
+## check the deployment of the REST prediction service
+```
+kubectl get sdep -n workflows
+kubectl -n workflows get sdep seldon-deployment-deploy-wine-clf-hhrxn -o json | jq .status
+```
+
+## Send requests to prediction service
+Locally we can port-forward to the istio-ingressgateway service and send requests to that:
+```
+kubectl port-forward -n istio-system svc/istio-ingressgateway 8080:80
+```
+Send requests to our prediction service
+```
+curl -X POST      -H 'Content-Type: application/json'  \
+    -d '{"data": { "ndarray": [[1,2,3,4,5]]}}'   \
+        http://localhost:8080/seldon/workflows/seldon-deployment-deploy-wine-clf-hhrxn/api/v1.0/predictions
+        
+{"data":{"names":["t:0","t:1","t:2","t:3","t:4"],"ndarray":[[1,2,3,4,5]]},"meta":{"requestPath":{"wine-clf":"foxy7887/wine-model:v10"}}}
+```
+
+
+## look at the model stats in MLFlow repo
+
+
+
+
+
+
+
+
+
+
 ## apply ingress object
 The ingress object has a backend that points to istio-ingressgateway. Apply the object to the istio-system namespace:
 
