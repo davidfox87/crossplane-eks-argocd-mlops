@@ -37,7 +37,7 @@ spec:
         path: /tmp/data.csv
     container:
       name: preprocess
-      image: foxy7887/xgb_train:v19
+      image: foxy7887/xgb_train:v20
       command: ["python3", "./run_preprocess.py"]
 
   - name: train
@@ -49,7 +49,7 @@ spec:
         path: /tmp/data.csv
     container:
       name: train
-      image: foxy7887/xgb_train:v19
+      image: foxy7887/xgb_train:v20
       command: ["python3", "./run_train.py"]
       args: ["--model_file", "{{inputs.parameters.model_path}}", "--bucket", "my-bucket"]
       volumeMounts:

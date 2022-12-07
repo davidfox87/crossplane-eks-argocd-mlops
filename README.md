@@ -82,8 +82,11 @@ curl -X POST      -H 'Content-Type: application/json'  \
 ```
 
 
-## look at the model stats in MLFlow repo
-
+## look at the stats from the training run in MLFlow repo
+```
+kubectl port-forward service/mlflow-tracking-server 5555:5000 -n mlflow
+http://localhost:5555
+```
 
 
 

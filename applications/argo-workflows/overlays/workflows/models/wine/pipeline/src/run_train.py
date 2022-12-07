@@ -7,7 +7,20 @@ from xgboost import XGBClassifier
 import argparse
 import sys
 import os 
+import mlflow
+import xgboost as xgb
+from sklearn.metrics import accuracy_score
 
+os.environ['MLFLOW_S3_ENDPOINT_URL'] = 'http://minio.default:9000' #minio API
+os.environ['AWS_ACCESS_KEY_ID'] = 'minio'
+os.environ['AWS_SECRET_ACCESS_KEY'] = 'minio123'
+mlflow.set_tracking_uri("http://mlflow-tracking-server.mlflow:5000")
+
+
+print("MLflow Version:", mlflow.__version__)
+print("MLflow Tracking URI:", mlflow.get_tracking_uri())
+print("XGBoost version:",xgb.__version__)
+client = mlflow.tracking.MlflowClient()
 
 def save_model(model, model_file):
         """Save XGBoost model for serving."""
@@ -53,16 +66,45 @@ def run_training(argv=None):
         n_estimators = 100
         learning_rate = 0.1
         
-        model = XGBClassifier(n_estimators=n_estimators, 
-                                learning_rate=learning_rate, 
-                                early_stopping_rounds=10)
+        with mlflow.start_run() as run:
+                run_id = run.info.run_id
+                experiment_id = run.info.experiment_id
+                print("MLflow:")
+                print("  run_id:", run_id)
+                print("  experiment_id:", experiment_id)
+                print("  experiment_name:", client.get_experiment(experiment_id).name)
 
-        logging.info('Training the classifier...')
-        model.fit(train_X,
-                train_y,
-                eval_set=[(test_X, test_y)])
+                # MLflow params
+                print("Parameters:")
+                print("  estimators:", n_estimators)
+                mlflow.log_param("estimators", n_estimators)
 
-        print("Best RMSE on eval: %.2f with %d rounds" %
+
+                model = XGBClassifier(n_estimators=n_estimators, 
+                                        learning_rate=learning_rate, 
+                                        early_stopping_rounds=10)
+
+                logging.info('Training the classifier...')
+                model.fit(train_X,
+                        train_y,
+                        eval_set=[(test_X, test_y)])
+
+                # MLflow metrics
+                predictions = model.predict(test_X)
+                print("predictions:",predictions)
+                
+                acc = accuracy_score(test_y, predictions)
+                print("Metrics:")
+                print("  accuracy:", acc)
+                
+                mlflow.log_metric("accuracy", acc)
+
+                # Log model
+                mlflow.xgboost.log_model(model,
+                                        artifact_path="mlflow/xgboost-model",
+                                        registered_model_name="xgboost-model")
+
+        print("Best acc on eval: %.2f with %d rounds" %
                 (model.best_score,
                 model.best_iteration+1))
 
