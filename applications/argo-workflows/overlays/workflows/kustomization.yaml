@@ -3,7 +3,6 @@ kind: Kustomization
 resources:
 - namespace.yaml
 - rbac.yaml
-- config.yaml
 - secrets
 #- ingress.yaml
 

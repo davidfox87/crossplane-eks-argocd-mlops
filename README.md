@@ -17,7 +17,6 @@
 ## start local cluster using minikube
 kubernetes version has to be less than 1.25 for seldon to work
 ```
-
 kind create cluster --name kind-cluster --config kind.yaml --wait 5m
 ```
 
@@ -46,9 +45,15 @@ Inside ```terraform-argocd/applications/argo-workflows/overlays/workflows/```
 ./deploy_secrets
 ```
 
+commit and push to github repo so argocd can manage sealedsecrets deployment. You need to add a .env file containing github access token
+
 ## wait for everything to sync and be healthy in the argo-cd UI
 The following screenshot shows the applications that argocd has deployed into our EKS cluster either from our own kustomize application manifests or third-party helm charts.
 ![argocd](argocd.png)
+
+## do some admin
+create argo-artifacts bucket called ```my-bucket```
+create PVC by applying ```applications/argo-workflows/overlays/workflows/models/wine/base/pvc.yaml``` in workflows namespace
 
 
 ## apply ingress object

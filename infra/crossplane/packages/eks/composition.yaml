@@ -34,6 +34,10 @@ spec:
               matchControllerRef: true
               matchLabels:
                 access: public
+            securityGroupIdSelector:
+              matchControllerRef: true
+              matchLabels:
+                name: eks-security-group
     patches:
     - fromFieldPath: metadata.annotations[crossplane.io/external-name]
       toFieldPath: metadata.annotations[crossplane.io/external-name]
@@ -172,14 +176,15 @@ spec:
                   "Effect" : "Allow",
                   "Action" : [
                     "s3:*",
+                    "s3:GetBucketLocation",
                     "s3:PutObject",
                     "s3:GetObject",
                     "s3:ListBucket",
                     "s3:DeleteObject"
                   ],
                   "Resource" : [
-                    "arn:aws:s3:::argo-artifacts",
-                    "arn:aws:s3:::argo-artifacts/*"
+                    "arn:aws:s3:::argo-artifacts-880572800141",
+                    "arn:aws:s3:::argo-artifacts-880572800141/*"
                   ]
                 }
               ]
@@ -190,15 +195,13 @@ spec:
       apiVersion: iam.aws.crossplane.io/v1beta1
       kind: RolePolicyAttachment
       forProvider:
+        policyArnRef:
+          name: s3-access
         roleNameSelector:
-            matchControllerRef: true
-            matchLabels:
-              role: nodegroup
-        policyArnSelector:
-            matchControllerRef: true
-            matchLabels:
-              policy: s3-sccess-policy
-        
+          matchControllerRef: true
+          matchLabels:
+            role: nodegroup
+
   - name: iamattachment-controlplane
     base:
       apiVersion: iam.aws.crossplane.io/v1beta1
@@ -267,27 +270,6 @@ spec:
             value: devops-catalog
           - key: kubernetes.io/cluster/devops-catalog
             value: shared
-  - name: sg-nodepool
-    base:
-      apiVersion: ec2.aws.crossplane.io/v1beta1
-      kind: SecurityGroup
-      spec:
-        forProvider:
-          description: Cluster communication with worker nodes
-          groupName: eks-security-group
-          vpcIdSelector:
-            matchControllerRef: true
-          egress:
-          - fromPort: 0
-            toPort: 0
-            ipProtocol: "-1"
-            ipRanges:
-            - cidrIp: "0.0.0.0/0"
-              description: all ips
-          tags:
-            - key: Name
-              value: devops-catalog
-
   - name: subnet-nodepool-1a
     base:
       apiVersion: ec2.aws.crossplane.io/v1beta1
@@ -376,8 +358,6 @@ spec:
     patches:
     - fromFieldPath: spec.id
       toFieldPath: metadata.name
-      # This ProviderConfig uses the above EKS Cluster's connection secret as
-      # its credentials secret.
     - fromFieldPath: metadata.uid
       toFieldPath: spec.credentials.secretRef.name
       transforms:
@@ -435,6 +415,28 @@ spec:
       - type: string
         string:
           fmt: '%s-sealed-secrets'
-      # uses the spec.id as the providerconfigref name
     - fromFieldPath: spec.id
       toFieldPath: spec.providerConfigRef.name
+
+  - name: sg-nodepool
+    base:
+      apiVersion: ec2.aws.crossplane.io/v1beta1
+      kind: SecurityGroup
+      metadata:
+        labels:
+          name: eks-security-group
+      spec:
+        forProvider:
+          region: us-west-1
+          groupName: eks-security-group
+          description: Cluster communication with worker nodes
+          vpcIdSelector:
+            matchControllerRef: true
+          egress:
+          - fromPort: 0
+            toPort: 0
+            ipProtocol: "-1"
+            ipRanges:
+            - cidrIp: 0.0.0.0/0
+    readinessChecks:
+    - type: None

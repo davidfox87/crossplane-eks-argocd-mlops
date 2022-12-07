@@ -5,6 +5,18 @@ resources:
 - ../../base
 - ../workflows
 
+patchesStrategicMerge:
+  - |
+    apiVersion: v1
+    kind: ConfigMap
+    metadata:
+      name: workflow-controller-configmap
+    data:
+      config: |
+        artifactRepository:
+          s3:
+            bucket: argo-artifacts-880572800141
+            endpoint: s3.amazonaws.com
 
 # patchesStrategicMerge:
 #   - |

@@ -12,7 +12,6 @@ xdg-open https://localhost:9444
 The API server can then be accessed using https://localhost:9443
 
 ```
-kubectl get secret argocd-initial-admin-secret -n argocd -o yaml
-echo cTNoNnFxdEVLVm42T2x3VQ== | base64 --decode
+kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
 ```
 Take the decoded password and login to the ui

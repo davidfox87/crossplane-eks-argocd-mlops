@@ -23,13 +23,22 @@ kind: Configuration
 metadata:
   name: crossplane-k8s
 spec:
-  package: foxy7887/crossplane-aws-platform:v0.0.22
+  package: foxy7887/crossplane-aws-platform:v0.0.36
 EOF
+
+cat <<EOF | kubectl apply -f -
+apiVersion: pkg.crossplane.io/v1
+kind: Provider
+metadata:
+  name: provider-aws
+spec:
+  package: crossplane/provider-aws:v0.32.0
+EOF
+
 
 kubectl get pkgrev
 
 # Wait until all the packages are healthy
-
 cat <<EOF | kubectl apply -f -
 apiVersion: aws.crossplane.io/v1beta1
 kind: ProviderConfig
@@ -51,7 +60,7 @@ kubectl create namespace team-foxy
 
 # Create a cluster
 ```
-cat <<EOF | kubectl apply --namespace team-foxy -f -
+cat <<EOF | kubectl apply  -n team-foxy -f -
 apiVersion: eks.mlops-playground.com/v1alpha1
 kind: ClusterClaim
 metadata:
@@ -147,7 +156,7 @@ kubectl crossplane build configuration
 
 Push the package:
 
-VERSION=v0.0.22
+VERSION=v0.0.3
 kubectl crossplane push configuration foxy7887/crossplane-aws-platform:${VERSION} 
 
 

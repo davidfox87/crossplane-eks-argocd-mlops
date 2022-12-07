@@ -117,3 +117,53 @@ Then we can interact with our EKS cluster
 ```
 kubectl --kubeconfig kubeconfig.yaml  get namespaces
 ```
+
+
+
+
+
+# Steps for combining crossplane with argocd for deploying EKS cluster
+
+1. Spawn management Kind cluster
+```
+kind create cluster --name kind-cluster --config kind.yaml --wait 5m
+```
+
+2. Install argo-cd
+Go to ```/Users/david.fox/Documents/crossplane-eks-argocd-mlops/applications/argo-cd/overlays/staging``` and run:
+```
+kustomize build | kubectl apply -f -
+```
+
+3. Log into Argocd UI
+```
+kubectl port-forward svc/argocd-server -n argocd 9444:443
+```
+
+The API server can then be accessed using https://localhost:9444
+
+Get the initial admin password and login
+```
+kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
+```
+
+4. Use argocd to deploy applications to our Kubernetes cluster 
+In a different project folder, clone the repo which has our ArgoCD project and application manifests 
+```
+git clone git@github.com:davidfox87/argocd-production.git
+```
+Install projects and apps
+```
+kubectl apply -f projects.yaml
+kubectl apply -f apps.yaml
+```
+5. generate the sealed-secrets manifest for the aws-creds and push to github. Navigate to ```/Users/david.fox/Documents/crossplane-eks-argocd-mlops/infra/crossplane/crossplane-config``` and run 
+``` 
+./deploy-secret.sh 
+git commit -am 'deploy aws-creds sealed-secret'
+git push
+```
+
+refresh argocd apps to pull and deploy the latest manifests
+
+6. Push EKS claims to team-foxy-infra
